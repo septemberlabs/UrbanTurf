@@ -9,8 +9,6 @@
 #import "Primary.h"
 #import "UrbanTurfFetcher.h"
 #import "Article.h"
-#import "HoodieTableViewCell.h"
-#import "ArticleTableViewCell.h"
 #import "ArticleViewController.h"
 #import "Stylesheet.h"
 
