@@ -1,0 +1,95 @@
+
+/*
+
+HoodieTableViewCell.xib
+
+HoodieTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HoodieTableViewCell"];
+if (cell == nil) {
+// Load the top-level objects from the custom cell XIB.
+NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"HoodieTableViewCell" owner:self options:nil];
+// Grab a pointer to the first object (presumably the custom cell, as that's all the XIB should contain).
+cell = [topLevelObjects objectAtIndex:0];
+}
+cell.imageContainerView.backgroundColor = [UIColor redColor];
+
+MappedContent *itemToDisplay = (MappedContent *)self.articles[indexPath.row];
+cell.textBox.text = itemToDisplay.title;
+cell.leftUpperLabel.text = itemToDisplay.subtitle;
+
+// if the image data exists display it immediately. if not, add a block off the main queue to go grab and store it.
+if (itemToDisplay.actualImage != nil) {
+cell.imageContainerView.image = itemToDisplay.actualImage;
+}
+else {
+NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:itemToDisplay.largeURL]];
+NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:request
+completionHandler:^(NSURL *localfile, NSURLResponse *response, NSError *error) {
+if (!error) {
+//NSLog(@"request.URL: %@", [request.URL absoluteString]);
+//NSLog(@"photo.thumbnailURL: %@", photo.thumbnailURL);
+itemToDisplay.actualImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:localfile]];
+}
+}];
+[task resume];
+}
+return cell;
+*/
+
+
+/*
+
+ArticleTableViewCell.xib
+
+ArticleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ArticleTableViewCell"];
+if (cell == nil) {
+// Load the top-level objects from the custom cell XIB.
+NSArray *topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"ArticleTableViewCell" owner:self options:nil];
+// Grab a pointer to the first object (presumably the custom cell, as that's all the XIB should contain).
+cell = [topLevelObjects objectAtIndex:0];
+}
+cell.articleImageView.backgroundColor = [UIColor redColor];
+
+Article *article = (Article *)self.articles[indexPath.row];
+cell.articleHeadline.text = article.title;
+cell.articleCopy.text = article.introduction;
+cell.articleMetaInfo.text = article.publication;
+
+// if the image data exists display it immediately. if not, add a block off the main queue to go grab and store it.
+if (article.actualImage != nil) {
+cell.articleImageView.image = article.actualImage;
+}
+else {
+NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:article.imageURL]];
+NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:request completionHandler:^(NSURL *localfile, NSURLResponse *response, NSError *error) {
+if (!error) {
+//NSLog(@"request.URL: %@", [request.URL absoluteString]);
+//NSLog(@"photo.thumbnailURL: %@", photo.thumbnailURL);
+article.actualImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:localfile]];
+}
+else {
+NSLog(@"Image download failed: %@", error.localizedDescription);
+}
+}];
+[task resume];
+}
+return cell;
+*/
+
+
+
+/*
+
+WORKING
+
+static NSString *customTableCell = @"Hoodie Cell";
+UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:customTableCell forIndexPath:indexPath];
+MappedContent *itemToDisplay = (MappedContent *)self.articles[indexPath.row];
+cell.textLabel.text = itemToDisplay.title;
+cell.detailTextLabel.text = [NSString stringWithFormat:@"Current row: %ld", (long)indexPath.row];
+return cell;
+*/
+

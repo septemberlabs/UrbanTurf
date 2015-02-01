@@ -7,14 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A1D9D5D1A547CE90041FBD0 /* scratch in Resources */ = {isa = PBXBuildFile; fileRef = 1A1D9D5C1A547CE90041FBD0 /* scratch */; };
+		1A2E6A551A49F3E20033AC87 /* Primary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A541A49F3E20033AC87 /* Primary.m */; };
+		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
+		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
+		1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5E1A49F6D70033AC87 /* UrbanTurfFetcher.m */; };
+		1A2E6A611A4A0A350033AC87 /* HoodieTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2E6A601A4A0A350033AC87 /* HoodieTableViewCell.xib */; };
+		1A2E6A641A4A0A3E0033AC87 /* HoodieTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A631A4A0A3E0033AC87 /* HoodieTableViewCell.m */; };
+		1A2E6A661A4A1E650033AC87 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A2E6A651A4A1E650033AC87 /* MapKit.framework */; };
+		1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A681A4E26540033AC87 /* ArticleViewController.m */; };
+		1A2E6A6B1A4E2C3B0033AC87 /* ArticleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2E6A6A1A4E2C3B0033AC87 /* ArticleTableViewCell.xib */; };
+		1A2E6A6E1A4E2FBF0033AC87 /* ArticleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A6D1A4E2FBF0033AC87 /* ArticleTableViewCell.m */; };
+		1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */; };
+		1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F1EB81A507971007D3B99 /* Stylesheet.m */; };
 		1AB1A5611A48E3D900369211 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5601A48E3D900369211 /* main.m */; };
 		1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5631A48E3D900369211 /* AppDelegate.m */; };
-		1AB1A5671A48E3D900369211 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5661A48E3D900369211 /* FirstViewController.m */; };
-		1AB1A56A1A48E3D900369211 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5691A48E3D900369211 /* SecondViewController.m */; };
 		1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56B1A48E3D900369211 /* Main.storyboard */; };
 		1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56E1A48E3D900369211 /* Images.xcassets */; };
 		1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A5701A48E3D900369211 /* LaunchScreen.xib */; };
 		1AB1A57E1A48E3D900369211 /* UrbanTurfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */; };
+		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
+		3068F3A7A48E641DA3A665CD /* libPods-UrbanTurf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87528F4CC2DF993489F0A70F /* libPods-UrbanTurf.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,21 +41,43 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A1D9D5C1A547CE90041FBD0 /* scratch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scratch; sourceTree = "<group>"; };
+		1A2E6A531A49F3E20033AC87 /* Primary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Primary.h; sourceTree = "<group>"; };
+		1A2E6A541A49F3E20033AC87 /* Primary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Primary.m; sourceTree = "<group>"; };
+		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
+		1A2E6A571A49F5BD0033AC87 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
+		1A2E6A591A49F6160033AC87 /* Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fetcher.h; sourceTree = "<group>"; };
+		1A2E6A5A1A49F6160033AC87 /* Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fetcher.m; sourceTree = "<group>"; };
+		1A2E6A5D1A49F6D70033AC87 /* UrbanTurfFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UrbanTurfFetcher.h; sourceTree = "<group>"; };
+		1A2E6A5E1A49F6D70033AC87 /* UrbanTurfFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UrbanTurfFetcher.m; sourceTree = "<group>"; };
+		1A2E6A601A4A0A350033AC87 /* HoodieTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HoodieTableViewCell.xib; sourceTree = "<group>"; };
+		1A2E6A621A4A0A3E0033AC87 /* HoodieTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoodieTableViewCell.h; sourceTree = "<group>"; };
+		1A2E6A631A4A0A3E0033AC87 /* HoodieTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoodieTableViewCell.m; sourceTree = "<group>"; };
+		1A2E6A651A4A1E650033AC87 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		1A2E6A671A4E26540033AC87 /* ArticleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleViewController.h; sourceTree = "<group>"; };
+		1A2E6A681A4E26540033AC87 /* ArticleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleViewController.m; sourceTree = "<group>"; };
+		1A2E6A6A1A4E2C3B0033AC87 /* ArticleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleTableViewCell.xib; sourceTree = "<group>"; };
+		1A2E6A6C1A4E2FBF0033AC87 /* ArticleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleTableViewCell.h; sourceTree = "<group>"; };
+		1A2E6A6D1A4E2FBF0033AC87 /* ArticleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleTableViewCell.m; sourceTree = "<group>"; };
+		1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
+		1A6F1EB71A507971007D3B99 /* Stylesheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
+		1A6F1EB81A507971007D3B99 /* Stylesheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stylesheet.m; sourceTree = "<group>"; };
 		1AB1A55B1A48E3D900369211 /* UrbanTurf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UrbanTurf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A55F1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A5601A48E3D900369211 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1AB1A5621A48E3D900369211 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1AB1A5631A48E3D900369211 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1AB1A5651A48E3D900369211 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		1AB1A5661A48E3D900369211 /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
-		1AB1A5681A48E3D900369211 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		1AB1A5691A48E3D900369211 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		1AB1A56C1A48E3D900369211 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1AB1A56E1A48E3D900369211 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1AB1A5711A48E3D900369211 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1AB1A5771A48E3D900369211 /* UrbanTurfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UrbanTurfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A57C1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UrbanTurfTests.m; sourceTree = "<group>"; };
+		1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontIconViewController.h; sourceTree = "<group>"; };
+		1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontIconViewController.m; sourceTree = "<group>"; };
+		3A79222581246488BFAC0543 /* Pods-UrbanTurf.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrbanTurf.release.xcconfig"; path = "Pods/Target Support Files/Pods-UrbanTurf/Pods-UrbanTurf.release.xcconfig"; sourceTree = "<group>"; };
+		87528F4CC2DF993489F0A70F /* libPods-UrbanTurf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UrbanTurf.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB6EC763C507EE1EE811CE63 /* Pods-UrbanTurf.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UrbanTurf.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UrbanTurf/Pods-UrbanTurf.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A2E6A661A4A1E650033AC87 /* MapKit.framework in Frameworks */,
+				3068F3A7A48E641DA3A665CD /* libPods-UrbanTurf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,12 +100,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A2E6A5C1A49F61D0033AC87 /* Fetchers */ = {
+			isa = PBXGroup;
+			children = (
+				1A2E6A5D1A49F6D70033AC87 /* UrbanTurfFetcher.h */,
+				1A2E6A5E1A49F6D70033AC87 /* UrbanTurfFetcher.m */,
+				1A2E6A591A49F6160033AC87 /* Fetcher.h */,
+				1A2E6A5A1A49F6160033AC87 /* Fetcher.m */,
+			);
+			name = Fetchers;
+			sourceTree = "<group>";
+		};
 		1AB1A5521A48E3D900369211 = {
 			isa = PBXGroup;
 			children = (
+				1A2E6A651A4A1E650033AC87 /* MapKit.framework */,
 				1AB1A55D1A48E3D900369211 /* UrbanTurf */,
 				1AB1A57A1A48E3D900369211 /* UrbanTurfTests */,
 				1AB1A55C1A48E3D900369211 /* Products */,
+				E8DA3852819FDE8DA8F3B2B1 /* Pods */,
+				FCD61217FCD59AA5A3D7F984 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,13 +135,27 @@
 		1AB1A55D1A48E3D900369211 /* UrbanTurf */ = {
 			isa = PBXGroup;
 			children = (
+				1A1D9D5C1A547CE90041FBD0 /* scratch */,
+				1A2E6A6A1A4E2C3B0033AC87 /* ArticleTableViewCell.xib */,
+				1A2E6A6C1A4E2FBF0033AC87 /* ArticleTableViewCell.h */,
+				1A2E6A6D1A4E2FBF0033AC87 /* ArticleTableViewCell.m */,
+				1A2E6A601A4A0A350033AC87 /* HoodieTableViewCell.xib */,
+				1A2E6A621A4A0A3E0033AC87 /* HoodieTableViewCell.h */,
+				1A2E6A631A4A0A3E0033AC87 /* HoodieTableViewCell.m */,
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
-				1AB1A5651A48E3D900369211 /* FirstViewController.h */,
-				1AB1A5661A48E3D900369211 /* FirstViewController.m */,
-				1AB1A5681A48E3D900369211 /* SecondViewController.h */,
-				1AB1A5691A48E3D900369211 /* SecondViewController.m */,
+				1A2E6A561A49F5BD0033AC87 /* Article.h */,
+				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
+				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
+				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
+				1A2E6A671A4E26540033AC87 /* ArticleViewController.h */,
+				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
+				1A2E6A531A49F3E20033AC87 /* Primary.h */,
+				1A2E6A541A49F3E20033AC87 /* Primary.m */,
+				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
+				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
+				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
 				1AB1A5701A48E3D900369211 /* LaunchScreen.xib */,
 				1AB1A55E1A48E3D900369211 /* Supporting Files */,
@@ -101,6 +166,7 @@
 		1AB1A55E1A48E3D900369211 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */,
 				1AB1A55F1A48E3D900369211 /* Info.plist */,
 				1AB1A5601A48E3D900369211 /* main.m */,
 			);
@@ -124,6 +190,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		E8DA3852819FDE8DA8F3B2B1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AB6EC763C507EE1EE811CE63 /* Pods-UrbanTurf.debug.xcconfig */,
+				3A79222581246488BFAC0543 /* Pods-UrbanTurf.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		FCD61217FCD59AA5A3D7F984 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				87528F4CC2DF993489F0A70F /* libPods-UrbanTurf.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -131,9 +214,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1AB1A5811A48E3D900369211 /* Build configuration list for PBXNativeTarget "UrbanTurf" */;
 			buildPhases = (
+				277905A639E8114D24916C1A /* Check Pods Manifest.lock */,
 				1AB1A5571A48E3D900369211 /* Sources */,
 				1AB1A5581A48E3D900369211 /* Frameworks */,
 				1AB1A5591A48E3D900369211 /* Resources */,
+				6AE48045BF79919982657067 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -173,6 +258,11 @@
 				TargetAttributes = {
 					1AB1A55A1A48E3D900369211 = {
 						CreatedOnToolsVersion = 6.1;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					1AB1A5761A48E3D900369211 = {
 						CreatedOnToolsVersion = 6.1;
@@ -204,9 +294,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A2E6A6B1A4E2C3B0033AC87 /* ArticleTableViewCell.xib in Resources */,
 				1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */,
 				1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */,
+				1A1D9D5D1A547CE90041FBD0 /* scratch in Resources */,
+				1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */,
 				1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */,
+				1A2E6A611A4A0A350033AC87 /* HoodieTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,15 +313,55 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		277905A639E8114D24916C1A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6AE48045BF79919982657067 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UrbanTurf/Pods-UrbanTurf-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1AB1A5571A48E3D900369211 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AB1A56A1A48E3D900369211 /* SecondViewController.m in Sources */,
+				1A2E6A641A4A0A3E0033AC87 /* HoodieTableViewCell.m in Sources */,
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,
-				1AB1A5671A48E3D900369211 /* FirstViewController.m in Sources */,
+				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
+				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
+				1A2E6A551A49F3E20033AC87 /* Primary.m in Sources */,
+				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
+				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
+				1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */,
 				1AB1A5611A48E3D900369211 /* main.m in Sources */,
+				1A2E6A6E1A4E2FBF0033AC87 /* ArticleTableViewCell.m in Sources */,
+				1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,7 +437,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -338,7 +472,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -347,21 +481,27 @@
 		};
 		1AB1A5821A48E3D900369211 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AB6EC763C507EE1EE811CE63 /* Pods-UrbanTurf.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = UrbanTurf/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		1AB1A5831A48E3D900369211 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A79222581246488BFAC0543 /* Pods-UrbanTurf.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = UrbanTurf/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -418,6 +558,7 @@
 				1AB1A5831A48E3D900369211 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1AB1A5841A48E3D900369211 /* Build configuration list for PBXNativeTarget "UrbanTurfTests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +567,7 @@
 				1AB1A5861A48E3D900369211 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
