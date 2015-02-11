@@ -6,10 +6,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--News-->
+        <!--Near Me-->
         <scene sceneID="wPR-n0-O1b">
             <objects>
-                <viewController title="News" id="SoS-of-BjG" customClass="Primary" sceneMemberID="viewController">
+                <viewController id="SoS-of-BjG" customClass="Primary" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ysJ-if-qSl"/>
                         <viewControllerLayoutGuide type="bottom" id="Jeu-HE-IFM"/>
@@ -91,7 +91,7 @@
                             <constraint firstItem="Scv-qX-ecL" firstAttribute="top" secondItem="ysJ-if-qSl" secondAttribute="bottom" id="rSX-X3-3ni"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="News" id="00q-Ld-nR2"/>
+                    <tabBarItem key="tabBarItem" title="Near Me" id="00q-Ld-nR2"/>
                     <connections>
                         <outlet property="mapTargetImage" destination="2zn-w0-DAo" id="RD0-Cp-aeD"/>
                         <outlet property="mapView" destination="3TK-tk-78B" id="pZR-SY-oXc"/>
@@ -119,7 +119,7 @@
         <!--Testing-->
         <scene sceneID="eNy-y2-BGQ">
             <objects>
-                <viewController title="Testing" id="edH-zo-Tjc" customClass="FontIconViewController" sceneMemberID="viewController">
+                <viewController id="edH-zo-Tjc" customClass="FontIconViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Gx6-CE-D2K"/>
                         <viewControllerLayoutGuide type="bottom" id="ERp-1Q-Vpx"/>
@@ -157,7 +157,7 @@
                             <constraint firstAttribute="centerX" secondItem="hFl-us-DUo" secondAttribute="centerX" id="wcL-Qm-YMZ"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="od6-GO-H9R"/>
+                    <tabBarItem key="tabBarItem" title="Testing" id="od6-GO-H9R"/>
                     <connections>
                         <outlet property="iconButton" destination="zBo-3N-zMC" id="pCK-Fi-7xJ"/>
                         <outlet property="iconLabel" destination="hFl-us-DUo" id="4vT-gA-sbg"/>
@@ -271,7 +271,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="HuT-Eg-TD5">
             <objects>
-                <tabBarController id="nAp-W2-Chy" sceneMemberID="viewController">
+                <tabBarController id="nAp-W2-Chy" customClass="TabBarController" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="U6l-oW-knP">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>

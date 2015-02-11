@@ -52,10 +52,10 @@
 
     // map view button
     [self.toggleListViewButton.titleLabel setFont:[UIFont fontWithName:@"fontello" size:26]];
-    [self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
+    [self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue80f"] forState:UIControlStateNormal];
     
     // search filters button
-    [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:@"fontello" size:22]];
+    [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:@"fontello" size:26]];
     [self.searchFiltersButton setTitle:[NSString stringWithUTF8String:"\ue804"] forState:UIControlStateNormal];
     
     self.listView = YES;

@@ -5,7 +5,7 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>C78F014F-2EFB-41F9-8C33-5C80C8B3DA3C</string>
+	<string>6CF61FCF-5DBF-47A1-8FEE-01CB11DA8622</string>
 	<key>IDESourceControlProjectName</key>
 	<string>UrbanTurf</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
@@ -14,11 +14,11 @@
 		<string>https://github.com/septemberlabs/UrbanTurf.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>UrbanTurf.xcworkspace</string>
+	<string>UrbanTurf.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>526D39F7D16E6C32CE112504358D1DB28E4C4292</key>
-		<string>..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/septemberlabs/UrbanTurf.git</string>
