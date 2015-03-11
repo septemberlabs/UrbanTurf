@@ -14,6 +14,9 @@
 
 static UIColor* _color1 = nil;
 static UIColor* _color2 = nil;
+static NSString* _fonticons = nil;
+static CGFloat _searchBarFontIconSize;
+static CGFloat _tabBarFontIconSize;
 
 /*
  font of article headline in full article view:
@@ -55,11 +58,20 @@ static UIColor* _color2 = nil;
     // Colors Initialization
     _color1 = [UIColor colorWithRed:(76/255.f) green:(183/255.f) blue:(73/255.f) alpha: 1]; // RGB: 76, 183, 73. Green used throughout.
     _color2 = [UIColor colorWithRed:(155/255.f) green:(158/255.f) blue:(161/255.f) alpha: 1]; // RGB: 155, 158, 161. Grey used for date on main article listing.
+    
+    _fonticons = @"fontello";
+    
+    _searchBarFontIconSize = 22.0;
+    _tabBarFontIconSize = 30.0;
+    
 }
 
 #pragma mark Colors
 
 + (UIColor*)color1 { return _color1; }
 + (UIColor*)color2 { return _color2; }
++ (NSString*)fonticons { return _fonticons; }
++ (CGFloat)searchBarFontIconSize { return _searchBarFontIconSize; }
++ (CGFloat)tabBarFontIconSize { return _tabBarFontIconSize; }
 
 @end

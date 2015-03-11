@@ -9,26 +9,12 @@
 #import "FontIconViewController.h"
 
 @interface FontIconViewController ()
-@property (weak, nonatomic) IBOutlet UILabel *iconLabel;
-@property (weak, nonatomic) IBOutlet UIButton *iconButton;
 @end
 
 @implementation FontIconViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // HERE. figuring out how to load from fontello.ttf
-    [self.iconLabel setFont:[UIFont fontWithName:@"fontello" size:30]];
-    [self.iconLabel setText:[NSString stringWithUTF8String:"\ue806"]];
-    
-    [self.iconButton.titleLabel setFont:[UIFont fontWithName:@"fontello" size:30]];
-    [self.iconButton setTitle:[NSString stringWithUTF8String:"\ue806"] forState:UIControlStateNormal];
-    //[self.iconButton.titleLabel setText:@"NOT BUTTON"];
-    
-    //self.iconLabel.layer.borderColor = [UIColor redColor].CGColor;
-    //self.iconLabel.layer.borderWidth = 1.0;
-    
 }
 
 - (void)didReceiveMemoryWarning {

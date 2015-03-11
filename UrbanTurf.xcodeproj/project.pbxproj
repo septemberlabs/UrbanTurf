@@ -28,6 +28,7 @@
 		1AF8A98D1A7EE5960045B18B /* HoodieTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A9881A7EE5960045B18B /* HoodieTableViewCell.m */; };
 		1AF8A98E1A7EE5960045B18B /* HoodieTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A9891A7EE5960045B18B /* HoodieTableViewCell.xib */; };
 		1AF8A98F1A7EE5960045B18B /* scratch in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A98A1A7EE5960045B18B /* scratch */; };
+		1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,8 @@
 		1AF8A9881A7EE5960045B18B /* HoodieTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoodieTableViewCell.m; sourceTree = "<group>"; };
 		1AF8A9891A7EE5960045B18B /* HoodieTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HoodieTableViewCell.xib; sourceTree = "<group>"; };
 		1AF8A98A1A7EE5960045B18B /* scratch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scratch; sourceTree = "<group>"; };
+		1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteLocationsTVC.h; sourceTree = "<group>"; };
+		1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteLocationsTVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +140,8 @@
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
 				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
+				1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */,
+				1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */,
 				1A2CEBDA1A8AC725004DE623 /* TabBarController.h */,
 				1A2CEBDB1A8AC725004DE623 /* TabBarController.m */,
 				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
@@ -318,6 +323,7 @@
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
 				1A2E6A551A49F3E20033AC87 /* Primary.m in Sources */,
 				1AF8A98D1A7EE5960045B18B /* HoodieTableViewCell.m in Sources */,
+				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
 				1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */,

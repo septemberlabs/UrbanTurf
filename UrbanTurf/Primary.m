@@ -40,23 +40,20 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    // map
-    // list
-    // sliders for search filters
-    // news
-    // my locations (star for bookmark, map marker)
-    // gear (for options)
-    
     //self.mapTargetImage.hidden = YES;
     //self.redoSearchButton.hidden = YES;
 
     // map view button
-    [self.toggleListViewButton.titleLabel setFont:[UIFont fontWithName:@"fontello" size:26]];
+    [self.toggleListViewButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
+    [self.toggleListViewButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
     [self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue80f"] forState:UIControlStateNormal];
-    
+
     // search filters button
-    [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:@"fontello" size:26]];
+    [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
+    [self.searchFiltersButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
     [self.searchFiltersButton setTitle:[NSString stringWithUTF8String:"\ue804"] forState:UIControlStateNormal];
+    
+    self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
     self.listView = YES;
     self.originalTableViewOriginY = self.tableView.frame.origin.y;
