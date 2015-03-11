@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FavoriteLocationsTVC : UITableViewController
+@interface FavoriteLocationsTVC : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @end

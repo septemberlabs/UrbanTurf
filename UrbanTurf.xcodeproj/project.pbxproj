@@ -16,6 +16,7 @@
 		1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A681A4E26540033AC87 /* ArticleViewController.m */; };
 		1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */; };
 		1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F1EB81A507971007D3B99 /* Stylesheet.m */; };
+		1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */; };
 		1AB1A5611A48E3D900369211 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5601A48E3D900369211 /* main.m */; };
 		1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5631A48E3D900369211 /* AppDelegate.m */; };
 		1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56B1A48E3D900369211 /* Main.storyboard */; };
@@ -58,6 +59,8 @@
 		1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
 		1A6F1EB71A507971007D3B99 /* Stylesheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		1A6F1EB81A507971007D3B99 /* Stylesheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stylesheet.m; sourceTree = "<group>"; };
+		1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveFavoriteLocation.h; sourceTree = "<group>"; };
+		1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveFavoriteLocation.m; sourceTree = "<group>"; };
 		1AB1A55B1A48E3D900369211 /* UrbanTurf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UrbanTurf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A55F1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A5601A48E3D900369211 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -150,6 +153,8 @@
 				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
 				1A2E6A531A49F3E20033AC87 /* Primary.h */,
 				1A2E6A541A49F3E20033AC87 /* Primary.m */,
+				1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */,
+				1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
 				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
@@ -329,6 +334,7 @@
 				1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */,
 				1AB1A5611A48E3D900369211 /* main.m in Sources */,
 				1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */,
+				1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */,
 				1AF8A98B1A7EE5960045B18B /* ArticleTableViewCell.m in Sources */,
 				1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */,
 			);
