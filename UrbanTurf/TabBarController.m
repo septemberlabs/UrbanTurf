@@ -8,6 +8,8 @@
 
 #import "TabBarController.h"
 #import "Stylesheet.h"
+#import "FavoriteLocationsTVC.h"
+#import "Primary.h"
 
 @interface TabBarController ()
 
@@ -35,8 +37,33 @@
     [[self.tabBar.items objectAtIndex:1] setTitle:[NSString stringWithUTF8String:"\ue800"]]; // center: Map marker for all map interactions. "News Map"
     [[self.tabBar.items objectAtIndex:2] setTitle:[NSString stringWithUTF8String:"\ue808"]]; // right: Gear for options. "Options"
     
-    self.selectedIndex = 1;
+    self.selectedIndex = 1; // default view controller is the news map
+    self.delegate = self; // the delegate is used to intercept button presses
 
+}
+
+#pragma mark - Selection of tab bar button (UITabBarControllerDelegate)
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    // if the favorites button is pressed, send that view controller the current location
+    if ([viewController isKindOfClass:[UINavigationController class]]) {  // the FavoriteLocationsTVC is embedded in a navigation controller, so check for that first
+        UINavigationController *vc = (UINavigationController *)viewController;
+        if ([vc.viewControllers[0] isKindOfClass:[FavoriteLocationsTVC class]]) {
+            FavoriteLocationsTVC *favorites = (FavoriteLocationsTVC *)vc.viewControllers[0];
+
+            // loop through the view controllers until the Primary one is found
+            for (id vc in self.viewControllers) {
+                if ([vc isKindOfClass:[Primary class]]) {
+                    Primary *primary = (Primary *)vc;
+                    CLLocationCoordinate2D currentLocation;
+                    currentLocation.latitude = primary.latitude;
+                    currentLocation.longitude = primary.longitude;
+                    favorites.currentLocation = currentLocation;
+                }
+            }
+        }
+    }
 }
 
 @end

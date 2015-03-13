@@ -9,19 +9,14 @@
 #import "SaveFavoriteLocation.h"
 
 @interface SaveFavoriteLocation ()
-
+@property (weak, nonatomic) IBOutlet UILabel *latlonLabel;
 @end
 
 @implementation SaveFavoriteLocation
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.latlonLabel.text = [NSString stringWithFormat:@"%f, %f", self.currentLocation.latitude, self.currentLocation.longitude];
 }
 
 /*

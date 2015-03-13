@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 @interface SaveFavoriteLocation : UIViewController
+
+@property (nonatomic) CLLocationCoordinate2D currentLocation;
 
 @end

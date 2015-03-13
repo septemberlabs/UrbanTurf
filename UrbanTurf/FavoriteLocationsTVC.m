@@ -7,6 +7,7 @@
 //
 
 #import "FavoriteLocationsTVC.h"
+#import "SaveFavoriteLocation.h"
 
 @interface FavoriteLocationsTVC ()
 
@@ -121,16 +122,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self performSegueWithIdentifier:@"SaveLocationToFavorites" sender:indexPath];
+    if (indexPath.section == 0) {
+        [self performSegueWithIdentifier:@"SaveLocationToFavorites" sender:indexPath];
+    }
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    
-    // HERE HERE HERE
-    
-    
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"SaveLocationToFavorites"]) {
+        if ([segue.destinationViewController isKindOfClass:[SaveFavoriteLocation class]]) {
+            SaveFavoriteLocation *saveLocationVC = (SaveFavoriteLocation *)segue.destinationViewController;
+            saveLocationVC.currentLocation = self.currentLocation;
+        }
+    }
 }
 
 @end
