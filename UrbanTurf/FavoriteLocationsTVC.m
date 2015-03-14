@@ -11,9 +11,9 @@
 
 @interface FavoriteLocationsTVC ()
 
-@property NSMutableArray *dummyArray;
+@property NSArray *savedLocations;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
+@property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
 @end
 
 @implementation FavoriteLocationsTVC
@@ -21,24 +21,26 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+
+    static NSString *userDefaultsKey = @"savedLocations";
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    self.savedLocations = [defaults arrayForKey:userDefaultsKey];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView reloadData];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    self.dummyArray = [NSMutableArray array];
-    for (NSInteger i = 0; i < 40; i++) {
-        [self.dummyArray addObject:[NSNumber numberWithInteger:i]];
-    }
-    
-    self.edgesForExtendedLayout = UIRectEdgeBottom;
+    // this sets the back button text of the subsequent vc, not the visible vc. confusing.
+    // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
+    self.navigationBar.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:nil action:nil];
 
+    //self.edgesForExtendedLayout = UIRectEdgeBottom;
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -49,11 +51,19 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
+    // the top section displays only a single row, the Save Location command
     if (section == 0) {
         return 1;
     }
+    // the bottom section displays a row for each saved location
     else {
-        return [self.dummyArray count];
+        if ([self.savedLocations count]) {
+            return [self.savedLocations count];
+        }
+        // if there are no saved locations, display a single row communicating that to the user
+        else {
+            return 1;
+        }
     }
     
 }
@@ -82,8 +92,13 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else {
-        cell.textLabel.text = [[self.dummyArray objectAtIndex:indexPath.row] stringValue];
-        cell.accessoryType = UITableViewCellAccessoryNone;
+        if ([self.savedLocations count]) {
+            cell.textLabel.text = (NSString *)[[self.savedLocations objectAtIndex:indexPath.row] objectForKey:@"Name"];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
+        else {
+            cell.textLabel.text = @"You haven't saved any locations.";
+        }
     }
 
     return cell;
@@ -99,9 +114,34 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.dummyArray removeObjectAtIndex:indexPath.row];
+        
+        // HERE HERE HERE
+        // 1. Deleting the last row in Saved Locations crashes, something to do with deleteRowsAtIndexPaths.
+        // 2. Table view isn't displaying new records as they are saved.
+        // 3. Delete the default text from the UITextField once the user clicks inside it.
+        // 4. Confirm the text in the UITextField is left-aligned.
+        // 5. Fix the cropped view display in Save Location.
+        // 6. Fix the Autolayout issues with the table view in this class.
+        // 7. Start re-aquainting yourself with MKMapView and current locations and passing that around.
+        
+        
+        
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else {
+        
+        NSMutableArray *newArray = [self.savedLocations mutableCopy];
+        [newArray removeObjectAtIndex:indexPath.row];
+        self.savedLocations = newArray; // HOW CAN THIS WORK, assigning a mutable to an immutable array?
+
+        static NSString *userDefaultsKey = @"savedLocations";
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:self.savedLocations forKey:userDefaultsKey];
+        [defaults synchronize];
+
+        NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
+
+    }
+    else {
         NSLog(@"Unhandled editing style! %ld", editingStyle);
     }
 }
