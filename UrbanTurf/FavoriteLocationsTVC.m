@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "FavoriteLocationsTVC.h"
 #import "SaveFavoriteLocation.h"
 
 @interface FavoriteLocationsTVC ()
-
-@property NSArray *savedLocations;
+@property (strong, nonatomic) NSArray *savedLocations;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
 @end
@@ -22,9 +22,7 @@
     
     [super viewDidLoad];
 
-    static NSString *userDefaultsKey = @"savedLocations";
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    self.savedLocations = [defaults arrayForKey:userDefaultsKey];
+    self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsKey];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -37,10 +35,18 @@
     //self.edgesForExtendedLayout = UIRectEdgeBottom;
 
 }
-
+/*
+- (void)setSavedLocations:(NSArray *)savedLocations
+{
+    _savedLocations = savedLocations;
+    [self.tableView reloadData];
+}
+*/
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsKey];
     [self.tableView reloadData];
+    NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
 }
 
 #pragma mark - Table view data source
@@ -57,13 +63,7 @@
     }
     // the bottom section displays a row for each saved location
     else {
-        if ([self.savedLocations count]) {
-            return [self.savedLocations count];
-        }
-        // if there are no saved locations, display a single row communicating that to the user
-        else {
-            return 1;
-        }
+        return [self.savedLocations count];
     }
     
 }
@@ -74,7 +74,13 @@
         return nil;
     }
     else {
-        return @"Favorites";
+        if ([self.savedLocations count]) {
+            return @"Favorites";
+        }
+        // if there are no saved locations, indicate this to the user
+        else {
+            return @"No Favorites";
+        }
     }
     
 }
@@ -105,10 +111,13 @@
     
 }
 
-// Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    if (indexPath.section == 0) {
+        return NO;
+    }
+    else {
+        return YES;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -116,27 +125,18 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         // HERE HERE HERE
-        // 1. Deleting the last row in Saved Locations crashes, something to do with deleteRowsAtIndexPaths.
-        // 2. Table view isn't displaying new records as they are saved.
-        // 3. Delete the default text from the UITextField once the user clicks inside it.
-        // 4. Confirm the text in the UITextField is left-aligned.
-        // 5. Fix the cropped view display in Save Location.
         // 6. Fix the Autolayout issues with the table view in this class.
-        // 7. Start re-aquainting yourself with MKMapView and current locations and passing that around.
-        
-        
-        
-        
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
+        // 8. Start re-aquainting yourself with MKMapView and current locations and passing that around.
+
         NSMutableArray *newArray = [self.savedLocations mutableCopy];
         [newArray removeObjectAtIndex:indexPath.row];
         self.savedLocations = newArray; // HOW CAN THIS WORK, assigning a mutable to an immutable array?
 
-        static NSString *userDefaultsKey = @"savedLocations";
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:self.savedLocations forKey:userDefaultsKey];
         [defaults synchronize];
+
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 
         NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
 

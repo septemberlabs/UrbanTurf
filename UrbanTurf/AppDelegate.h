@@ -12,6 +12,8 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+extern NSString * const userDefaultsKey;
+extern NSString * const googleAPIKey;
 
 @end
 

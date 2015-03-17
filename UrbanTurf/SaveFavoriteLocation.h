@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
+#import <GoogleMaps/GoogleMaps.h>
 
-@interface SaveFavoriteLocation : UIViewController
+@interface SaveFavoriteLocation : UIViewController <GMSMapViewDelegate>
 
 @property (nonatomic) CLLocationCoordinate2D currentLocation;
 

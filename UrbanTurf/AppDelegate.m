@@ -7,6 +7,11 @@
 //
 
 #import "AppDelegate.h"
+#import <GoogleMaps/GoogleMaps.h>
+
+// global string constants pattern described here: http://nshipster.com/c-storage-classes/
+NSString * const userDefaultsKey = @"savedLocations";
+NSString * const googleAPIKey = @"AIzaSyDs6Xda8mpENemqpNEkCULatxluYJl0HIc";
 
 @interface AppDelegate ()
 
@@ -16,8 +21,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+
+    [GMSServices provideAPIKey:googleAPIKey];
     return YES;
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

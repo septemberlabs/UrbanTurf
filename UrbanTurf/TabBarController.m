@@ -21,7 +21,7 @@
 
     [super viewDidLoad];
 
-    // thank you: http://xcode.jackietrillo.com/?p=280
+    // thank you for font icon explanation: http://xcode.jackietrillo.com/?p=280
 
     NSDictionary* attributesNormal =  @{
                                         NSFontAttributeName: [UIFont fontWithName:@"fontello" size:30.0],
@@ -52,13 +52,11 @@
         if ([vc.viewControllers[0] isKindOfClass:[FavoriteLocationsTVC class]]) {
             FavoriteLocationsTVC *favorites = (FavoriteLocationsTVC *)vc.viewControllers[0];
 
-            // loop through the view controllers until the Primary one is found
+            // loop through the view controllers contained by this tab bar vc until Primary is found, then pluck out the current location
             for (id vc in self.viewControllers) {
                 if ([vc isKindOfClass:[Primary class]]) {
                     Primary *primary = (Primary *)vc;
-                    CLLocationCoordinate2D currentLocation;
-                    currentLocation.latitude = primary.latitude;
-                    currentLocation.longitude = primary.longitude;
+                    CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake(primary.latitude, primary.longitude);
                     favorites.currentLocation = currentLocation;
                 }
             }

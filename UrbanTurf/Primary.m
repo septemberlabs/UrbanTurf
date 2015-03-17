@@ -58,6 +58,9 @@
     self.listView = YES;
     self.originalTableViewOriginY = self.tableView.frame.origin.y;
     
+    self.latitude = office.latitude;
+    self.longitude = office.longitude;
+    
     [self fetchData];
     
     self.mapView.delegate = self;
@@ -96,9 +99,7 @@
 {
     NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
     for (NSDictionary *article in fetchedResults) {
-        CLLocationCoordinate2D location;
-        location.latitude = [article[@"latitude"] doubleValue];
-        location.longitude = [article[@"longitude"] doubleValue];
+        CLLocationCoordinate2D location = CLLocationCoordinate2DMake([article[@"latitude"] doubleValue], [article[@"longitude"] doubleValue]);
         Article *processedArticle = [[Article alloc] initWithTitle:article[@"headline"] Location:location];
         processedArticle.url = article[@"website"];
         processedArticle.imageURL = article[@"image_url"];
@@ -396,7 +397,7 @@
     MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
     request.naturalLanguageQuery = searchString;
     // TO DO: set the region to the DMV
-    CLLocationCoordinate2D zeroMilestone; zeroMilestone.latitude = 38.895108; zeroMilestone.longitude = -77.036548;
+    CLLocationCoordinate2D zeroMilestone = CLLocationCoordinate2DMake(38.895108, -77.036548);
     request.region = MKCoordinateRegionMakeWithDistance(zeroMilestone, 50.0, 50.0);
     
     // Create and initialize a search object.
