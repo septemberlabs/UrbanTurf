@@ -13,11 +13,13 @@
 @interface SaveFavoriteLocation ()
 @property (weak, nonatomic) IBOutlet UIView *locationInfo;
 @property (weak, nonatomic) IBOutlet UILabel *latlonLabel;
-@property (weak, nonatomic) IBOutlet UITextField *nameField;
+@property (weak, nonatomic) IBOutlet UITextField *nameTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *crosshairs;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
-@property (weak, nonatomic) IBOutlet UIView *mapViewContainingView;
 @property (weak, nonatomic) IBOutlet UINavigationItem *navigationBar;
 @end
+
+static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\"";
 
 @implementation SaveFavoriteLocation
 
@@ -25,6 +27,7 @@
     
     [super viewDidLoad];
     
+    self.nameTextField.text = defaultNameTextFieldContent;
     self.latlonLabel.text = [NSString stringWithFormat:@"%f, %f", self.currentLocation.latitude, self.currentLocation.longitude];
     
     // hairline border between location info and map
@@ -38,92 +41,119 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(prepareTextField:)
                                                  name:UITextFieldTextDidBeginEditingNotification
-                                               object:self.nameField];
+                                               object:self.nameTextField];
     
-    //UIView *newView = [[UIView alloc] initWithFrame:mapViewFrame];
-    //newView.backgroundColor = [UIColor blueColor];
-    //[self.view addSubview:newView];
+    [self.mapView moveCamera:[GMSCameraUpdate setTarget:self.currentLocation zoom:16.0f]];
+    self.mapView.delegate = self;
 
-    CGRect mapViewFrame = CGRectMake(0, CGRectGetHeight(self.locationInfo.frame), CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
-    GMSCameraPosition *currentlyViewedLocation = [GMSCameraPosition cameraWithTarget:self.currentLocation zoom:16];
-    GMSMapView *mapView = [GMSMapView mapWithFrame:mapViewFrame camera:currentlyViewedLocation];
-    mapView.delegate = self;
-    //self.mapView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-    [self.view addSubview:mapView];
-    
-    UIImageView *crosshairs = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40.0, 40.0)];
-    crosshairs.image = [UIImage imageNamed:@"cursor-crosshair"];
-    crosshairs.center = CGPointMake(mapView.bounds.size.width / 2, mapView.bounds.size.height / 2);
-    [self.view addSubview:crosshairs];
-    
-    /*
-    NSLog(@"mapView bounds: %@", NSStringFromCGRect(self.mapView.bounds));
-    NSLog(@"mapView bounds size: %@", NSStringFromCGSize(self.mapView.bounds.size));
-    NSLog(@"mapView frame: %@", NSStringFromCGRect(self.mapView.frame));
-    NSLog(@"mapView frame size: %@", NSStringFromCGSize(self.mapView.frame.size));
-    NSLog(@"mapView center: %@", NSStringFromCGPoint(self.mapView.center));
-    NSLog(@"locationInfo bounds: %@", NSStringFromCGRect(self.locationInfo.bounds));
-    NSLog(@"locationInfo bounds size: %@", NSStringFromCGSize(self.locationInfo.bounds.size));
-    NSLog(@"locationInfo frame: %@", NSStringFromCGRect(self.locationInfo.frame));
-    NSLog(@"locationInfo frame size: %@", NSStringFromCGSize(self.locationInfo.frame.size));
-    NSLog(@"locationInfo center: %@", NSStringFromCGPoint(self.locationInfo.center));
-     */
-    
-    // HERE HERE
-    // 1. remove old SaveFavoriteLocation MVC from storyboard, and all unused variables herein.
-    // 2. If someone clicks done without adding a name to save the location with, throw up an alert, remove the text, and place the cursor there.
-    // 3. Start laying out options page.
-    
-    
-    
+    self.crosshairs.layer.borderWidth = 1.0f;
+    self.crosshairs.layer.borderColor = [UIColor blueColor].CGColor;
+
+}
+
+- (void)viewWillLayoutSubviews
+{
+    // GMSMapView includes two subviews that the UIImageView is underneath, so it won't display without forcing it up front.
+    [self.mapView bringSubviewToFront:self.crosshairs];
 }
 
 - (void)prepareTextField:(NSNotification *)userInfo
 {
-    self.nameField.text = nil;
-    self.nameField.textColor = [UIColor blackColor];
+    self.nameTextField.text = nil;
+    self.nameTextField.textColor = [UIColor blackColor];
 }
 
-- (IBAction)saveLocation:(id)sender {
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    NSDictionary *locationDictionary = @{
-                        @"Name" : self.nameField.text,
-                        @"Latitude" : [NSNumber numberWithFloat:self.currentLocation.latitude],
-                        @"Longitude" : [NSNumber numberWithFloat:self.currentLocation.longitude]
-                        };
-
-    // if saved locations exist in user defaults, add the new location dictionary to end of that array
-    NSArray *arrayToSave;
-    if ([defaults arrayForKey:userDefaultsKey] != nil) {
-        arrayToSave = [[defaults arrayForKey:userDefaultsKey] arrayByAddingObject:locationDictionary];
-    }
-    // otherwise create an entirely new array with the location dictionary as the sole object
-    else {
-        arrayToSave = [NSArray arrayWithObject:locationDictionary];
-    }
-    
-    [defaults setObject:arrayToSave forKey:userDefaultsKey];
-    [defaults synchronize];
-    
-    NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
-
-}
-
-- (void) mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
+// when user clicks Done
+- (IBAction)saveLocation:(id)sender
 {
-    self.latlonLabel.text = [NSString stringWithFormat:@"%f, %f", position.target.latitude, position.target.latitude];
+    BOOL proceedWithSave = TRUE; // flag to determine if error checks passed
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *alreadySavedLocations = [defaults arrayForKey:userDefaultsKey];
+    NSString *cleanedString = [self.nameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    if (![self checkForValidName]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Name Specified"
+                                                        message:@"Please specify a name to save this location."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        proceedWithSave = FALSE;
+    }
+    
+    // check that the user hasn't already used the same name
+    if ((proceedWithSave) && (alreadySavedLocations != nil)) {
+        for (id arrayElement in alreadySavedLocations) {
+            NSDictionary *alreadySavedLocation = (NSDictionary *)arrayElement;
+            if ([alreadySavedLocation[@"Name"] isEqualToString:cleanedString]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Name Already Used"
+                                                                message:@"You already have a saved location by that name. Please choose an alternative name."
+                                                               delegate:self
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                proceedWithSave = FALSE;
+                break;
+            }
+        }
+    }
+    
+    // all tests passed. proceed with save.
+    if (proceedWithSave) {
+        
+        NSDictionary *newLocation = @{
+                                      @"Name" : cleanedString,
+                                      @"Latitude" : [NSNumber numberWithFloat:self.currentLocation.latitude],
+                                      @"Longitude" : [NSNumber numberWithFloat:self.currentLocation.longitude]
+                                      };
+        
+        // if saved locations exist in user defaults, add the new location dictionary to end of that array
+        NSArray *arrayToSave;
+        if (alreadySavedLocations != nil) {
+            arrayToSave = [alreadySavedLocations arrayByAddingObject:newLocation];
+        }
+        // otherwise create an entirely new array with the location dictionary as the sole object
+        else {
+            arrayToSave = [NSArray arrayWithObject:newLocation];
+        }
+        
+        [defaults setObject:arrayToSave forKey:userDefaultsKey];
+        [defaults synchronize];
+        
+        NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
+        
+        // return to the saved locations screen
+        [self.navigationController popViewControllerAnimated:YES];
+
+    }
+    
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (BOOL)checkForValidName
+{
+    // check to see if the user hasn't entered anything at all (ie, the default is still the value)
+    if ([self.nameTextField.text isEqualToString:defaultNameTextFieldContent]) {
+        return FALSE;
+    }
+    
+    // check for just white space or nothing
+    if ([[self.nameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0) {
+        return FALSE;
+    }
+    
+    return TRUE;
 }
-*/
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // there's only one button, so no need to check against the value of buttonIndex
+    [self.nameTextField becomeFirstResponder];
+}
+
+// update the lat/lon readout in real time as the user pans around the map
+- (void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
+{
+    self.latlonLabel.text = [NSString stringWithFormat:@"%f, %f", position.target.latitude, position.target.longitude];
+}
 
 @end

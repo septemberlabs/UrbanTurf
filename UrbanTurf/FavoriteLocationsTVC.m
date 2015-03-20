@@ -100,7 +100,7 @@
     else {
         if ([self.savedLocations count]) {
             cell.textLabel.text = (NSString *)[[self.savedLocations objectAtIndex:indexPath.row] objectForKey:@"Name"];
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
         else {
             cell.textLabel.text = @"You haven't saved any locations.";
@@ -142,7 +142,7 @@
 
     }
     else {
-        NSLog(@"Unhandled editing style! %ld", editingStyle);
+        NSLog(@"Unhandled editing style! %d", editingStyle);
     }
 }
 
