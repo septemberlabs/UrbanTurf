@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "Constants.h"
 #import "SaveFavoriteLocation.h"
 #import <GoogleMaps/GoogleMaps.h>
 
@@ -68,7 +68,7 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
 {
     BOOL proceedWithSave = TRUE; // flag to determine if error checks passed
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *alreadySavedLocations = [defaults arrayForKey:userDefaultsKey];
+    NSArray *alreadySavedLocations = [defaults arrayForKey:userDefaultsSavedLocationsKey];
     NSString *cleanedString = [self.nameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
     if (![self checkForValidName]) {
@@ -117,7 +117,7 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
             arrayToSave = [NSArray arrayWithObject:newLocation];
         }
         
-        [defaults setObject:arrayToSave forKey:userDefaultsKey];
+        [defaults setObject:arrayToSave forKey:userDefaultsSavedLocationsKey];
         [defaults synchronize];
         
         NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);

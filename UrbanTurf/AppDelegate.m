@@ -7,11 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "Constants.h"
 #import <GoogleMaps/GoogleMaps.h>
-
-// global string constants pattern described here: http://nshipster.com/c-storage-classes/
-NSString * const userDefaultsKey = @"savedLocations";
-NSString * const googleAPIKey = @"AIzaSyDs6Xda8mpENemqpNEkCULatxluYJl0HIc";
 
 @interface AppDelegate ()
 
@@ -20,11 +17,31 @@ NSString * const googleAPIKey = @"AIzaSyDs6Xda8mpENemqpNEkCULatxluYJl0HIc";
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    [GMSServices provideAPIKey:googleAPIKey];
-    return YES;
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     
+    // prepare the app defaults
+    NSArray *defaultsKeys = [NSArray arrayWithObjects:
+                             userDefaultsRadiusKey,
+                             userDefaultsDisplayOrderKey,
+                             userDefaultsHomeScreenLocationKey,
+                             userDefaultsVersionKey,
+                             nil];
+    NSArray *defaultsValues = [NSArray arrayWithObjects:
+                               [NSNumber numberWithDouble:defaultSearchRadius],
+                               [NSNumber numberWithInt:0], // the first element in the array, Closest First
+                               @"Current Location",
+                               version,
+                               nil];
+    NSDictionary *defaults = [NSDictionary dictionaryWithObjects:defaultsValues forKeys:defaultsKeys];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+
+    // authenticate with Google for use of Maps
+    [GMSServices provideAPIKey:googleAPIKey];
+    
+    NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

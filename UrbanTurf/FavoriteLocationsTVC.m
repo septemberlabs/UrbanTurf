@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "Constants.h"
 #import "FavoriteLocationsTVC.h"
 #import "SaveFavoriteLocation.h"
 
@@ -22,7 +22,7 @@
     
     [super viewDidLoad];
 
-    self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsKey];
+    self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -44,7 +44,9 @@
 */
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsKey];
+    [super viewWillAppear:animated];
+    
+    self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
     [self.tableView reloadData];
     NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
 }
@@ -75,7 +77,7 @@
     }
     else {
         if ([self.savedLocations count]) {
-            return @"Favorites";
+            return nil;
         }
         // if there are no saved locations, indicate this to the user
         else {
@@ -133,7 +135,7 @@
         self.savedLocations = newArray; // HOW CAN THIS WORK, assigning a mutable to an immutable array?
 
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:self.savedLocations forKey:userDefaultsKey];
+        [defaults setObject:self.savedLocations forKey:userDefaultsSavedLocationsKey];
         [defaults synchronize];
 
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];

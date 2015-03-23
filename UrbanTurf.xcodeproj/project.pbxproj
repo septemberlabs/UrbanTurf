@@ -16,6 +16,7 @@
 		1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A681A4E26540033AC87 /* ArticleViewController.m */; };
 		1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */; };
 		1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F1EB81A507971007D3B99 /* Stylesheet.m */; };
+		1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7DB1DC1ABDFB81003DB53F /* Constants.m */; };
 		1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */; };
 		1AB1A5611A48E3D900369211 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5601A48E3D900369211 /* main.m */; };
 		1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5631A48E3D900369211 /* AppDelegate.m */; };
@@ -23,6 +24,9 @@
 		1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56E1A48E3D900369211 /* Images.xcassets */; };
 		1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A5701A48E3D900369211 /* LaunchScreen.xib */; };
 		1AB1A57E1A48E3D900369211 /* UrbanTurfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */; };
+		1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */; };
+		1AC8126F1ABF904500ABD302 /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126E1ABF904500ABD302 /* Options.m */; };
+		1AC812721ABFDAB000ABD302 /* Radius.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC812711ABFDAB000ABD302 /* Radius.m */; };
 		1AD33F4F1AB551F500DE1DE2 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */; };
 		1AD33F511AB5526E00DE1DE2 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */; };
 		1AD33F5E1AB5530000DE1DE2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F521AB552FF00DE1DE2 /* AVFoundation.framework */; };
@@ -37,7 +41,6 @@
 		1AD33F671AB5530000DE1DE2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */; };
 		1AD33F681AB5530000DE1DE2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */; };
 		1AD33F691AB5530000DE1DE2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */; };
-		1AD33F6C1AB5E5DD00DE1DE2 /* OptionsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD33F6B1AB5E5DD00DE1DE2 /* OptionsVC.m */; };
 		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
 		1AF8A98B1A7EE5960045B18B /* ArticleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A9851A7EE5960045B18B /* ArticleTableViewCell.m */; };
 		1AF8A98C1A7EE5960045B18B /* ArticleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A9861A7EE5960045B18B /* ArticleTableViewCell.xib */; };
@@ -74,6 +77,8 @@
 		1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
 		1A6F1EB71A507971007D3B99 /* Stylesheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		1A6F1EB81A507971007D3B99 /* Stylesheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stylesheet.m; sourceTree = "<group>"; };
+		1A7DB1DB1ABDFB81003DB53F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		1A7DB1DC1ABDFB81003DB53F /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveFavoriteLocation.h; sourceTree = "<group>"; };
 		1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveFavoriteLocation.m; sourceTree = "<group>"; };
 		1AB1A55B1A48E3D900369211 /* UrbanTurf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UrbanTurf.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,6 +92,12 @@
 		1AB1A5771A48E3D900369211 /* UrbanTurfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UrbanTurfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A57C1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UrbanTurfTests.m; sourceTree = "<group>"; };
+		1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayOrder.h; sourceTree = "<group>"; };
+		1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayOrder.m; sourceTree = "<group>"; };
+		1AC8126D1ABF904500ABD302 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
+		1AC8126E1ABF904500ABD302 /* Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Options.m; sourceTree = "<group>"; };
+		1AC812701ABFDAB000ABD302 /* Radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Radius.h; sourceTree = "<group>"; };
+		1AC812711ABFDAB000ABD302 /* Radius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Radius.m; sourceTree = "<group>"; };
 		1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = SOURCE_ROOT; };
 		1AD33F521AB552FF00DE1DE2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -101,8 +112,6 @@
 		1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		1AD33F6A1AB5E5DD00DE1DE2 /* OptionsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsVC.h; sourceTree = "<group>"; };
-		1AD33F6B1AB5E5DD00DE1DE2 /* OptionsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsVC.m; sourceTree = "<group>"; };
 		1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontIconViewController.h; sourceTree = "<group>"; };
 		1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontIconViewController.m; sourceTree = "<group>"; };
 		1AF8A9841A7EE5960045B18B /* ArticleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleTableViewCell.h; sourceTree = "<group>"; };
@@ -182,13 +191,17 @@
 		1AB1A55D1A48E3D900369211 /* UrbanTurf */ = {
 			isa = PBXGroup;
 			children = (
+				1A7DB1DB1ABDFB81003DB53F /* Constants.h */,
+				1A7DB1DC1ABDFB81003DB53F /* Constants.m */,
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
 				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
-				1AD33F6A1AB5E5DD00DE1DE2 /* OptionsVC.h */,
-				1AD33F6B1AB5E5DD00DE1DE2 /* OptionsVC.m */,
+				1AC812701ABFDAB000ABD302 /* Radius.h */,
+				1AC812711ABFDAB000ABD302 /* Radius.m */,
+				1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */,
+				1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */,
 				1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */,
 				1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */,
 				1A2CEBDA1A8AC725004DE623 /* TabBarController.h */,
@@ -197,6 +210,8 @@
 				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
 				1A2E6A671A4E26540033AC87 /* ArticleViewController.h */,
 				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
+				1AC8126D1ABF904500ABD302 /* Options.h */,
+				1AC8126E1ABF904500ABD302 /* Options.m */,
 				1A2E6A531A49F3E20033AC87 /* Primary.h */,
 				1A2E6A541A49F3E20033AC87 /* Primary.m */,
 				1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */,
@@ -387,9 +402,12 @@
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
+				1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */,
+				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,
 				1A2E6A551A49F3E20033AC87 /* Primary.m in Sources */,
+				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
+				1AC812721ABFDAB000ABD302 /* Radius.m in Sources */,
 				1AF8A98D1A7EE5960045B18B /* HoodieTableViewCell.m in Sources */,
-				1AD33F6C1AB5E5DD00DE1DE2 /* OptionsVC.m in Sources */,
 				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
