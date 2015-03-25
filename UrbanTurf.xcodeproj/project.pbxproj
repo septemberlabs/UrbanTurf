@@ -16,6 +16,7 @@
 		1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A681A4E26540033AC87 /* ArticleViewController.m */; };
 		1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */; };
 		1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F1EB81A507971007D3B99 /* Stylesheet.m */; };
+		1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */; };
 		1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7DB1DC1ABDFB81003DB53F /* Constants.m */; };
 		1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */; };
 		1AB1A5611A48E3D900369211 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5601A48E3D900369211 /* main.m */; };
@@ -77,6 +78,8 @@
 		1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
 		1A6F1EB71A507971007D3B99 /* Stylesheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		1A6F1EB81A507971007D3B99 /* Stylesheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stylesheet.m; sourceTree = "<group>"; };
+		1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeScreenLocationSelection.h; sourceTree = "<group>"; };
+		1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeScreenLocationSelection.m; sourceTree = "<group>"; };
 		1A7DB1DB1ABDFB81003DB53F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1A7DB1DC1ABDFB81003DB53F /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveFavoriteLocation.h; sourceTree = "<group>"; };
@@ -198,6 +201,8 @@
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
 				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
+				1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */,
+				1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */,
 				1AC812701ABFDAB000ABD302 /* Radius.h */,
 				1AC812711ABFDAB000ABD302 /* Radius.m */,
 				1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */,
@@ -412,6 +417,7 @@
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
 				1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */,
+				1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */,
 				1AB1A5611A48E3D900369211 /* main.m in Sources */,
 				1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */,
 				1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */,

@@ -70,21 +70,20 @@
     
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
     if (section == 0) {
         return nil;
     }
     else {
         if ([self.savedLocations count]) {
-            return nil;
+            return @"Favorites";
         }
         // if there are no saved locations, indicate this to the user
         else {
             return @"No Favorites";
         }
-    }
-    
+    }    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -96,7 +95,7 @@
     }
     
     if (indexPath.section == 0) {
-        cell.textLabel.text = @"Add Location to Favorites";
+        cell.textLabel.text = @"Add This Location to Favorites";
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else {
@@ -126,10 +125,6 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        // HERE HERE HERE
-        // 6. Fix the Autolayout issues with the table view in this class.
-        // 8. Start re-aquainting yourself with MKMapView and current locations and passing that around.
-
         NSMutableArray *newArray = [self.savedLocations mutableCopy];
         [newArray removeObjectAtIndex:indexPath.row];
         self.savedLocations = newArray; // HOW CAN THIS WORK, assigning a mutable to an immutable array?
@@ -147,18 +142,6 @@
         NSLog(@"Unhandled editing style! %d", editingStyle);
     }
 }
-
-/* ********** ORIGINAL **********
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
 #pragma mark - Navigation
 

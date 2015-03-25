@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import "Constants.h"
 #import "SaveFavoriteLocation.h"
+#import "Constants.h"
 #import <GoogleMaps/GoogleMaps.h>
 
 @interface SaveFavoriteLocation ()

@@ -17,22 +17,22 @@
 
 @implementation TabBarController
 
-- (void)viewDidLoad {
-
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 
     // thank you for font icon explanation: http://xcode.jackietrillo.com/?p=280
 
     NSDictionary* attributesNormal =  @{
-                                        NSFontAttributeName: [UIFont fontWithName:@"fontello" size:30.0],
+                                        NSFontAttributeName: [UIFont fontWithName:@"fontello" size:34.0],
                                         UITextAttributeTextColor: [Stylesheet color1]
                                         };
     
     for (UITabBarItem* tabBarItem in self.tabBar.items) {
         [tabBarItem setTitleTextAttributes:attributesNormal forState:UIControlStateNormal];
-        [tabBarItem setTitlePositionAdjustment:UIOffsetMake(0.0, -9.0)];
+        [tabBarItem setTitlePositionAdjustment:UIOffsetMake(0.0, -8.0)];
     }
-
+    
     [[self.tabBar.items objectAtIndex:0] setTitle:[NSString stringWithUTF8String:"\ue818"]]; // left: Star for bookmarked locations. "Saved Locations"
     [[self.tabBar.items objectAtIndex:1] setTitle:[NSString stringWithUTF8String:"\ue800"]]; // center: Map marker for all map interactions. "News Map"
     [[self.tabBar.items objectAtIndex:2] setTitle:[NSString stringWithUTF8String:"\ue808"]]; // right: Gear for options. "Options"
