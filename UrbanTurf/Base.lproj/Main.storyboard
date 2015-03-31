@@ -571,11 +571,66 @@
                         <segue destination="j9b-vJ-qSZ" kind="relationship" relationship="viewControllers" id="Pxa-Fj-V7X"/>
                         <segue destination="SoS-of-BjG" kind="relationship" relationship="viewControllers" id="owj-4R-f9i"/>
                         <segue destination="ZL4-cQ-v6S" kind="relationship" relationship="viewControllers" id="ayS-Xs-9Qu"/>
+                        <segue destination="STl-BS-KjN" kind="relationship" relationship="viewControllers" id="NJk-GY-KKh"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4f-Dv-I5d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1019" y="1027"/>
+        </scene>
+        <!--Google Map-->
+        <scene sceneID="bZm-1A-NLT">
+            <objects>
+                <viewController id="STl-BS-KjN" customClass="GoogleMap" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xIa-9V-1yE"/>
+                        <viewControllerLayoutGuide type="bottom" id="BZ0-oN-wCM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="65P-iN-QSW">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="STl-BS-KjN" id="u0B-Tn-MVL"/>
+                                </connections>
+                            </searchBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RTz-VU-U5z" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="44" width="600" height="507"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="RTz-VU-U5z" secondAttribute="trailing" id="1VF-9I-CB4"/>
+                            <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="RTz-VU-U5z" secondAttribute="bottom" id="4MR-D6-p8d"/>
+                            <constraint firstItem="jdZ-fx-JPL" firstAttribute="top" secondItem="65P-iN-QSW" secondAttribute="top" id="B23-vJ-L48"/>
+                            <constraint firstAttribute="trailing" secondItem="jdZ-fx-JPL" secondAttribute="trailing" id="b6c-bs-ar2"/>
+                            <constraint firstItem="RTz-VU-U5z" firstAttribute="top" secondItem="jdZ-fx-JPL" secondAttribute="bottom" id="c8v-2A-KHZ"/>
+                            <constraint firstItem="RTz-VU-U5z" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eiS-cf-54B"/>
+                            <constraint firstItem="jdZ-fx-JPL" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="k3l-NF-6Xl"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Google Map" id="uov-xH-laq"/>
+                    <connections>
+                        <outlet property="mapView" destination="RTz-VU-U5z" id="lck-rh-mzN"/>
+                        <outlet property="searchDisplayController" destination="StY-bM-Ueg" id="TgF-s7-wWI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Atw-Q7-w20" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="StY-bM-Ueg">
+                    <connections>
+                        <outlet property="delegate" destination="STl-BS-KjN" id="GIo-Id-7dk"/>
+                        <outlet property="searchBar" destination="jdZ-fx-JPL" id="mh0-XH-T8g"/>
+                        <outlet property="searchContentsController" destination="STl-BS-KjN" id="biQ-5j-0uY"/>
+                        <outlet property="searchResultsDataSource" destination="STl-BS-KjN" id="USz-uy-4Wn"/>
+                        <outlet property="searchResultsDelegate" destination="STl-BS-KjN" id="w5p-PQ-5SU"/>
+                    </connections>
+                </searchDisplayController>
+            </objects>
+            <point key="canvasLocation" x="-1089" y="1892"/>
         </scene>
         <!--Nav Controller - Article View-->
         <scene sceneID="VAL-Hc-FxX">

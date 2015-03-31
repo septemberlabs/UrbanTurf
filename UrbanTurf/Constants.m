@@ -10,7 +10,8 @@
 
 // global string constants pattern described here: http://nshipster.com/c-storage-classes/
 
-NSString * const googleAPIKey = @"AIzaSyDs6Xda8mpENemqpNEkCULatxluYJl0HIc";
+NSString * const googleAPIKeyForBrowserApplications = @"AIzaSyA0b_bOTi257UdLINlcn7JGOjrSiYM-kBk";
+NSString * const googleAPIKeyForiOSApplications = @"AIzaSyDs6Xda8mpENemqpNEkCULatxluYJl0HIc";
 
 #pragma mark - USER DEFAULTS
 

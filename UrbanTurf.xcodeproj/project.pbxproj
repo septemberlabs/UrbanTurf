@@ -42,6 +42,7 @@
 		1AD33F671AB5530000DE1DE2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */; };
 		1AD33F681AB5530000DE1DE2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */; };
 		1AD33F691AB5530000DE1DE2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */; };
+		1AF4D2E31AC37D18003168AD /* GoogleMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4D2E21AC37D18003168AD /* GoogleMap.m */; };
 		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
 		1AF8A98B1A7EE5960045B18B /* ArticleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A9851A7EE5960045B18B /* ArticleTableViewCell.m */; };
 		1AF8A98C1A7EE5960045B18B /* ArticleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A9861A7EE5960045B18B /* ArticleTableViewCell.xib */; };
@@ -115,6 +116,8 @@
 		1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1AF4D2E11AC37D18003168AD /* GoogleMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleMap.h; sourceTree = "<group>"; };
+		1AF4D2E21AC37D18003168AD /* GoogleMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleMap.m; sourceTree = "<group>"; };
 		1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontIconViewController.h; sourceTree = "<group>"; };
 		1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontIconViewController.m; sourceTree = "<group>"; };
 		1AF8A9841A7EE5960045B18B /* ArticleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleTableViewCell.h; sourceTree = "<group>"; };
@@ -201,6 +204,8 @@
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
 				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
+				1AF4D2E11AC37D18003168AD /* GoogleMap.h */,
+				1AF4D2E21AC37D18003168AD /* GoogleMap.m */,
 				1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */,
 				1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */,
 				1AC812701ABFDAB000ABD302 /* Radius.h */,
@@ -409,6 +414,7 @@
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
 				1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */,
 				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,
+				1AF4D2E31AC37D18003168AD /* GoogleMap.m in Sources */,
 				1A2E6A551A49F3E20033AC87 /* Primary.m in Sources */,
 				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
 				1AC812721ABFDAB000ABD302 /* Radius.m in Sources */,

@@ -35,13 +35,7 @@
     //self.edgesForExtendedLayout = UIRectEdgeBottom;
 
 }
-/*
-- (void)setSavedLocations:(NSArray *)savedLocations
-{
-    _savedLocations = savedLocations;
-    [self.tableView reloadData];
-}
-*/
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -139,7 +133,7 @@
 
     }
     else {
-        NSLog(@"Unhandled editing style! %d", editingStyle);
+        NSLog(@"Unhandled editing style! %ld", editingStyle);
     }
 }
 

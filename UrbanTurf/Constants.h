@@ -10,7 +10,8 @@
 
 @interface Constants : NSObject
 
-extern NSString * const googleAPIKey;
+extern NSString * const googleAPIKeyForBrowserApplications;
+extern NSString * const googleAPIKeyForiOSApplications;
 
 #pragma mark - USER DEFAULTS
 

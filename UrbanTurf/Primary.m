@@ -380,7 +380,6 @@
 {
     if (!_searchResults) {
         _searchResults = [NSArray array];
-        self.searchResults = _searchResults;
     }
     return _searchResults;
 }
