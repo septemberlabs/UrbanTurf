@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "Fetcher.h"
 
-@interface GoogleMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate>
+@interface GoogleMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate, FetcherView>
+
+@property (nonatomic) CLLocationDegrees latitude;
+@property (nonatomic) CLLocationDegrees longitude;
 
 @end

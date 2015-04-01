@@ -8,9 +8,7 @@
 
 #import "UrbanTurfFetcher.h"
 #import "Article.h"
-
-static NSString *const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articles?";
-const float LATLON_RADIUS = 0.5; // default radius from the given lat/lon for which to return items
+#import "Constants.h"
 
 @implementation UrbanTurfFetcher
 

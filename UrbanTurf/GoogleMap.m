@@ -12,12 +12,11 @@
 #import "UrbanTurfFetcher.h"
 
 @interface GoogleMap ()
+@property (strong, nonatomic) Fetcher *fetcher; // fetches data
 @property (strong, nonatomic) NSArray *searchResults;
 @property (strong, nonatomic) NSURLSession *urlSession;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) NSArray *articles; // of Articles
-@property (nonatomic) CLLocationDegrees latitude;
-@property (nonatomic) CLLocationDegrees longitude;
 @end
 
 @implementation GoogleMap
@@ -26,6 +25,57 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.latitude = office.latitude;
+    self.longitude = office.longitude;
+    
+    [self fetchData];
+}
+
+- (Fetcher *)fetcher
+{
+    if (!_fetcher) {
+        _fetcher = [[UrbanTurfFetcher alloc] init];
+        _fetcher.delegate = self;
+    }
+    return _fetcher;
+}
+
+- (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude
+{
+    self.latitude = latitude;
+    self.longitude = longitude;
+    [self fetchData];
+}
+
+- (void)fetchData
+{
+    [self.fetcher fetchDataWithLatitude:self.latitude longitude:self.longitude];
+}
+
+- (void)receiveData:(NSArray *)fetchedResults
+{
+    NSLog(@"fetchedResults called.");
+    NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
+    NSLog(@"results: %@", fetchedResults);
+    /*
+    for (NSDictionary *article in fetchedResults) {
+        CLLocationCoordinate2D location = CLLocationCoordinate2DMake([article[@"latitude"] doubleValue], [article[@"longitude"] doubleValue]);
+        Article *processedArticle = [[Article alloc] initWithTitle:article[@"headline"] Location:location];
+        processedArticle.url = article[@"website"];
+        processedArticle.imageURL = article[@"image_url"];
+        processedArticle.introduction = article[@"intro"];
+        processedArticle.publication = article[@"website_name"];
+        processedArticle.date = article[@"article_date"];
+        [processedFromJSON addObject:processedArticle];
+    }
+    //NSLog(@"processedForTVC: %@", processedForTVC);
+    self.articles = [processedFromJSON copy];
+    [self.tableView reloadData];
+    
+    Article *firstItemToDisplay = (Article *)self.articles[0];
+    [self reorientMapWithAnnotation:firstItemToDisplay];
+ */
 }
 
 #pragma mark - TVC methods
@@ -52,7 +102,6 @@
 {
     if (!_searchResults) {
         _searchResults = [NSArray array];
-        self.searchResults = _searchResults;
     }
     return _searchResults;
 }
@@ -101,12 +150,6 @@
     }];
     [task resume];
 
-}
-
-- (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude
-{
-    self.latitude = latitude;
-    self.longitude = longitude;
 }
 
 #pragma mark - Search Bar

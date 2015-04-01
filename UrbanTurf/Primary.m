@@ -11,6 +11,7 @@
 #import "Article.h"
 #import "ArticleViewController.h"
 #import "Stylesheet.h"
+#import "Constants.h"
 
 @interface Primary ()
 @property (strong, nonatomic) Fetcher *fetcher; // fetches data
