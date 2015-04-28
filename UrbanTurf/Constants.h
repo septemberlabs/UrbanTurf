@@ -20,9 +20,13 @@ extern NSString * const userDefaultsRadiusKey;
 extern double const defaultSearchRadius;
 extern double const minRadius;
 extern double const maxRadius;
+extern NSString * const RADIUS_TABLE_HEADER;
+extern NSString * const RADIUS_TABLE_FOOTER;
 
 extern NSString * const userDefaultsDisplayOrderKey;
 + (NSArray *)displayOrders;
+extern NSString * const DISPLAY_ORDER_TABLE_HEADER;
+extern NSString * const DISPLAY_ORDER_TABLE_FOOTER;
 
 extern NSString * const userDefaultsHomeScreenLocationKey;
 extern NSString * const homeScreenLocation;

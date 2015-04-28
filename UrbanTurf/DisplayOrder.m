@@ -17,6 +17,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.tableView.layer.borderWidth = 1.0f;
+    self.tableView.layer.borderColor = [[UIColor greenColor] CGColor];
 }
 
 #pragma mark - Table view data source
@@ -82,23 +84,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return @"Order to display stories";
+    return DISPLAY_ORDER_TABLE_HEADER;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    return @"The sequence in which stories are displayed is either according to distance from your chosen location, or in reverse chronological order (that is, most recent first).";
+    return DISPLAY_ORDER_TABLE_FOOTER;
 }
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

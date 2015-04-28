@@ -90,7 +90,9 @@
 - (void)setSearchResults:(NSArray *)searchResults
 {
     _searchResults = searchResults;
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.searchDisplayController.searchResultsTableView reloadData];
+    });
 }
 
 - (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude
@@ -111,7 +113,7 @@
 {
     NSLog(@"fetchedResults called.");
     NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
-    NSLog(@"results: %@", fetchedResults);
+    //NSLog(@"results: %@", fetchedResults);
     for (NSDictionary *article in fetchedResults) {
         CLLocationCoordinate2D location = CLLocationCoordinate2DMake([article[@"latitude"] doubleValue], [article[@"longitude"] doubleValue]);
         Article *processedArticle = [[Article alloc] initWithTitle:article[@"headline"] Location:location];
@@ -154,7 +156,7 @@
     if (tableView == self.tableView) {
         return [self.articles count];
     }
-    
+
     // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [self.searchResults count];
@@ -531,7 +533,11 @@
 
 #pragma mark - UISearchDisplayDelegate
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+/*
+
+ HERE HERE HERE.
+ 
+ - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     // execute the autocomplete search only once the user has entered at least three characters.
     if ([searchText length] >= 3) {
@@ -539,14 +545,22 @@
     }
     else {
         self.searchResults = [NSArray array];
-        [self.searchDisplayController.searchResultsTableView reloadData];
     }
 }
+ */
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
+    // execute the autocomplete search only once the user has entered at least three characters.
+    if ([searchString length] >= 3) {
+        [self executeSearch:searchString];
+    }
+    else {
+        self.searchResults = [NSArray array];
+    }
+    
     // the autocomplete data is downloaded asynchronously, and the table is reloaded upon completion then, so shouldn't be now.
-    return YES;
+    return NO;
 }
 
 @end

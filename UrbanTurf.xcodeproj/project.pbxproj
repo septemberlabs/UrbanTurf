@@ -25,9 +25,15 @@
 		1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56E1A48E3D900369211 /* Images.xcassets */; };
 		1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A5701A48E3D900369211 /* LaunchScreen.xib */; };
 		1AB1A57E1A48E3D900369211 /* UrbanTurfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */; };
+		1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BEFD1ACDC97C003BCCC0 /* RadiusSliderCell.m */; };
+		1AB7BF001ACDC97C003BCCC0 /* RadiusSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB7BEFE1ACDC97C003BCCC0 /* RadiusSliderCell.xib */; };
+		1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */; };
+		1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */; };
+		1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */; };
+		1AB7BF0F1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF0E1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m */; };
 		1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */; };
 		1AC8126F1ABF904500ABD302 /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126E1ABF904500ABD302 /* Options.m */; };
-		1AC812721ABFDAB000ABD302 /* Radius.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC812711ABFDAB000ABD302 /* Radius.m */; };
+		1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC812711ABFDAB000ABD302 /* RadiusOld.m */; };
 		1AD33F4F1AB551F500DE1DE2 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */; };
 		1AD33F511AB5526E00DE1DE2 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */; };
 		1AD33F5E1AB5530000DE1DE2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F521AB552FF00DE1DE2 /* AVFoundation.framework */; };
@@ -44,11 +50,7 @@
 		1AD33F691AB5530000DE1DE2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */; };
 		1AF4D2E31AC37D18003168AD /* GoogleMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4D2E21AC37D18003168AD /* GoogleMap.m */; };
 		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
-		1AF8A98B1A7EE5960045B18B /* ArticleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A9851A7EE5960045B18B /* ArticleTableViewCell.m */; };
-		1AF8A98C1A7EE5960045B18B /* ArticleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A9861A7EE5960045B18B /* ArticleTableViewCell.xib */; };
-		1AF8A98D1A7EE5960045B18B /* HoodieTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A9881A7EE5960045B18B /* HoodieTableViewCell.m */; };
-		1AF8A98E1A7EE5960045B18B /* HoodieTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A9891A7EE5960045B18B /* HoodieTableViewCell.xib */; };
-		1AF8A98F1A7EE5960045B18B /* scratch in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8A98A1A7EE5960045B18B /* scratch */; };
+		1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9B1371ACCADF8004F3A5B /* Radius.m */; };
 		1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */; };
 /* End PBXBuildFile section */
 
@@ -96,12 +98,22 @@
 		1AB1A5771A48E3D900369211 /* UrbanTurfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UrbanTurfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A57C1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UrbanTurfTests.m; sourceTree = "<group>"; };
+		1AB7BEFC1ACDC97C003BCCC0 /* RadiusSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusSliderCell.h; sourceTree = "<group>"; };
+		1AB7BEFD1ACDC97C003BCCC0 /* RadiusSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusSliderCell.m; sourceTree = "<group>"; };
+		1AB7BEFE1ACDC97C003BCCC0 /* RadiusSliderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadiusSliderCell.xib; sourceTree = "<group>"; };
+		1AB7BF011ACDD0B1003BCCC0 /* RadiusLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusLabelCell.h; sourceTree = "<group>"; };
+		1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusLabelCell.m; sourceTree = "<group>"; };
+		1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadiusLabelCell.xib; sourceTree = "<group>"; };
+		1AB7BF071ACDFB6E003BCCC0 /* SearchOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchOptions.h; sourceTree = "<group>"; };
+		1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchOptions.m; sourceTree = "<group>"; };
+		1AB7BF0D1ACE04FB003BCCC0 /* UITableViewController+TableHeight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewController+TableHeight.h"; sourceTree = "<group>"; };
+		1AB7BF0E1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewController+TableHeight.m"; sourceTree = "<group>"; };
 		1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayOrder.h; sourceTree = "<group>"; };
 		1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayOrder.m; sourceTree = "<group>"; };
 		1AC8126D1ABF904500ABD302 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
 		1AC8126E1ABF904500ABD302 /* Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Options.m; sourceTree = "<group>"; };
-		1AC812701ABFDAB000ABD302 /* Radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Radius.h; sourceTree = "<group>"; };
-		1AC812711ABFDAB000ABD302 /* Radius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Radius.m; sourceTree = "<group>"; };
+		1AC812701ABFDAB000ABD302 /* RadiusOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusOld.h; sourceTree = "<group>"; };
+		1AC812711ABFDAB000ABD302 /* RadiusOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusOld.m; sourceTree = "<group>"; };
 		1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = SOURCE_ROOT; };
 		1AD33F521AB552FF00DE1DE2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -120,13 +132,8 @@
 		1AF4D2E21AC37D18003168AD /* GoogleMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleMap.m; sourceTree = "<group>"; };
 		1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontIconViewController.h; sourceTree = "<group>"; };
 		1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontIconViewController.m; sourceTree = "<group>"; };
-		1AF8A9841A7EE5960045B18B /* ArticleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleTableViewCell.h; sourceTree = "<group>"; };
-		1AF8A9851A7EE5960045B18B /* ArticleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleTableViewCell.m; sourceTree = "<group>"; };
-		1AF8A9861A7EE5960045B18B /* ArticleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleTableViewCell.xib; sourceTree = "<group>"; };
-		1AF8A9871A7EE5960045B18B /* HoodieTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HoodieTableViewCell.h; sourceTree = "<group>"; };
-		1AF8A9881A7EE5960045B18B /* HoodieTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HoodieTableViewCell.m; sourceTree = "<group>"; };
-		1AF8A9891A7EE5960045B18B /* HoodieTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HoodieTableViewCell.xib; sourceTree = "<group>"; };
-		1AF8A98A1A7EE5960045B18B /* scratch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scratch; sourceTree = "<group>"; };
+		1AF9B1361ACCADF8004F3A5B /* Radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Radius.h; sourceTree = "<group>"; };
+		1AF9B1371ACCADF8004F3A5B /* Radius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Radius.m; sourceTree = "<group>"; };
 		1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteLocationsTVC.h; sourceTree = "<group>"; };
 		1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteLocationsTVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -197,42 +204,35 @@
 		1AB1A55D1A48E3D900369211 /* UrbanTurf */ = {
 			isa = PBXGroup;
 			children = (
+				1AB7BF061ACDD219003BCCC0 /* Options */,
+				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
+				1AC3FBB01ACEDF4F00933C64 /* Favorite Locations */,
 				1A7DB1DB1ABDFB81003DB53F /* Constants.h */,
 				1A7DB1DC1ABDFB81003DB53F /* Constants.m */,
+				1AB7BF0D1ACE04FB003BCCC0 /* UITableViewController+TableHeight.h */,
+				1AB7BF0E1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m */,
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
 				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
+				1AF9B1361ACCADF8004F3A5B /* Radius.h */,
+				1AF9B1371ACCADF8004F3A5B /* Radius.m */,
 				1AF4D2E11AC37D18003168AD /* GoogleMap.h */,
 				1AF4D2E21AC37D18003168AD /* GoogleMap.m */,
-				1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */,
-				1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */,
-				1AC812701ABFDAB000ABD302 /* Radius.h */,
-				1AC812711ABFDAB000ABD302 /* Radius.m */,
-				1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */,
-				1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */,
-				1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */,
-				1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */,
 				1A2CEBDA1A8AC725004DE623 /* TabBarController.h */,
 				1A2CEBDB1A8AC725004DE623 /* TabBarController.m */,
 				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
 				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
 				1A2E6A671A4E26540033AC87 /* ArticleViewController.h */,
 				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
-				1AC8126D1ABF904500ABD302 /* Options.h */,
-				1AC8126E1ABF904500ABD302 /* Options.m */,
 				1A2E6A531A49F3E20033AC87 /* Primary.h */,
 				1A2E6A541A49F3E20033AC87 /* Primary.m */,
-				1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */,
-				1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
-				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
 				1AB1A5701A48E3D900369211 /* LaunchScreen.xib */,
 				1AB1A55E1A48E3D900369211 /* Supporting Files */,
-				1AF8A9831A7EE5960045B18B /* old */,
 			);
 			path = UrbanTurf;
 			sourceTree = "<group>";
@@ -265,18 +265,38 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1AF8A9831A7EE5960045B18B /* old */ = {
+		1AB7BF061ACDD219003BCCC0 /* Options */ = {
 			isa = PBXGroup;
 			children = (
-				1AF8A9841A7EE5960045B18B /* ArticleTableViewCell.h */,
-				1AF8A9851A7EE5960045B18B /* ArticleTableViewCell.m */,
-				1AF8A9861A7EE5960045B18B /* ArticleTableViewCell.xib */,
-				1AF8A9871A7EE5960045B18B /* HoodieTableViewCell.h */,
-				1AF8A9881A7EE5960045B18B /* HoodieTableViewCell.m */,
-				1AF8A9891A7EE5960045B18B /* HoodieTableViewCell.xib */,
-				1AF8A98A1A7EE5960045B18B /* scratch */,
+				1AC8126D1ABF904500ABD302 /* Options.h */,
+				1AC8126E1ABF904500ABD302 /* Options.m */,
+				1AB7BF071ACDFB6E003BCCC0 /* SearchOptions.h */,
+				1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */,
+				1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */,
+				1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */,
+				1AC812701ABFDAB000ABD302 /* RadiusOld.h */,
+				1AC812711ABFDAB000ABD302 /* RadiusOld.m */,
+				1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */,
+				1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */,
+				1AB7BF011ACDD0B1003BCCC0 /* RadiusLabelCell.h */,
+				1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */,
+				1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */,
+				1AB7BEFC1ACDC97C003BCCC0 /* RadiusSliderCell.h */,
+				1AB7BEFD1ACDC97C003BCCC0 /* RadiusSliderCell.m */,
+				1AB7BEFE1ACDC97C003BCCC0 /* RadiusSliderCell.xib */,
 			);
-			path = old;
+			name = Options;
+			sourceTree = "<group>";
+		};
+		1AC3FBB01ACEDF4F00933C64 /* Favorite Locations */ = {
+			isa = PBXGroup;
+			children = (
+				1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */,
+				1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */,
+				1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */,
+				1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */,
+			);
+			name = "Favorite Locations";
 			sourceTree = "<group>";
 		};
 		FCD61217FCD59AA5A3D7F984 /* Frameworks */ = {
@@ -384,14 +404,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AF8A98C1A7EE5960045B18B /* ArticleTableViewCell.xib in Resources */,
-				1AF8A98E1A7EE5960045B18B /* HoodieTableViewCell.xib in Resources */,
-				1AF8A98F1A7EE5960045B18B /* scratch in Resources */,
 				1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */,
 				1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */,
 				1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */,
 				1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */,
 				1AD33F511AB5526E00DE1DE2 /* GoogleMaps.bundle in Resources */,
+				1AB7BF001ACDC97C003BCCC0 /* RadiusSliderCell.xib in Resources */,
+				1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,16 +428,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */,
+				1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */,
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
+				1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */,
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
 				1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */,
+				1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */,
 				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,
 				1AF4D2E31AC37D18003168AD /* GoogleMap.m in Sources */,
+				1AB7BF0F1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m in Sources */,
 				1A2E6A551A49F3E20033AC87 /* Primary.m in Sources */,
 				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
-				1AC812721ABFDAB000ABD302 /* Radius.m in Sources */,
-				1AF8A98D1A7EE5960045B18B /* HoodieTableViewCell.m in Sources */,
+				1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */,
 				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
@@ -427,7 +450,6 @@
 				1AB1A5611A48E3D900369211 /* main.m in Sources */,
 				1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */,
 				1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */,
-				1AF8A98B1A7EE5960045B18B /* ArticleTableViewCell.m in Sources */,
 				1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,8 +20,12 @@ NSString * const userDefaultsRadiusKey = @"searchRadius";
 double const defaultSearchRadius = 0.2;
 double const minRadius = 0.1;
 double const maxRadius = 2.0;
+NSString * const RADIUS_TABLE_HEADER = @"This is the header";
+NSString * const RADIUS_TABLE_FOOTER = @"This is the footer";
 
 NSString * const userDefaultsDisplayOrderKey = @"displayOrder";
+NSString * const DISPLAY_ORDER_TABLE_HEADER = @"Order to display stories";
+NSString * const DISPLAY_ORDER_TABLE_FOOTER = @"The sequence in which stories are displayed is either according to distance from your chosen location, or in reverse chronological order (that is, most recent first).";
 
 NSString * const userDefaultsHomeScreenLocationKey = @"homeScreenLocation";
 
