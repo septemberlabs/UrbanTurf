@@ -9,7 +9,7 @@
 #import "TabBarController.h"
 #import "Stylesheet.h"
 #import "FavoriteLocationsTVC.h"
-#import "Primary.h"
+#import "NewsMap.h"
 
 @interface TabBarController ()
 
@@ -52,10 +52,10 @@
         if ([vc.viewControllers[0] isKindOfClass:[FavoriteLocationsTVC class]]) {
             FavoriteLocationsTVC *favorites = (FavoriteLocationsTVC *)vc.viewControllers[0];
 
-            // loop through the view controllers contained by this tab bar vc until Primary is found, then pluck out the current location
+            // loop through the view controllers contained by this tab bar vc until map is found, then pluck out the current location
             for (id vc in self.viewControllers) {
-                if ([vc isKindOfClass:[Primary class]]) {
-                    Primary *primary = (Primary *)vc;
+                if ([vc isKindOfClass:[NewsMap class]]) {
+                    NewsMap *primary = (NewsMap *)vc;
                     CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake(primary.latitude, primary.longitude);
                     favorites.currentLocation = currentLocation;
                 }

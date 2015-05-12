@@ -133,7 +133,7 @@
 
     }
     else {
-        NSLog(@"Unhandled editing style! %ld", editingStyle);
+        NSLog(@"Unhandled editing style! %d", (int)editingStyle);
     }
 }
 

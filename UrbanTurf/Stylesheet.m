@@ -14,6 +14,7 @@
 
 static UIColor* _color1 = nil;
 static UIColor* _color2 = nil;
+static UIColor* _color3 = nil;
 static NSString* _fonticons = nil;
 static CGFloat _searchBarFontIconSize;
 static CGFloat _tabBarFontIconSize;
@@ -56,8 +57,16 @@ static CGFloat _tabBarFontIconSize;
 + (void)initialize
 {
     // Colors Initialization
-    _color1 = [UIColor colorWithRed:(76/255.f) green:(183/255.f) blue:(73/255.f) alpha: 1]; // RGB: 76, 183, 73. Green used throughout.
-    _color2 = [UIColor colorWithRed:(155/255.f) green:(158/255.f) blue:(161/255.f) alpha: 1]; // RGB: 155, 158, 161. Grey used for date on main article listing.
+    
+    // RGB: 76, 183, 73. Hex: #4CB749. Green used throughout.
+    _color1 = [UIColor colorWithRed:(76/255.f) green:(183/255.f) blue:(73/255.f) alpha: 1];
+    
+    // RGB: 155, 158, 161. Grey used for date on main article listing.
+    _color2 = [UIColor colorWithRed:(155/255.f) green:(158/255.f) blue:(161/255.f) alpha: 1];
+    
+    // RGB: 229, 255, 226. Hex: #E5FFE2. Green used for scroll-selecting articles.
+    // lightened color1 using this: http://www.cssfontstack.com/oldsites/hexcolortool/
+    _color3 = [UIColor colorWithRed:(229/255.f) green:(255/255.f) blue:(226/255.f) alpha: 1];
     
     _fonticons = @"fontello";
     
@@ -70,6 +79,7 @@ static CGFloat _tabBarFontIconSize;
 
 + (UIColor*)color1 { return _color1; }
 + (UIColor*)color2 { return _color2; }
++ (UIColor*)color3 { return _color3; }
 + (NSString*)fonticons { return _fonticons; }
 + (CGFloat)searchBarFontIconSize { return _searchBarFontIconSize; }
 + (CGFloat)tabBarFontIconSize { return _tabBarFontIconSize; }
