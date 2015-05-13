@@ -8,7 +8,6 @@
 
 #import "NewsMap.h"
 #import "Constants.h"
-#import <GoogleMaps/GoogleMaps.h>
 #import "UrbanTurfFetcher.h"
 #import "Article.h"
 #import "Stylesheet.h"
@@ -67,6 +66,7 @@
     self.borderBetweenMapAndTable.frame = CGRectMake(0, CGRectGetHeight(self.mapView.frame) - 1.0, CGRectGetWidth(self.mapView.frame) - 1, 0.25f);
     [self.mapView.layer addSublayer:self.borderBetweenMapAndTable];
     
+    self.mapView.delegate = self;
     self.mapView.settings.myLocationButton = NO;
     
     // instatiate the crosshairs image, but wait to position on the screen until viewWillLayoutSubviews
@@ -400,7 +400,52 @@
 
 }
 
+#pragma mark - GMSMapViewDelegate
+
+- (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    NSLog(@"tapped at: %f, %f", coordinate.latitude, coordinate.longitude);
+    /*
+    if (self.crosshairs.hidden) {
+        self.crosshairs.alpha = 0.0; // make it totally transparent before unhiding it just in case for some reason it isn't already.
+        self.crosshairs.hidden = NO; // unhide it.
+        // increase the alpha from totally transparent to totally opaque.
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             self.crosshairs.alpha = 1.0;
+                         }];
+    }
+     */
+}
+
+- (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture
+{
+    // only re-display the crosshairs if the map is moving due to a user gesture.
+    if (gesture) {
+        if (self.crosshairs.hidden) {
+            self.crosshairs.hidden = NO;
+            self.crosshairs.alpha = 1.0;
+        }
+    }
+}
+
+
 #pragma mark - Article scrolling behavior
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
+    if (!self.crosshairs.hidden) {
+        // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             self.crosshairs.alpha = 0.0;
+                         }
+                         completion:^(BOOL finished) {
+                             self.crosshairs.hidden = YES;
+                         }];
+    }
+}
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
