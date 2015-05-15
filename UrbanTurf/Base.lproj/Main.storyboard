@@ -364,13 +364,7 @@
                                     <constraint firstAttribute="height" constant="100" id="Hqn-VG-ewa"/>
                                 </constraints>
                             </imageView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="dxj-tD-5DF">
-                                <rect key="frame" x="16" y="172" width="568" height="150"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="vFO-wy-S5o"/>
-                                </constraints>
-                            </mapView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZUO-me-ENy" userLabel="Article Headline">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZUO-me-ENy" userLabel="Article Headline">
                                 <rect key="frame" x="16" y="330" width="568" height="62"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -380,7 +374,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RkF-uo-JEi" userLabel="Article Meta Info">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RkF-uo-JEi" userLabel="Article Meta Info">
                                 <rect key="frame" x="16" y="400" width="568" height="29"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -390,7 +384,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AR8-a0-kRY" userLabel="Article Body">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AR8-a0-kRY" userLabel="Article Body">
                                 <rect key="frame" x="16" y="437" width="568" height="105"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -415,15 +409,11 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="jlh-9q-OD7" secondAttribute="trailing" id="2TK-Gc-SvZ"/>
                             <constraint firstAttribute="trailing" secondItem="AR8-a0-kRY" secondAttribute="trailing" constant="16" id="3IE-U0-bem"/>
-                            <constraint firstItem="dxj-tD-5DF" firstAttribute="trailing" secondItem="wmA-ey-Kp8" secondAttribute="trailingMargin" id="6Cf-nh-CHV"/>
-                            <constraint firstItem="dxj-tD-5DF" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leadingMargin" id="7Bj-dD-ScC"/>
                             <constraint firstItem="jlh-9q-OD7" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" id="EAW-ZU-MFn"/>
-                            <constraint firstItem="ZUO-me-ENy" firstAttribute="top" secondItem="dxj-tD-5DF" secondAttribute="bottom" constant="8" id="JAy-b1-x8M"/>
                             <constraint firstItem="AR8-a0-kRY" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" constant="16" id="O3F-62-sP9"/>
                             <constraint firstAttribute="bottom" secondItem="V4o-ZP-TIb" secondAttribute="bottom" id="Sea-2F-Jtp"/>
                             <constraint firstAttribute="trailing" secondItem="V4o-ZP-TIb" secondAttribute="trailing" id="YUJ-ZO-jwR"/>
                             <constraint firstItem="AR8-a0-kRY" firstAttribute="top" secondItem="RkF-uo-JEi" secondAttribute="bottom" constant="8" id="aq2-Cl-Lod"/>
-                            <constraint firstItem="dxj-tD-5DF" firstAttribute="top" secondItem="jlh-9q-OD7" secondAttribute="bottom" constant="8" id="du4-10-q2K"/>
                             <constraint firstItem="RkF-uo-JEi" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" constant="16" id="i3a-az-i34"/>
                             <constraint firstItem="V4o-ZP-TIb" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" id="m9l-L8-En3"/>
                             <constraint firstAttribute="trailing" secondItem="RkF-uo-JEi" secondAttribute="trailing" constant="16" id="qdC-uw-Oy3"/>
@@ -439,7 +429,6 @@
                         <outlet property="articleHeadline" destination="ZUO-me-ENy" id="wMv-FV-0gc"/>
                         <outlet property="articleImage" destination="jlh-9q-OD7" id="UuP-0R-oVy"/>
                         <outlet property="articleMetaInfo" destination="RkF-uo-JEi" id="NgB-iU-sPE"/>
-                        <outlet property="mapView" destination="dxj-tD-5DF" id="WKQ-Io-R7i"/>
                         <outlet property="viewArticleButton" destination="V4o-ZP-TIb" id="w4Z-fj-L2X"/>
                     </connections>
                 </viewController>

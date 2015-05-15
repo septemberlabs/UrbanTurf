@@ -30,9 +30,12 @@
 @property (nonatomic) BOOL listView;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
 @property (strong, nonatomic) UIImageView *crosshairs;
+@property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
 @end
 
 @implementation NewsMap
+
+#define CHARACTERS_BEFORE_SEARCHING 3
 
 @synthesize searchResults = _searchResults;
 
@@ -126,6 +129,14 @@
     [self fetchData];
 }
 
+- (NSMutableArray *)recentSearches
+{
+    if (!_recentSearches) {
+        _recentSearches = [[NSMutableArray alloc] init];
+    }
+    return _recentSearches;
+}
+
 #pragma mark - Fetching
 
 - (void)fetchData
@@ -152,43 +163,124 @@
     self.articles = [processedFromJSON copy];
     [self.tableView reloadData];
     
-    if ([self.articles count]) {
-        Article *firstItemToDisplay = (Article *)self.articles[0];
-    }
-    // ***** UNCOMMENT ONCE THIS method IMPLEMENTED *****
-    //[self reorientMapWithAnnotation:firstItemToDisplay];
+    // on the main queue, update the map to add markers for the results of the new fetch.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mapView clear]; // clear off existing markers
+        for (Article *article in self.articles) {
+            GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
+            marker.snippet = @"Hello World";
+            marker.appearAnimation = kGMSMarkerAnimationPop;
+            marker.map = self.mapView;
+            article.marker = marker;
+        }
+    });
 }
 
 #pragma mark - TVC methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
         return 1;
     }
     
-    // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return 1;
+        if ([self.searchDisplayController.searchBar.text length] < CHARACTERS_BEFORE_SEARCHING) {
+            if ([self numberOfRecentSearchesToDisplay]) return 2; // two sections if there are recent searches
+            else return 1;
+        }
+        else {
+            return 1;
+        }
     }
-
+    
     return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
         return [self.articles count];
     }
-
-    // if the table view sending the message is the search controller TVC
+    
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return [self.searchResults count];
+        
+        if ([self.searchDisplayController.searchBar.text length] < CHARACTERS_BEFORE_SEARCHING) {
+            if ([self numberOfRecentSearchesToDisplay]) {
+                if (section == 0) {
+                    return [self numberOfRecentSearchesToDisplay];
+                }
+                else {
+                    return (1 + [self numberOfSavedLocationsToDisplay]); // current location plus saved locations
+                }
+            }
+            else {
+                return (1 + [self numberOfSavedLocationsToDisplay]); // current location plus saved locations
+            }
+        }
+        else {
+            return [self.searchResults count];
+        }
+        
     }
-
+    
     return 0;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (tableView == self.tableView) {
+        return nil;
+    }
+    
+    // if the table view sending the message is the search controller TVC.
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        
+        // displaying the pre-search results options.
+        if ([self.searchDisplayController.searchBar.text length] < CHARACTERS_BEFORE_SEARCHING) {
+            
+            // if there are recent searches, the first section will be those. if not, the first (and only) section will be saved locations.
+            if ([self numberOfRecentSearchesToDisplay]) {
+                if (section == 0) {
+                    return @"Recent searches";
+                }
+                else {
+                    return @"Saved locations";
+                }
+            }
+            else {
+                return @"Saved locations";
+            }
+        }
+        // displaying the search results.
+        else {
+            return @"Matching places";
+        }
+        
+    }
+    
+    return 0;
+}
+
+- (NSInteger)numberOfRecentSearchesToDisplay
+{
+    if ([self.recentSearches count] > 3) {
+        return 3;
+    }
+    else {
+        return [self.recentSearches count];
+    }
+}
+
+- (NSInteger)numberOfSavedLocationsToDisplay
+{
+    NSArray *savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
+    if ([savedLocations count] > 3) {
+        return 3;
+    }
+    else {
+        return [savedLocations count];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -196,7 +288,7 @@
     // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
         //return TOP_CAPTION_HEIGHT + IMAGE_HEIGHT + BOTTOM_CAPTION_HEIGHT + VERTICAL_MARGIN;
-        return 140;
+        return 130;
     }
     
     // if the table view sending the message is the search controller TVC
@@ -325,17 +417,72 @@
         
     }
     
-    // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        static NSString *reusableCellIdentifier = @"searchResultsTableCell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellIdentifier];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reusableCellIdentifier];
+
+        // displaying the pre-search results options.
+        if ([self.searchDisplayController.searchBar.text length] < CHARACTERS_BEFORE_SEARCHING) {
+
+            static NSString *reusableCellIdentifier = @"searchResultsTableCell";
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellIdentifier];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reusableCellIdentifier];
+            }
+
+            // if there are recent searches, the first section will be those. if not, the first (and only) section will be saved locations.
+            if ([self numberOfRecentSearchesToDisplay]) {
+                if (indexPath.section == 0) {
+                    cell.textLabel.text = (NSString *)[self.recentSearches objectAtIndex:indexPath.row];
+                }
+                else {
+                    if (indexPath.row == 0) {
+                        cell.textLabel.text = @"Current location";
+                    }
+                    else {
+                        cell.textLabel.text = (NSString *)[[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:(indexPath.row - 1)];
+                    }
+                }
+            }
+            else {
+                if (indexPath.row == 0) {
+                    cell.textLabel.text = @"Current location";
+                }
+                else {
+                    cell.textLabel.text = (NSString *)[[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:(indexPath.row - 1)];
+                }
+            }
+
+            return cell;
+
+            /*
+            // display the corresponding recent search
+            if (indexPath.row <= ([self numberOfRecentSearchesToDisplay] - 1)) {
+                cell.textLabel.text = (NSString *)[self.recentSearches objectAtIndex:indexPath.row];
+            }
+            // display "current location"
+            else if (indexPath.row == [self numberOfRecentSearchesToDisplay]) {
+                cell.textLabel.text = @"Current location";
+            }
+            // display corresponding saved location
+            else {
+                cell.textLabel.text = (NSString *)[[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:indexPath.row];
+            }
+
+            return cell;
+             */
+            
         }
-        NSDictionary *place = [self.searchResults objectAtIndex:indexPath.row];
-        //NSLog(@"place: %@", [place description]);
-        cell.textLabel.text = [NSString stringWithFormat:@"%@", [place objectForKey:@"description"]];
-        return cell;
+        // displaying the search results.
+        else {
+            static NSString *reusableCellIdentifier = @"searchResultsTableCell";
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellIdentifier];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reusableCellIdentifier];
+            }
+            NSDictionary *place = [self.searchResults objectAtIndex:indexPath.row];
+            //NSLog(@"place: %@", [place description]);
+            cell.textLabel.text = [NSString stringWithFormat:@"%@", [place objectForKey:@"description"]];
+            return cell;
+        }
     }
 
     return nil;
@@ -346,9 +493,13 @@
     // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         
-        // deselect the row and remove the search controller apparatus (search box, results tableview, etc.)
+        // deselect the row and remove the search controller apparatus (search box, results tableview, etc.).
         [tableView deselectRowAtIndexPath:indexPath animated:NO];
         [self.searchDisplayController setActive:NO animated:YES];
+        
+        // save the search for display in search history later.
+        UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+        [self.recentSearches insertObject:selectedCell.textLabel.text atIndex:0];
         
         NSDictionary *selectedSearchResult = (NSDictionary *)self.searchResults[indexPath.row];
         //NSLog(@"selectedSearchResult: %@", [selectedSearchResult description]);
@@ -379,72 +530,82 @@
 
 - (void)receiveGooglePlacesPlaceDetails:(NSDictionary *)fetchedPlace
 {
-    // create the coordinate structure with the returned JSON
+    // create the coordinate structure with the returned JSON.
     CLLocationCoordinate2D selectedLocation = CLLocationCoordinate2DMake([[fetchedPlace valueForKeyPath:@"result.geometry.location.lat"] doubleValue], [[fetchedPlace valueForKeyPath:@"result.geometry.location.lng"] doubleValue]);
     
-    // store it in an instance variable, which will trigger a fetch of articles at that location
+    // store it in an instance variable, which will trigger a fetch of articles at that location.
     [self setLocationWithLatitude:selectedLocation.latitude andLongitude:selectedLocation.longitude];
     
-    // on the main queue, update the map to that coordinate
+    // on the main queue, update the map to that coordinate.
     dispatch_async(dispatch_get_main_queue(), ^{
         // return the table to the top
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         [self.mapView clear]; // clear off existing markers
         [self.mapView moveCamera:[GMSCameraUpdate setTarget:selectedLocation zoom:DEFAULT_ZOOM_LEVEL]];
-        GMSMarker *marker = [GMSMarker markerWithPosition:selectedLocation];
-        marker.snippet = @"Hello World";
-        marker.appearAnimation = kGMSMarkerAnimationPop;
-        marker.map = self.mapView;
-        //NSLog(@"I'm on the main thread.");
+        if (self.crosshairs.hidden) [self showCrosshairs];
     });
 
 }
 
 #pragma mark - GMSMapViewDelegate
 
-- (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
+- (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
-    NSLog(@"tapped at: %f, %f", coordinate.latitude, coordinate.longitude);
-    /*
-    if (self.crosshairs.hidden) {
-        self.crosshairs.alpha = 0.0; // make it totally transparent before unhiding it just in case for some reason it isn't already.
-        self.crosshairs.hidden = NO; // unhide it.
-        // increase the alpha from totally transparent to totally opaque.
-        [UIView animateWithDuration:0.5
-                         animations:^{
-                             self.crosshairs.alpha = 1.0;
-                         }];
+    NSLog(@"idle!");
+    //[self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude];
+}
+
+- (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
+{
+    if (!self.crosshairs.hidden) [self hideCrosshairs];
+    for (int i = 0; i < [self.articles count]; i++) {
+        Article *article = (Article *)[self.articles objectAtIndex:i];
+        if (article.marker == marker) {
+            [self reorientMap:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
     }
-     */
+    return YES;
 }
 
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture
 {
     // only re-display the crosshairs if the map is moving due to a user gesture.
-    if (gesture) {
-        if (self.crosshairs.hidden) {
-            self.crosshairs.hidden = NO;
-            self.crosshairs.alpha = 1.0;
-        }
-    }
+    if (gesture && self.crosshairs.hidden) [self showCrosshairs];
 }
 
+- (void)hideCrosshairs
+{
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         self.crosshairs.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         self.crosshairs.hidden = YES;
+                     }];
+}
+
+- (void)showCrosshairs
+{
+    self.crosshairs.hidden = NO;
+    self.crosshairs.alpha = 1.0;
+    
+    /* COULDN'T GET THIS FADE-IN EFFECT TO WORK --
+    self.crosshairs.alpha = 0.0; // make it totally transparent before unhiding it just in case for some reason it isn't already.
+    self.crosshairs.hidden = NO; // unhide it.
+    // increase the alpha from totally transparent to totally opaque.
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         self.crosshairs.alpha = 1.0;
+                     }];
+     */
+}
 
 #pragma mark - Article scrolling behavior
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
-    if (!self.crosshairs.hidden) {
-        // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
-        [UIView animateWithDuration:0.5
-                         animations:^{
-                             self.crosshairs.alpha = 0.0;
-                         }
-                         completion:^(BOOL finished) {
-                             self.crosshairs.hidden = YES;
-                         }];
-    }
+    if (!self.crosshairs.hidden) [self hideCrosshairs];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -494,51 +655,46 @@
                                                  repeats:NO];
 }
 
-- (void)reorientMapWithTimer:(NSTimer *)timer
+- (void)reorientMap:(NSIndexPath *)indexPathOfCellToFocus
 {
-    //NSLog(@"Timer fired.");
-
-    // Three things need to happen when the timer fires:
-    // 1. Highlight the newly-focused cell (article) and de-highlight the currently-focused one, if it exists.
-    // 2. Scroll the table so that the newly-focused cell is topmost and 100% visible.
+    // Three things need to happen to visually focus on a new article/cell:
+    // 1. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
+    // 2. De-highlight the currently-focused one, if it exists.
     // 3. Move the map camera to the newly-focused article's location.
     
-    // this is the cell to receive focus, i.e. the new one.
-    NSIndexPath *indexPathOfCellToFocus = (NSIndexPath*)timer.userInfo[@"indexPathOfCellToFocus"];
-    UITableViewCell *cellToFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
-
     // 1
-    [UIView animateWithDuration:0.5 animations:^{
-        
-        // this turns off the highlighting for the cell that has the current focus, if it exists.
-        if (self.indexOfArticleWithFocus) {
-            NSIndexPath *indexPathOfCellWithCurrentFocus = [NSIndexPath indexPathForRow:[self.indexOfArticleWithFocus integerValue] inSection:0];
-            UITableViewCell *cellWithCurrentFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellWithCurrentFocus];
-            cellWithCurrentFocus.backgroundColor = nil;
-        }
-        
-        // highlight the new cell and save its value to enable turning off highlighting later.
-        cellToFocus.backgroundColor = [Stylesheet color3];
-        self.indexOfArticleWithFocus = [NSNumber numberWithInt:(int)indexPathOfCellToFocus.row];
-        
-    }];
+    // when the scrolling finishes, delegate method scrollViewDidEndScrollingAnimation will do the actual highlighting.
+    [self.tableView scrollToRowAtIndexPath:indexPathOfCellToFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
     // 2
-    [self.tableView scrollToRowAtIndexPath:indexPathOfCellToFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    if (self.indexOfArticleWithFocus) {
+        UITableViewCell *cellWithCurrentFocus = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.indexOfArticleWithFocus integerValue] inSection:0]];
+        cellWithCurrentFocus.backgroundColor = nil;
+    }
     
     // 3
     Article *articleWithFocus = (Article *)[self.articles objectAtIndex:[self.indexOfArticleWithFocus integerValue]];
     [self reorientMapWithAnnotation:articleWithFocus];
 }
 
+- (void)reorientMapWithTimer:(NSTimer *)timer
+{
+    //NSLog(@"Timer fired.");
+    NSIndexPath *indexPathOfCellToFocus = (NSIndexPath *)timer.userInfo[@"indexPathOfCellToFocus"];
+    [self reorientMap:indexPathOfCellToFocus];
+}
+
 - (void)reorientMapWithAnnotation:(Article *)itemToMap
 {
+    [self.mapView animateToLocation:itemToMap.coordinate];
+    /*
     [self.mapView clear]; // clear off existing markers
     [self.mapView moveCamera:[GMSCameraUpdate setTarget:itemToMap.coordinate zoom:DEFAULT_ZOOM_LEVEL]];
     GMSMarker *marker = [GMSMarker markerWithPosition:itemToMap.coordinate];
     marker.snippet = @"Hello World";
     marker.appearAnimation = kGMSMarkerAnimationPop;
     marker.map = self.mapView;
+     */
 }
 
 - (IBAction)pressToggleViewButton:(id)sender
@@ -613,12 +769,29 @@
     // eventually add code to animate-expand the searchbar full width, over the neighboring buttons. (then contract again when search is executed.)
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    // at the end of scrolling, the topmost visible row will be the one we want to give focus.
+    NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
+    UITableViewCell *cellToFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
+
+    // store the newly highlighted cell's row to enable turning off highlighting later.
+    self.indexOfArticleWithFocus = [NSNumber numberWithInt:(int)indexPathOfCellToFocus.row];
+
+    // fade in the highlighting color.
+    [UIView animateWithDuration:0.5 animations:^{
+        cellToFocus.backgroundColor = [Stylesheet color3];
+    }];
+}
+
 #pragma mark - UISearchDisplayDelegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
     // execute the autocomplete search only once the user has entered at least three characters.
-    if ([searchString length] >= 3) {
+    if ([searchString length] >= CHARACTERS_BEFORE_SEARCHING) {
         [self executeSearch:searchString];
     }
     else {

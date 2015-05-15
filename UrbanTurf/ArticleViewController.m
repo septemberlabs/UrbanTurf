@@ -7,11 +7,9 @@
 //
 
 #import "ArticleViewController.h"
-#import <MapKit/MapKit.h>
 
 @interface ArticleViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *articleImage;
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITextView *articleHeadline;
 @property (weak, nonatomic) IBOutlet UITextView *articleMetaInfo;
 @property (weak, nonatomic) IBOutlet UITextView *articleBody;

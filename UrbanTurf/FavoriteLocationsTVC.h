@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface FavoriteLocationsTVC : UIViewController <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic) CLLocationCoordinate2D currentLocation;

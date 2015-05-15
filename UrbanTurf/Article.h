@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <MapKit/MapKit.h>
+#import <GoogleMaps/GoogleMaps.h>
 
-@interface Article : NSObject <MKAnnotation>
+@interface Article : NSObject
 
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, copy) NSString *title; // this is the article headline. called title to comply with MKAnnotation protocol.
@@ -21,6 +21,7 @@
 @property (nonatomic, strong) NSString *publication;
 @property (nonatomic, strong) NSString *date;
 @property (nonatomic, strong) NSString *introduction;
+@property (nonatomic, strong) GMSMarker *marker;
 
 - (id)initWithTitle:(NSString *)newTitle Location:(CLLocationCoordinate2D)location;
 
