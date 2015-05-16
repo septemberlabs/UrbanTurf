@@ -6,9 +6,6 @@
 //  Copyright (c) 2014 Will Smith. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-
 @interface Stylesheet : NSObject
 
 // Colors

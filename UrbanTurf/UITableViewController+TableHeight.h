@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @interface UITableViewController (TableHeight)
 - (CGFloat)tableHeightBasedOnContents;
 @end

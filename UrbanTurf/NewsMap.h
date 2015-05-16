@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import "Fetcher.h"

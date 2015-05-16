@@ -23,7 +23,7 @@
 @property (strong, nonatomic) NSArray *searchResults;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) NSArray *articles; // of Articles
-@property (strong, nonatomic) NSNumber *indexOfArticleWithFocus; // index within articles array and table view
+@property (strong, nonatomic) Article *articleWithFocus; // article with current focus, if any
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSTimer *timer;
 @property CGFloat originalTableViewOriginY;
@@ -31,6 +31,7 @@
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
 @property (strong, nonatomic) UIImageView *crosshairs;
 @property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
+@property BOOL gestureInitiatedMapMove;
 @end
 
 @implementation NewsMap
@@ -78,7 +79,7 @@
     self.latitude = office.latitude;
     self.longitude = office.longitude;
     
-    self.indexOfArticleWithFocus = nil;
+    self.gestureInitiatedMapMove = NO;
     
     [self fetchData];
 }
@@ -171,6 +172,7 @@
             marker.snippet = @"Hello World";
             marker.appearAnimation = kGMSMarkerAnimationPop;
             marker.map = self.mapView;
+            marker.userData = article;
             article.marker = marker;
         }
     });
@@ -200,7 +202,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == self.tableView) {
-        return [self.articles count];
+        return [self.articles count] + 1; // the extra one is for the last cell, a spacer cell.
     }
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -287,8 +289,13 @@
 {
     // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
-        //return TOP_CAPTION_HEIGHT + IMAGE_HEIGHT + BOTTOM_CAPTION_HEIGHT + VERTICAL_MARGIN;
-        return 130;
+        if (indexPath.row == [self.articles count]) {
+            return 400;
+        }
+        else {
+            //return TOP_CAPTION_HEIGHT + IMAGE_HEIGHT + BOTTOM_CAPTION_HEIGHT + VERTICAL_MARGIN;
+            return 130;
+        }
     }
     
     // if the table view sending the message is the search controller TVC
@@ -312,11 +319,21 @@
     // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
         
+        // this is a unique cell, the last one, and doesn't need much configuration.
+        if (indexPath.row == [self.articles count]) {
+            static NSString *LastCellIdentifier = @"Last Cell - Spacer";
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LastCellIdentifier];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:LastCellIdentifier];
+            }
+            return cell;
+        }
+
         static NSString *CellIdentifier = @"Article Cell";
-        
+
         UILabel *headlineLabel, *introLabel, *metaInfoLabel;
         UIImageView *image;
-        
+
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             
@@ -382,7 +399,8 @@
         
         Article *article = (Article *)self.articles[indexPath.row];
         headlineLabel.text = article.title;
-        introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)];
+        //introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)];
+        introLabel.text = [NSString stringWithFormat:@"%d. %@", (int)indexPath.row, [article.introduction substringWithRange:NSMakeRange(0, 100)]];
         metaInfoLabel.text = article.publication;
         NSDictionary *publicationAttributes = @{
                                                 NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
@@ -397,7 +415,7 @@
         // concatenate the publication name and date, separating them with •
         NSMutableString *metaInfoString = [article.publication mutableCopy];
         [metaInfoString appendString:[NSString stringWithFormat:@" • %@", article.date]];
-        
+
         // make it attributed with publicationAttributes for the whole string
         NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
         
@@ -552,25 +570,43 @@
 - (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
     NSLog(@"idle!");
-    //[self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude];
+    if (self.gestureInitiatedMapMove) {
+        
+        [self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude];
+    }
 }
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
 {
-    if (!self.crosshairs.hidden) [self hideCrosshairs];
+    if (!self.crosshairs.hidden) [self hideCrosshairs]; // hide the crosshairs if they're not already hidden.
+    NSLog(@"index: %lu", (unsigned long)[self.articles indexOfObject:marker.userData]);
+    [self setFocusOnArticle:(Article *)marker.userData];
+
+    // DELETE [self setFocusOnArticleAtIndex:[NSIndexPath indexPathForRow:[self.articles indexOfObject:marker.userData] inSection:0]]; // marker.userData is the article in self.articles.
+    
+    /* DELETE
     for (int i = 0; i < [self.articles count]; i++) {
         Article *article = (Article *)[self.articles objectAtIndex:i];
-        if (article.marker == marker) {
-            [self reorientMap:[NSIndexPath indexPathForRow:i inSection:0]];
+        if (article == markersArticle) {
+            [self setFocusOnArticleAtIndex:[NSIndexPath indexPathForRow:i inSection:0]];
         }
     }
+     */
     return YES;
 }
 
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture
 {
-    // only re-display the crosshairs if the map is moving due to a user gesture.
-    if (gesture && self.crosshairs.hidden) [self showCrosshairs];
+    if (gesture) {
+        // re-display the crosshairs if the map is moving due to a user gesture.
+        if (self.crosshairs.hidden) [self showCrosshairs];
+        
+        // record the fact that a gesture started the move so we know that in idleAtCameraPosition.
+        self.gestureInitiatedMapMove = YES;
+    }
+    else {
+        self.gestureInitiatedMapMove = NO;
+    }
 }
 
 - (void)hideCrosshairs
@@ -634,67 +670,66 @@
     CGFloat topEdgeOfTable = tableViewOriginInWindowCoordinateSystem.y;
     
     // if verticalMidpoint is greater than topEdgeOfTable it means that more than half the cell is exposed, and we should scroll to display it.
-    NSIndexPath *indexPathOfCellToFocus;
+    Article *articleToReceiveFocus;
     if (verticalMidpoint >= topEdgeOfTable) {
-        indexPathOfCellToFocus = [NSIndexPath indexPathForRow:topmostIndexPath.row inSection:topmostIndexPath.section];
+        articleToReceiveFocus = (Article *)[self.articles objectAtIndex:topmostIndexPath.row];
     }
     // otherwise the top edge of the table is lower than the midpoint of the top cell, meaning only the bottom half or less are exposed, and we should scroll to display the cell beneath it.
     else {
-        indexPathOfCellToFocus = [NSIndexPath indexPathForRow:(topmostIndexPath.row + 1) inSection:topmostIndexPath.section];
+        articleToReceiveFocus = (Article *)[self.articles objectAtIndex:(topmostIndexPath.row + 1)];
     }
     
-    NSDictionary *userInfo = @{ @"indexPathOfCellToFocus" : indexPathOfCellToFocus };
+    NSDictionary *userInfo = @{ @"articleToReceiveFocus" : articleToReceiveFocus };
     if (self.timer) {
         [self.timer invalidate];
         self.timer = nil;
     }
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                   target:self
-                                                selector:@selector(reorientMapWithTimer:)
+                                                selector:@selector(setFocusOnArticleWithTimer:)
                                                 userInfo:userInfo
                                                  repeats:NO];
 }
 
-- (void)reorientMap:(NSIndexPath *)indexPathOfCellToFocus
+- (void)setFocusOnArticle:(Article *)articleToReceiveFocus
 {
     // Three things need to happen to visually focus on a new article/cell:
-    // 1. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
-    // 2. De-highlight the currently-focused one, if it exists.
-    // 3. Move the map camera to the newly-focused article's location.
+    // 3. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
+    // 1. De-highlight the currently-focused one, if it exists.
+    // 2. Move the map camera to the newly-focused article's location.
     
     // 1
-    // when the scrolling finishes, delegate method scrollViewDidEndScrollingAnimation will do the actual highlighting.
-    [self.tableView scrollToRowAtIndexPath:indexPathOfCellToFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    
-    // 2
-    if (self.indexOfArticleWithFocus) {
-        UITableViewCell *cellWithCurrentFocus = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.indexOfArticleWithFocus integerValue] inSection:0]];
+    if (self.articleWithFocus) {
+        NSIndexPath *indexPathWithCurrentFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
+        UITableViewCell *cellWithCurrentFocus = [self.tableView cellForRowAtIndexPath:indexPathWithCurrentFocus];
         cellWithCurrentFocus.backgroundColor = nil;
     }
+    self.articleWithFocus = articleToReceiveFocus; // save the newly focused article.
     
+    // 2
+    [self setFocusOnArticleAtIndexWithAnnotation:articleToReceiveFocus];
+
     // 3
-    Article *articleWithFocus = (Article *)[self.articles objectAtIndex:[self.indexOfArticleWithFocus integerValue]];
-    [self reorientMapWithAnnotation:articleWithFocus];
+    // when the scrolling finishes, delegate method scrollViewDidEndScrollingAnimation will do the actual highlighting.
+    NSIndexPath *indexPathToReceiveFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:articleToReceiveFocus] inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPathToReceiveFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
 }
 
-- (void)reorientMapWithTimer:(NSTimer *)timer
+- (void)setFocusOnArticleWithTimer:(NSTimer *)timer
 {
-    //NSLog(@"Timer fired.");
-    NSIndexPath *indexPathOfCellToFocus = (NSIndexPath *)timer.userInfo[@"indexPathOfCellToFocus"];
-    [self reorientMap:indexPathOfCellToFocus];
+    [self setFocusOnArticle:(Article *)timer.userInfo[@"articleToReceiveFocus"]];
 }
 
-- (void)reorientMapWithAnnotation:(Article *)itemToMap
+- (void)setFocusOnArticleAtIndexWithAnnotation:(Article *)articleToReceiveFocus
 {
-    [self.mapView animateToLocation:itemToMap.coordinate];
-    /*
-    [self.mapView clear]; // clear off existing markers
-    [self.mapView moveCamera:[GMSCameraUpdate setTarget:itemToMap.coordinate zoom:DEFAULT_ZOOM_LEVEL]];
-    GMSMarker *marker = [GMSMarker markerWithPosition:itemToMap.coordinate];
-    marker.snippet = @"Hello World";
-    marker.appearAnimation = kGMSMarkerAnimationPop;
-    marker.map = self.mapView;
-     */
+    // reset all the markers to the default color, red.
+    for (Article *article in self.articles) {
+        article.marker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
+    }
+    // move the map set the newly focused article's location and set the corresponding marker to green.
+    [self.mapView animateToLocation:articleToReceiveFocus.coordinate];
+    articleToReceiveFocus.marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
 }
 
 - (IBAction)pressToggleViewButton:(id)sender
@@ -774,11 +809,9 @@
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     // at the end of scrolling, the topmost visible row will be the one we want to give focus.
-    NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
+    //NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
+    NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
     UITableViewCell *cellToFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
-
-    // store the newly highlighted cell's row to enable turning off highlighting later.
-    self.indexOfArticleWithFocus = [NSNumber numberWithInt:(int)indexPathOfCellToFocus.row];
 
     // fade in the highlighting color.
     [UIView animateWithDuration:0.5 animations:^{

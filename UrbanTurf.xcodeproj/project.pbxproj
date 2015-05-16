@@ -128,6 +128,7 @@
 		1AC8126E1ABF904500ABD302 /* Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Options.m; sourceTree = "<group>"; };
 		1AC812701ABFDAB000ABD302 /* RadiusOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusOld.h; sourceTree = "<group>"; };
 		1AC812711ABFDAB000ABD302 /* RadiusOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusOld.m; sourceTree = "<group>"; };
+		1AD3175E1B06DADF005774D2 /* UrbanTurf-prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UrbanTurf-prefix.pch"; sourceTree = "<group>"; };
 		1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = SOURCE_ROOT; };
 		1AD33F521AB552FF00DE1DE2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -285,6 +286,7 @@
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
 				1AB1A5701A48E3D900369211 /* LaunchScreen.xib */,
+				1AD3175E1B06DADF005774D2 /* UrbanTurf-prefix.pch */,
 				1AB1A55E1A48E3D900369211 /* Supporting Files */,
 			);
 			path = UrbanTurf;
@@ -698,6 +700,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UrbanTurf/UrbanTurf-prefix.pch";
 				INFOPLIST_FILE = UrbanTurf/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -714,6 +718,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "UrbanTurf/UrbanTurf-prefix.pch";
 				INFOPLIST_FILE = UrbanTurf/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
