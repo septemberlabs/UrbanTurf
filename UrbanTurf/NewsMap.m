@@ -197,6 +197,7 @@
     }
     
     return 0;
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -206,7 +207,6 @@
     }
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
-        
         if ([self.searchDisplayController.searchBar.text length] < CHARACTERS_BEFORE_SEARCHING) {
             if ([self numberOfRecentSearchesToDisplay]) {
                 if (section == 0) {
@@ -223,7 +223,6 @@
         else {
             return [self.searchResults count];
         }
-        
     }
     
     return 0;
@@ -523,6 +522,7 @@
         //NSLog(@"selectedSearchResult: %@", [selectedSearchResult description]);
         NSString *placeID = [selectedSearchResult objectForKey:@"place_id"];
         [[GooglePlacesClient sharedGooglePlacesClient] getPlaceDetails:placeID delegate:self];
+        
     }
 }
 
@@ -569,9 +569,7 @@
 
 - (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
-    NSLog(@"idle!");
     if (self.gestureInitiatedMapMove) {
-        
         [self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude];
     }
 }
