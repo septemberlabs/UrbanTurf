@@ -162,10 +162,14 @@
     }
     //NSLog(@"processedForTVC: %@", processedForTVC);
     self.articles = [processedFromJSON copy];
-    [self.tableView reloadData];
     
-    // on the main queue, update the map to add markers for the results of the new fetch.
+    // make all UI updates on on the main queue, namely reloading the tableview and updating the map to add markers for the results of the new fetch.
     dispatch_async(dispatch_get_main_queue(), ^{
+
+        // update the tableview
+        [self.tableView reloadData];
+        
+        // add all the markers to the map
         [self.mapView clear]; // clear off existing markers
         for (Article *article in self.articles) {
             GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
@@ -289,7 +293,7 @@
     // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
         if (indexPath.row == [self.articles count]) {
-            return 400;
+            return 300;
         }
         else {
             //return TOP_CAPTION_HEIGHT + IMAGE_HEIGHT + BOTTOM_CAPTION_HEIGHT + VERTICAL_MARGIN;
@@ -670,11 +674,21 @@
     // if verticalMidpoint is greater than topEdgeOfTable it means that more than half the cell is exposed, and we should scroll to display it.
     Article *articleToReceiveFocus;
     if (verticalMidpoint >= topEdgeOfTable) {
-        articleToReceiveFocus = (Article *)[self.articles objectAtIndex:topmostIndexPath.row];
+        if (topmostIndexPath.row < [self.articles count]) {
+            articleToReceiveFocus = (Article *)[self.articles objectAtIndex:topmostIndexPath.row];
+        }
+        else {
+            articleToReceiveFocus = (Article *)[self.articles lastObject];
+        }
     }
     // otherwise the top edge of the table is lower than the midpoint of the top cell, meaning only the bottom half or less are exposed, and we should scroll to display the cell beneath it.
     else {
-        articleToReceiveFocus = (Article *)[self.articles objectAtIndex:(topmostIndexPath.row + 1)];
+        if ((topmostIndexPath.row + 1) < [self.articles count]) {
+            articleToReceiveFocus = (Article *)[self.articles objectAtIndex:(topmostIndexPath.row + 1)];
+        }
+        else {
+            articleToReceiveFocus = (Article *)[self.articles lastObject];
+        }
     }
     
     NSDictionary *userInfo = @{ @"articleToReceiveFocus" : articleToReceiveFocus };
@@ -711,6 +725,27 @@
     // when the scrolling finishes, delegate method scrollViewDidEndScrollingAnimation will do the actual highlighting.
     NSIndexPath *indexPathToReceiveFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:articleToReceiveFocus] inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPathToReceiveFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    UITableViewCell *cellToReceiveFocus = [self.tableView cellForRowAtIndexPath:indexPathToReceiveFocus];
+    CGPoint cellOriginInWindowCoordinateSystem = [cellToReceiveFocus convertPoint:cellToReceiveFocus.frame.origin fromCoordinateSpace:nil];
+    CGPoint tableViewOriginInWindowCoordinateSystem = [self.tableView convertPoint:self.tableView.frame.origin toView:nil];
+    
+    NSLog(@"cellOriginInWindowCoordinateSystem.y: %f", cellOriginInWindowCoordinateSystem.y);
+    NSLog(@"tableViewOriginInWindowCoordinateSystem.y: %f", tableViewOriginInWindowCoordinateSystem.y);
+    
+    
+/*
+    // at the end of scrolling, the topmost visible row will be the one we want to give focus.
+    //NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
+    NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
+    UITableViewCell *cellToFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
+    
+    // fade in the highlighting color.
+    [UIView animateWithDuration:0.5 animations:^{
+        cellToFocus.backgroundColor = [Stylesheet color3];
+    }];
+*/
+    
     
 }
 
@@ -815,6 +850,11 @@
     [UIView animateWithDuration:0.5 animations:^{
         cellToFocus.backgroundColor = [Stylesheet color3];
     }];
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
+{
+    NSLog(@"scrollViewDidScrollToTop called.");
 }
 
 #pragma mark - UISearchDisplayDelegate
