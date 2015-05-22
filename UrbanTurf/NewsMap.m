@@ -726,26 +726,15 @@
     NSIndexPath *indexPathToReceiveFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:articleToReceiveFocus] inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPathToReceiveFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
+    // we need to do the following for the case when scrollToRowAtIndexPath causes no scroll because either a) articleToReceiveFocus is the topmost cell and the user got there by pull-dragging to the top or b) the exceedingly rare case where the user has stopped scrolling on the exact pixel between two cells so no further scroll is necessary. In either of those cases, the backgroundColor animation (i.e., highlighting) would not have occurred because scrollViewDidEndScrollingAnimation would never be called.
     UITableViewCell *cellToReceiveFocus = [self.tableView cellForRowAtIndexPath:indexPathToReceiveFocus];
-    CGPoint cellOriginInWindowCoordinateSystem = [cellToReceiveFocus convertPoint:cellToReceiveFocus.frame.origin fromCoordinateSpace:nil];
-    CGPoint tableViewOriginInWindowCoordinateSystem = [self.tableView convertPoint:self.tableView.frame.origin toView:nil];
-    
-    NSLog(@"cellOriginInWindowCoordinateSystem.y: %f", cellOriginInWindowCoordinateSystem.y);
-    NSLog(@"tableViewOriginInWindowCoordinateSystem.y: %f", tableViewOriginInWindowCoordinateSystem.y);
-    
-    
-/*
-    // at the end of scrolling, the topmost visible row will be the one we want to give focus.
-    //NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
-    NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
-    UITableViewCell *cellToFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
-    
-    // fade in the highlighting color.
-    [UIView animateWithDuration:0.5 animations:^{
-        cellToFocus.backgroundColor = [Stylesheet color3];
-    }];
-*/
-    
+    CGPoint cellOriginInWindowCoordinateSystem = [cellToReceiveFocus convertPoint:cellToReceiveFocus.bounds.origin toView:nil];
+    CGPoint tableViewOriginInWindowCoordinateSystem = [self.tableView convertPoint:self.tableView.bounds.origin toView:nil];
+    if (cellOriginInWindowCoordinateSystem.y == tableViewOriginInWindowCoordinateSystem.y) {
+        [UIView animateWithDuration:0.5 animations:^{
+            cellToReceiveFocus.backgroundColor = [Stylesheet color3];
+        }];
+    }
     
 }
 
@@ -770,27 +759,40 @@
     // hide the list, go full screen with the map
     if (self.listView) {
         
-        self.borderBetweenMapAndTable.hidden = YES;
-        
         // the Y delta by which we're contracting the table view and expanding the map view is the current height of the table view.
         CGFloat dY = self.tableView.frame.size.height;
+
+        CGFloat newHeight = self.mapView.frame.size.height + dY;
         
         // we need to save this for when we reanimate the table view back in.
         self.originalTableViewOriginY = self.tableView.frame.origin.y;
         
+        // we shrink the tableview by animating it to a height of 0.
         CGRect newTableViewRect = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + dY, self.tableView.frame.size.width, 0);
-        [UIView animateWithDuration:0.5 animations:^{
-            self.tableView.frame = newTableViewRect;
-        }];
-        
+
+        // we expand the mapview by animating it to a height of its current height + the tableview's original height (dY).
         CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, self.mapView.frame.size.height + dY);
-        //CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, self.mapView.frame.size.height);
+        /*
+        CGFloat marginToAdd = (newHeight - self.mapView.frame.size.height) / 2;
+        CGRect newMapViewRect2 = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y - marginToAdd, self.mapView.frame.size.width, newHeight);
+        self.mapView.frame = newMapViewRect2;
+        self.mapView = [GMSMapView mapWithFrame:newMapViewRect2 camera:[GMSCameraPosition cameraWithTarget:home zoom:15.0]];
+        CGRect newMapViewRect3 = CGRectMake(1000, 1000, self.mapView.frame.size.width, newHeight);
+        */
+        //self.mapView.frame = newMapViewRect;
+        
+        self.borderBetweenMapAndTable.opacity = 0.0;
         [UIView animateWithDuration:0.5
+                              delay:0.5
+                            options:UIViewAnimationOptionCurveLinear
                          animations:^{
+                             //self.mapView.frame = newMapViewRect3;
                              self.mapView.frame = newMapViewRect;
+                             self.tableView.frame = newTableViewRect;
                          }
                          completion:^(BOOL finished) {
                              //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
+                             //self.mapView.frame = newMapViewRect3;
                          }];
         
         self.listView = NO;
@@ -799,24 +801,39 @@
     
     // show the list, shrink the map
     else {
+
+        // we expand the tableview by setting its vertical origin back to its original location and calculating the height as the difference between that origin and the origin now, which is at the bottom of the screen.
+        CGFloat newTableViewFrameHeight = self.tableView.frame.origin.y - self.originalTableViewOriginY;
+        CGRect newTableViewRect = CGRectMake(self.tableView.frame.origin.x, self.originalTableViewOriginY, self.tableView.frame.size.width, newTableViewFrameHeight);
+
+        // everything about the new mapview is the same except the height, which should become the difference between its current height and the tableview's new height.
+        CGFloat newMapViewFrameHeight = self.mapView.frame.size.height - newTableViewRect.size.height;
+        //CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, newMapViewFrameHeight);
         
-        CGFloat newTableViewFrameY = self.tableView.frame.origin.y - self.originalTableViewOriginY;
-        CGRect newTableViewRect = CGRectMake(self.tableView.frame.origin.x, self.originalTableViewOriginY, self.tableView.frame.size.width, newTableViewFrameY);
-        [UIView animateWithDuration:0.5 animations:^{
-            self.tableView.frame = newTableViewRect;
-        }];
+        CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y - 15, self.mapView.frame.size.width, self.mapView.frame.size.height);
         
-        CGFloat newMapViewFrameY = self.mapView.frame.size.height - newTableViewRect.size.height;
-        CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, newMapViewFrameY);
-        //CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, self.mapView.frame.size.height);
+
         [UIView animateWithDuration:0.5
+                         animations:^{
+                             self.tableView.frame = newTableViewRect;
+                             self.mapView.frame = newMapViewRect;
+                         }
+                         completion:^(BOOL finished) {
+                             //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
+                             //self.borderBetweenMapAndTable.hidden = NO;
+                             //self.borderBetweenMapAndTable.opacity = 1.0;
+                         }];
+        /*
+        [UIView animateWithDuration:0.3
                          animations:^{
                              self.mapView.frame = newMapViewRect;
                          }
                          completion:^(BOOL finished) {
                              //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
-                             self.borderBetweenMapAndTable.hidden = NO;
+                             //self.borderBetweenMapAndTable.hidden = NO;
+                             //self.borderBetweenMapAndTable.opacity = 1.0;
                          }];
+         */
         
         // UNCOMMENT ONCE THESE TWO ARE IMPLEMENTED
         //self.mapTargetImage.hidden = YES;
