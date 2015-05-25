@@ -24,7 +24,7 @@
 @property (strong, nonatomic) Article *articleWithFocus; // article with current focus, if any
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSTimer *timer;
-@property CGFloat originalTableViewOriginY;
+@property CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic) BOOL listView;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
 @property (strong, nonatomic) UIImageView *crosshairs;
@@ -60,7 +60,7 @@
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
     self.listView = YES;
-    self.originalTableViewOriginY = self.tableView.frame.origin.y;
+    self.originalMapViewBottomEdgeY = self.tableView.frame.origin.y;
     
     // hairline border between map and articles
     self.borderBetweenMapAndTable = [CALayer layer];
@@ -759,86 +759,47 @@
     if (self.listView) {
         
         // we need to save this for when we reanimate the table view back in.
-        self.originalTableViewOriginY = self.tableView.frame.origin.y;
+        self.originalMapViewBottomEdgeY = self.tableView.frame.origin.y;
         
-        // we expand the map view by animating it to a height of its current height + the table view's current height.
-        CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, self.mapView.frame.size.height + self.tableView.frame.size.height);
-        
-        // we animate the table view by pushing its origin to the bottom of the screen (current y origin plus current height) and giving it a height of 0.
-        CGRect newTableViewRect = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + self.tableView.frame.size.height, self.tableView.frame.size.width, 0);
-
+        // remove this border instantly; don't animate its disappearance.
         self.borderBetweenMapAndTable.opacity = 0.0;
+        
+        // we expand the map view by animating the change in its height constraint to its current height plus the table view's current height. by changing the constraint, the height of the table view will respond accordingly (ie, shrink to nothing) thanks to other constraints that force equality between the bottom of the map view and top of the table view. credit for technique: http://stackoverflow.com/questions/12622424/how-do-i-animate-constraint-changes
+        [self.view layoutIfNeeded];
+        self.mapViewHeightConstraint.constant = self.mapView.frame.size.height + self.tableView.frame.size.height;
+        
         [UIView animateWithDuration:0.4
                               delay:0.0 // we can add delay here (0.3 or more seems necessary) to avoid the user seeing the grey areas of the new map rect that momentarily appear before the new map tiles load.
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-                             self.mapView.frame = newMapViewRect;
-                             self.tableView.frame = newTableViewRect;
+                             [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
-                             self.mapViewHeightConstraint.constant = newMapViewRect.size.height; // update the height constraint. if not, when the user types in the search box and the map is in the expanded view, the UI will snap back to the map view and table view both appearing in the original configuration -- because it's adhering to the map view height constraint set in Interface Builder.
-                             
                              //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
                          }];
         
         self.listView = NO; // save the state so we know whether to expand or contract next time the button is pressed.
-
-        /* DELETE SOON
-         
-         // the Y delta by which we're contracting the table view and expanding the map view is the current height of the table view.
-         //CGFloat dY = self.tableView.frame.size.height;
-         
-         CGFloat marginToAdd = (newHeight - self.mapView.frame.size.height) / 2;
-         CGRect newMapViewRect2 = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y - marginToAdd, self.mapView.frame.size.width, newHeight);
-         self.mapView.frame = newMapViewRect2;
-         self.mapView = [GMSMapView mapWithFrame:newMapViewRect2 camera:[GMSCameraPosition cameraWithTarget:home zoom:15.0]];
-         CGRect newMapViewRect3 = CGRectMake(1000, 1000, self.mapView.frame.size.width, newHeight);
-         */
-        //self.mapView.frame = newMapViewRect;
-        
     }
     
     // show the list, shrink the map
     else {
 
-        // we expand the table view by setting its vertical origin back to its original location and calculating the height as the difference between that origin and the origin now, which is at the bottom of the screen.
-        CGRect newTableViewRect = CGRectMake(self.tableView.frame.origin.x, self.originalTableViewOriginY, self.tableView.frame.size.width, self.tableView.frame.origin.y - self.originalTableViewOriginY);
-
-        // everything about the new map view is the same except the height, which should become the difference between its current height and the table view's new height.
-        CGRect newMapViewRect = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.origin.y, self.mapView.frame.size.width, self.mapView.frame.size.height - newTableViewRect.size.height);
+        // we contract the map view by animating the change in its height constraint to its current height (i.e., the whole window) minus the difference between the table view's current y position (very bottom of window) and the original bottom edge of the map view.
+        [self.view layoutIfNeeded];
+        self.mapViewHeightConstraint.constant = self.mapView.frame.size.height - (self.tableView.frame.origin.y - self.originalMapViewBottomEdgeY);
         
         [UIView animateWithDuration:0.4
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-                             self.mapView.frame = newMapViewRect;
-                             self.tableView.frame = newTableViewRect;
-                             self.crosshairs.alpha = 0.0;
+                             [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
                              //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
-                             self.mapViewHeightConstraint.constant = newMapViewRect.size.height; // update the height constraint.
-                             self.borderBetweenMapAndTable.opacity = 1.0;
-                             self.crosshairs.alpha = 1.0;
+                             self.borderBetweenMapAndTable.opacity = 1.0; // display the border instantly once the animation has completed.
                          }];
 
         self.listView = YES; // save the state so we know whether to expand or contract next time the button is pressed.
-        
-        /* DELETE SOON
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             self.mapView.frame = newMapViewRect;
-                         }
-                         completion:^(BOOL finished) {
-                             //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
-                             //self.borderBetweenMapAndTable.hidden = NO;
-                             //self.borderBetweenMapAndTable.opacity = 1.0;
-                         }];
-         */
-        
-        // UNCOMMENT ONCE THESE TWO ARE IMPLEMENTED
-        //self.mapTargetImage.hidden = YES;
-        //self.redoSearchButton.hidden = YES;
     }
 }
 
