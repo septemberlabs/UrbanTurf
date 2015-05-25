@@ -320,7 +320,7 @@
             <objects>
                 <tableViewController id="w9K-SS-20x" userLabel="Options - Display Order" customClass="DisplayOrder" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="V9g-Bg-WHq">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
@@ -456,10 +456,10 @@
             </objects>
             <point key="canvasLocation" x="-1019" y="1027"/>
         </scene>
-        <!--Google Map-->
+        <!--News Map-->
         <scene sceneID="bZm-1A-NLT">
             <objects>
-                <viewController id="STl-BS-KjN" customClass="NewsMap" sceneMemberID="viewController">
+                <viewController id="STl-BS-KjN" userLabel="News Map" customClass="NewsMap" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="xIa-9V-1yE"/>
                         <viewControllerLayoutGuide type="bottom" id="BZ0-oN-wCM"/>
@@ -478,66 +478,73 @@
                                 <rect key="frame" x="0.0" y="214" width="600" height="337"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
-                            <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
-                                <rect key="frame" x="40" y="20" width="520" height="44"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="STl-BS-KjN" id="u0B-Tn-MVL"/>
-                                </connections>
-                            </searchBar>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SNh-eR-cuz" userLabel="Search Filters Button">
-                                <rect key="frame" x="0.0" y="20" width="40" height="44"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Xm-ZY-1dp" userLabel="Search Controls Container">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRU-d9-LkK" userLabel="Search Filters Button">
+                                        <rect key="frame" x="8" y="6" width="40" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="72S-o8-jNa"/>
+                                        </constraints>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search by address" translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
+                                        <rect key="frame" x="48" y="0.0" width="512" height="44"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="STl-BS-KjN" id="u0B-Tn-MVL"/>
+                                        </connections>
+                                    </searchBar>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcz-a2-ut1" userLabel="Toggle View Button">
+                                        <rect key="frame" x="560" y="6" width="40" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="kuN-bA-CnG"/>
+                                        </constraints>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="pressToggleViewButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="f3G-l2-R2H"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="wkg-fR-lai"/>
+                                    <constraint firstItem="iRU-d9-LkK" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="top" constant="6" id="5dh-ib-QxN"/>
+                                    <constraint firstItem="Tcz-a2-ut1" firstAttribute="height" secondItem="jdZ-fx-JPL" secondAttribute="height" id="AZl-WC-uRf"/>
+                                    <constraint firstAttribute="centerY" secondItem="jdZ-fx-JPL" secondAttribute="centerY" id="M4i-X7-VFV"/>
+                                    <constraint firstItem="jdZ-fx-JPL" firstAttribute="leading" secondItem="iRU-d9-LkK" secondAttribute="trailing" id="ZIs-sk-pHk"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tcz-a2-ut1" secondAttribute="trailing" id="apD-nZ-SLm"/>
+                                    <constraint firstItem="iRU-d9-LkK" firstAttribute="leading" secondItem="8Xm-ZY-1dp" secondAttribute="leading" constant="8" id="avr-7K-jLs"/>
+                                    <constraint firstItem="iRU-d9-LkK" firstAttribute="height" secondItem="jdZ-fx-JPL" secondAttribute="height" id="imY-XH-xWF"/>
+                                    <constraint firstItem="Tcz-a2-ut1" firstAttribute="leading" secondItem="jdZ-fx-JPL" secondAttribute="trailing" id="lnT-FZ-VXO"/>
+                                    <constraint firstItem="jdZ-fx-JPL" firstAttribute="height" secondItem="8Xm-ZY-1dp" secondAttribute="height" id="uz0-VH-Jyg"/>
+                                    <constraint firstItem="Tcz-a2-ut1" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="top" constant="6" id="z2T-G9-zax"/>
                                 </constraints>
-                                <state key="normal">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pressSearchFiltersButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="TtJ-ig-nGK"/>
-                                    <segue destination="KLQ-rb-E8O" kind="show" id="FSN-ix-qIj"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcz-a2-ut1" userLabel="Toggle View Button">
-                                <rect key="frame" x="560" y="20" width="40" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="2V8-AO-2zS"/>
-                                </constraints>
-                                <state key="normal">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pressToggleViewButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="f3G-l2-R2H"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="RTz-VU-U5z" secondAttribute="trailing" id="1VF-9I-CB4"/>
-                            <constraint firstItem="Tcz-a2-ut1" firstAttribute="leading" secondItem="jdZ-fx-JPL" secondAttribute="trailing" id="5lO-GQ-Egn"/>
-                            <constraint firstItem="SNh-eR-cuz" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="6AW-Mq-hcf"/>
                             <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="Z6b-sw-l5K" secondAttribute="bottom" id="DWX-GN-N9N"/>
-                            <constraint firstItem="jdZ-fx-JPL" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="F47-aZ-dUA"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="Ior-gv-7aL"/>
-                            <constraint firstItem="jdZ-fx-JPL" firstAttribute="height" secondItem="Tcz-a2-ut1" secondAttribute="height" id="Ke0-Ld-k10"/>
+                            <constraint firstItem="8Xm-ZY-1dp" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="IuV-t7-y18"/>
+                            <constraint firstAttribute="trailing" secondItem="8Xm-ZY-1dp" secondAttribute="trailing" id="Occ-J7-prc"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="top" secondItem="RTz-VU-U5z" secondAttribute="bottom" id="Oh3-K1-hbe"/>
                             <constraint firstAttribute="trailing" secondItem="Z6b-sw-l5K" secondAttribute="trailing" id="SL7-J4-fN0"/>
-                            <constraint firstItem="jdZ-fx-JPL" firstAttribute="leading" secondItem="SNh-eR-cuz" secondAttribute="trailing" id="Wcf-so-Xrj"/>
-                            <constraint firstItem="SNh-eR-cuz" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="X3A-XH-FYp"/>
-                            <constraint firstItem="SNh-eR-cuz" firstAttribute="height" secondItem="jdZ-fx-JPL" secondAttribute="height" id="b5u-GJ-pak"/>
-                            <constraint firstItem="RTz-VU-U5z" firstAttribute="top" secondItem="jdZ-fx-JPL" secondAttribute="bottom" id="c8v-2A-KHZ"/>
-                            <constraint firstAttribute="trailing" secondItem="Tcz-a2-ut1" secondAttribute="trailing" id="e3f-KZ-omn"/>
+                            <constraint firstItem="8Xm-ZY-1dp" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eMf-O7-xdd"/>
                             <constraint firstItem="RTz-VU-U5z" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eiS-cf-54B"/>
-                            <constraint firstItem="Tcz-a2-ut1" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="u7V-LZ-16g"/>
+                            <constraint firstItem="RTz-VU-U5z" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="bottom" id="po2-1c-gas"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Google Map" id="uov-xH-laq"/>
                     <connections>
                         <outlet property="mapView" destination="RTz-VU-U5z" id="lck-rh-mzN"/>
-                        <outlet property="searchBarLeftBoundary" destination="Wcf-so-Xrj" id="TBk-mP-4fN"/>
-                        <outlet property="searchBarRightBoundary" destination="5lO-GQ-Egn" id="Z70-mB-xJd"/>
+                        <outlet property="mapViewHeightConstraint" destination="pgg-4k-MOo" id="x2j-sp-8DP"/>
                         <outlet property="searchDisplayController" destination="StY-bM-Ueg" id="TgF-s7-wWI"/>
-                        <outlet property="searchFiltersButton" destination="SNh-eR-cuz" id="zsQ-ao-TTT"/>
+                        <outlet property="searchFiltersButton" destination="iRU-d9-LkK" id="Q72-R1-iyl"/>
                         <outlet property="tableView" destination="Z6b-sw-l5K" id="blO-gm-OV3"/>
                         <outlet property="toggleViewButton" destination="Tcz-a2-ut1" id="yGK-pP-weL"/>
                         <segue destination="tA3-C2-ynY" kind="show" id="LMH-YW-LRE"/>
@@ -565,7 +572,7 @@
                         <viewControllerLayoutGuide type="bottom" id="m7d-aX-x94"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Glr-eR-3MD">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JHR-wH-bqn">
@@ -874,6 +881,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9uE-VE-TBY"/>
+        <segue reference="N5N-7W-6pU"/>
     </inferredMetricsTieBreakers>
 </document>
