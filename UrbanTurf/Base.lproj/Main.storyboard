@@ -766,12 +766,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OBB-9n-T2H" customClass="GMSMapView">
                                 <rect key="frame" x="0.0" y="172" width="600" height="384"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="viN-B3-qKB">
-                                        <rect key="frame" x="285" y="177" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="9TA-93-pWK"/>
-                                            <constraint firstAttribute="width" constant="30" id="f57-Ud-aei"/>
-                                        </constraints>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cursor-crosshair" translatesAutoresizingMaskIntoConstraints="NO" id="viN-B3-qKB">
+                                        <rect key="frame" x="284" y="176" width="32" height="32"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -801,7 +797,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="crosshairs" destination="viN-B3-qKB" id="ddS-Yx-Ktw"/>
+                        <outlet property="crosshairs" destination="viN-B3-qKB" id="3ch-t7-KcN"/>
                         <outlet property="latlonLabel" destination="Kjc-yo-6XB" id="so4-cr-h6s"/>
                         <outlet property="locationInfo" destination="yCZ-dP-MZR" id="gzz-fv-Chc"/>
                         <outlet property="mapView" destination="OBB-9n-T2H" id="DBt-7T-TRY"/>
@@ -880,6 +876,9 @@
             <point key="canvasLocation" x="254" y="1992"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="cursor-crosshair" width="32" height="32"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="N5N-7W-6pU"/>
     </inferredMetricsTieBreakers>

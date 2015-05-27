@@ -401,8 +401,8 @@
         
         Article *article = (Article *)self.articles[indexPath.row];
         headlineLabel.text = article.title;
-        //introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)];
-        introLabel.text = [NSString stringWithFormat:@"%d. %@", (int)indexPath.row, [article.introduction substringWithRange:NSMakeRange(0, 100)]];
+        introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)];
+        //introLabel.text = [NSString stringWithFormat:@"%d. %@", (int)indexPath.row, [article.introduction substringWithRange:NSMakeRange(0, 100)]];
         metaInfoLabel.text = article.publication;
         NSDictionary *publicationAttributes = @{
                                                 NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
@@ -467,7 +467,8 @@
                     cell.textLabel.text = @"Current location";
                 }
                 else {
-                    cell.textLabel.text = (NSString *)[[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:(indexPath.row - 1)];
+                    NSDictionary *locationToDisplay = [[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:(indexPath.row - 1)];
+                    cell.textLabel.text = (NSString *)[locationToDisplay objectForKey:@"Name"];
                 }
             }
 
