@@ -458,7 +458,8 @@
                         cell.textLabel.text = @"Current location";
                     }
                     else {
-                        cell.textLabel.text = (NSString *)[[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:(indexPath.row - 1)];
+                        NSDictionary *locationToDisplay = [[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:(indexPath.row - 1)];
+                        cell.textLabel.text = (NSString *)[locationToDisplay objectForKey:@"Name"];
                     }
                 }
             }
@@ -473,23 +474,6 @@
             }
 
             return cell;
-
-            /*
-            // display the corresponding recent search
-            if (indexPath.row <= ([self numberOfRecentSearchesToDisplay] - 1)) {
-                cell.textLabel.text = (NSString *)[self.recentSearches objectAtIndex:indexPath.row];
-            }
-            // display "current location"
-            else if (indexPath.row == [self numberOfRecentSearchesToDisplay]) {
-                cell.textLabel.text = @"Current location";
-            }
-            // display corresponding saved location
-            else {
-                cell.textLabel.text = (NSString *)[[[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey] objectAtIndex:indexPath.row];
-            }
-
-            return cell;
-             */
             
         }
         // displaying the search results.

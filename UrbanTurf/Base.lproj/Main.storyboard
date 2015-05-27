@@ -666,11 +666,11 @@
                         <viewControllerLayoutGuide type="bottom" id="wat-jv-kdZ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3at-ry-zxG">
-                        <rect key="frame" x="0.0" y="64" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="CME-kH-gmC">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ctO-i1-hfJ">
@@ -683,25 +683,26 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <sections/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wat-jv-kdZ" firstAttribute="top" secondItem="CME-kH-gmC" secondAttribute="bottom" id="7e0-Tg-CGo"/>
+                            <constraint firstItem="CME-kH-gmC" firstAttribute="top" secondItem="3at-ry-zxG" secondAttribute="topMargin" id="MGf-aa-LLo"/>
                             <constraint firstItem="CME-kH-gmC" firstAttribute="leading" secondItem="3at-ry-zxG" secondAttribute="leading" id="PPc-st-y1u"/>
                             <constraint firstAttribute="trailing" secondItem="CME-kH-gmC" secondAttribute="trailing" id="eGi-qM-9ha"/>
-                            <constraint firstItem="CME-kH-gmC" firstAttribute="top" secondItem="4I8-gh-cgD" secondAttribute="bottom" id="y3x-8t-MeJ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Favorite Locations" id="MG4-VW-yD7"/>
                     <connections>
-                        <outlet property="navigationBar" destination="MG4-VW-yD7" id="7Sm-Om-V7u"/>
-                        <outlet property="tableView" destination="CME-kH-gmC" id="6eM-dW-Ei1"/>
+                        <outlet property="navigationBar" destination="MG4-VW-yD7" id="Isw-O6-bVh"/>
+                        <outlet property="tableView" destination="CME-kH-gmC" id="UoQ-rZ-lNC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jNG-wr-LzH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="811" y="1315"/>
+            <point key="canvasLocation" x="957" y="1301"/>
         </scene>
         <!--Add Location-->
         <scene sceneID="lZ6-Yf-OJW">
@@ -807,7 +808,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L6W-aW-DEU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1561" y="1315"/>
+            <point key="canvasLocation" x="1807" y="1301"/>
         </scene>
         <!--Nav Controller - Favorite Locations-->
         <scene sceneID="C9r-Sd-6pC">
@@ -821,12 +822,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="rSN-jO-E3e" kind="relationship" relationship="rootViewController" id="mjg-Mn-UdM"/>
+                        <segue destination="rSN-jO-E3e" kind="relationship" relationship="rootViewController" id="XJh-Cd-tfr"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="81o-Rf-Jtz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="39" y="1315"/>
+            <point key="canvasLocation" x="181" y="1301"/>
         </scene>
         <!--Options - Home Screen-->
         <scene sceneID="6c3-Fg-qM3">
