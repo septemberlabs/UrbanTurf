@@ -9,6 +9,7 @@
 #import "Constants.h"
 #import "FavoriteLocationsTVC.h"
 #import "SaveFavoriteLocation.h"
+#import "NewsMap.h"
 
 @interface FavoriteLocationsTVC ()
 @property (strong, nonatomic) NSArray *savedLocations;
@@ -143,19 +144,42 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        [self performSegueWithIdentifier:@"SaveLocationToFavorites" sender:indexPath];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES]; // we deselect the row here but not in the second section because prepareForSegue still needs it selected.
+        [self performSegueWithIdentifier:@"SaveLocationToFavorites" sender:self];
+
+        /*
+        SaveFavoriteLocation *saveLocationVC = [[SaveFavoriteLocation alloc] init];
+        saveLocationVC.currentLocation = self.currentLocation;
+        [self presentViewController:saveLocationVC animated:YES completion:nil];
+         */
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+
+    if (indexPath.section == 1) {
+        [self performSegueWithIdentifier:@"GoToLocation" sender:self];
+    }
+
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    
     if ([segue.identifier isEqualToString:@"SaveLocationToFavorites"]) {
         if ([segue.destinationViewController isKindOfClass:[SaveFavoriteLocation class]]) {
             SaveFavoriteLocation *saveLocationVC = (SaveFavoriteLocation *)segue.destinationViewController;
             saveLocationVC.currentLocation = self.currentLocation;
         }
     }
+
+    if ([segue.identifier isEqualToString:@"GoToLocation"]) {
+        if ([segue.destinationViewController isKindOfClass:[NewsMap class]]) {
+            NewsMap *newsMap = (NewsMap *)segue.destinationViewController;
+            NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+            NSNumber *latitude = [[self.savedLocations objectAtIndex:selectedIndexPath.row] objectForKey:@"Latitude"];
+            NSNumber *longitude = [[self.savedLocations objectAtIndex:selectedIndexPath.row] objectForKey:@"Longitude"];
+            [newsMap setLocationWithLatitude:[latitude floatValue] andLongitude:[longitude floatValue]];
+        }
+    }
+    
 }
 
 @end

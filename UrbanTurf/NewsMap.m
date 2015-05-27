@@ -126,6 +126,7 @@
 {
     self.latitude = latitude;
     self.longitude = longitude;
+    [self.mapView moveCamera:[GMSCameraUpdate setTarget:CLLocationCoordinate2DMake(latitude, longitude) zoom:DEFAULT_ZOOM_LEVEL]];
     [self fetchData];
 }
 

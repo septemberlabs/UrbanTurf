@@ -355,7 +355,7 @@
                         <viewControllerLayoutGuide type="bottom" id="r7t-AJ-wtd"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="wmA-ey-Kp8">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jlh-9q-OD7">
@@ -395,7 +395,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V4o-ZP-TIb">
-                                <rect key="frame" x="0.0" y="501" width="600" height="50"/>
+                                <rect key="frame" x="0.0" y="550" width="600" height="50"/>
                                 <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="SUt-Ie-2P3"/>
@@ -465,7 +465,7 @@
                         <viewControllerLayoutGuide type="bottom" id="BZ0-oN-wCM"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="65P-iN-QSW">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RTz-VU-U5z" customClass="GMSMapView">
@@ -475,7 +475,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Z6b-sw-l5K">
-                                <rect key="frame" x="0.0" y="214" width="600" height="337"/>
+                                <rect key="frame" x="0.0" y="214" width="600" height="386"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Xm-ZY-1dp" userLabel="Search Controls Container">
@@ -678,9 +678,6 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ctO-i1-hfJ" id="8DO-PY-D3U">
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="DwI-2h-HOb" kind="show" identifier="SaveLocationToFavorites" id="jTb-mD-E8A"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
@@ -698,11 +695,13 @@
                     <connections>
                         <outlet property="navigationBar" destination="MG4-VW-yD7" id="Isw-O6-bVh"/>
                         <outlet property="tableView" destination="CME-kH-gmC" id="UoQ-rZ-lNC"/>
+                        <segue destination="STl-BS-KjN" kind="presentation" identifier="GoToLocation" modalTransitionStyle="flipHorizontal" id="Iuh-3h-Z6A"/>
+                        <segue destination="DwI-2h-HOb" kind="show" identifier="SaveLocationToFavorites" id="NLR-gj-Ao8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jNG-wr-LzH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="957" y="1301"/>
+            <point key="canvasLocation" x="913" y="1301"/>
         </scene>
         <!--Add Location-->
         <scene sceneID="lZ6-Yf-OJW">
@@ -808,7 +807,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L6W-aW-DEU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1807" y="1301"/>
+            <point key="canvasLocation" x="1789" y="1301"/>
         </scene>
         <!--Nav Controller - Favorite Locations-->
         <scene sceneID="C9r-Sd-6pC">
@@ -881,6 +880,7 @@
         <image name="cursor-crosshair" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Iuh-3h-Z6A"/>
         <segue reference="N5N-7W-6pU"/>
     </inferredMetricsTieBreakers>
 </document>
