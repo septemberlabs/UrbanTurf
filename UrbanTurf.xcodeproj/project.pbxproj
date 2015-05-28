@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* TabBarController.m */; };
+		1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */; };
 		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
 		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
 		1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5E1A49F6D70033AC87 /* UrbanTurfFetcher.m */; };
@@ -81,8 +81,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1A2CEBDA1A8AC725004DE623 /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
-		1A2CEBDB1A8AC725004DE623 /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
+		1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTabBarController.h; sourceTree = "<group>"; };
+		1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTabBarController.m; sourceTree = "<group>"; };
 		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		1A2E6A571A49F5BD0033AC87 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
 		1A2E6A591A49F6160033AC87 /* Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fetcher.h; sourceTree = "<group>"; };
@@ -276,8 +276,8 @@
 				1AF9B1371ACCADF8004F3A5B /* Radius.m */,
 				1AF4D2E11AC37D18003168AD /* NewsMap.h */,
 				1AF4D2E21AC37D18003168AD /* NewsMap.m */,
-				1A2CEBDA1A8AC725004DE623 /* TabBarController.h */,
-				1A2CEBDB1A8AC725004DE623 /* TabBarController.m */,
+				1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */,
+				1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */,
 				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
 				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
 				1A2E6A671A4E26540033AC87 /* ArticleViewController.h */,
@@ -568,7 +568,7 @@
 				1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */,
 				1AECA1661AF059E500EAE054 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				1AB1A5611A48E3D900369211 /* main.m in Sources */,
-				1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */,
+				1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */,
 				1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */,
 				1AECA1631AF059E500EAE054 /* AFURLRequestSerialization.m in Sources */,
 				1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */,

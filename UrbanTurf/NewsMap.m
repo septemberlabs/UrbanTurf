@@ -126,7 +126,9 @@
 {
     self.latitude = latitude;
     self.longitude = longitude;
-    [self.mapView moveCamera:[GMSCameraUpdate setTarget:CLLocationCoordinate2DMake(latitude, longitude) zoom:DEFAULT_ZOOM_LEVEL]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.mapView moveCamera:[GMSCameraUpdate setTarget:CLLocationCoordinate2DMake(latitude, longitude) zoom:DEFAULT_ZOOM_LEVEL]];
+    });
     [self fetchData];
 }
 
@@ -543,12 +545,12 @@
     // store it in an instance variable, which will trigger a fetch of articles at that location.
     [self setLocationWithLatitude:selectedLocation.latitude andLongitude:selectedLocation.longitude];
     
-    // on the main queue, update the map to that coordinate.
+    // on the main queue update the UI (map and table view).
     dispatch_async(dispatch_get_main_queue(), ^{
         // return the table to the top
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         [self.mapView clear]; // clear off existing markers
-        [self.mapView moveCamera:[GMSCameraUpdate setTarget:selectedLocation zoom:DEFAULT_ZOOM_LEVEL]];
+        //[self.mapView moveCamera:[GMSCameraUpdate setTarget:selectedLocation zoom:DEFAULT_ZOOM_LEVEL]];
         if (self.crosshairs.hidden) [self showCrosshairs];
     });
 
@@ -559,6 +561,7 @@
 - (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
     if (self.gestureInitiatedMapMove) {
+        self.gestureInitiatedMapMove = NO;
         [self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude];
     }
 }

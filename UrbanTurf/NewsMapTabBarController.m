@@ -1,21 +1,21 @@
 //
-//  TabBarController.m
+//  NewsMapTabBarController.m
 //  UrbanTurf
 //
 //  Created by Will Smith on 2/10/15.
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import "TabBarController.h"
+#import "NewsMapTabBarController.h"
 #import "Stylesheet.h"
 #import "FavoriteLocationsTVC.h"
 #import "NewsMap.h"
 
-@interface TabBarController ()
+@interface NewsMapTabBarController ()
 
 @end
 
-@implementation TabBarController
+@implementation NewsMapTabBarController
 
 - (void)viewDidLoad
 {
@@ -60,6 +60,20 @@
                     favorites.currentLocation = currentLocation;
                 }
             }
+        }
+    }
+}
+
+#pragma mark - Transition between saved locations and news map
+
+- (void)prepareAndLoadNewsMap:(CLLocationCoordinate2D)location
+{
+    // loop through the view controllers until the NewsMap is found, then set its location and select it as the active tab.
+    for (id vc in self.viewControllers) {
+        if ([vc isKindOfClass:[NewsMap class]]) {
+            NewsMap *newsMap = (NewsMap *)vc;
+            [newsMap setLocationWithLatitude:location.latitude andLongitude:location.longitude];
+            self.selectedViewController = newsMap;
         }
     }
 }
