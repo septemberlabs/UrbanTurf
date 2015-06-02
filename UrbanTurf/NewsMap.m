@@ -31,11 +31,13 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeightConstraint;
 @property (nonatomic) BOOL gestureInitiatedMapMove;
 
-// various states of the UI
+// various states and constraints of the UI related to the article overlay effect in full-map mode.
 @property (nonatomic) BOOL listView;
 @property (nonatomic) BOOL articleOverlaid;
 @property (strong, nonatomic) GMSMarker *tappedMarker;
-@property (strong, nonatomic) UIView *articleOverlay;
+@property (strong, nonatomic) IBOutlet UIView *articleOverlay;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayTopEdgeConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayHeightConstraint;
 @end
 
 @implementation NewsMap
@@ -66,6 +68,7 @@
     
     self.listView = YES;
     self.articleOverlaid = NO;
+    self.tappedMarker = nil;
     self.originalMapViewBottomEdgeY = self.tableView.frame.origin.y;
     
     // hairline border between map and articles
@@ -100,14 +103,6 @@
     [self.crosshairs setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.mapView addConstraint:[NSLayoutConstraint constraintWithItem:self.mapView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.crosshairs attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self.mapView addConstraint:[NSLayoutConstraint constraintWithItem:self.mapView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.crosshairs attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-
-    // this is the article overlay container view that is usually hidden and displayed only when a marker is pressed in full-map mode.
-    // when it is displayed we add a subview with the article info in it, rather than adding the article info to it directly.
-    // this allows us to nicely animate between two articles using transitionWithView:duration:options:animations:completion:.
-    CGRect articleOverlayHiddenFrame = CGRectMake(self.view.frame.origin.x, self.view.frame.size.height, self.view.frame.size.width, 150);
-    self.articleOverlay = [[UIView alloc] initWithFrame:articleOverlayHiddenFrame];
-    self.articleOverlay.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:self.articleOverlay];
 }
 
 #pragma mark - Accessors
@@ -581,102 +576,108 @@
     }
 }
 
+- (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    [self removeArticleOverlay];
+}
+
+- (void)removeArticleOverlay
+{
+    // if an article is overlaid, hide it. (else, do nothing.)
+    if (self.articleOverlaid) {
+        
+        [self.view layoutIfNeeded];
+        self.articleOverlayTopEdgeConstraint.constant += self.articleOverlayHeightConstraint.constant;
+        
+        [UIView animateWithDuration:0.35
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [self.view layoutIfNeeded];
+                         }
+                         completion:^(BOOL finished) {
+                             // once the article overlay is off-screen, remove all the subviews (should be just one, but just in case iterate across entire subviews array).
+                             [[self.articleOverlay subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                         }];
+        
+        // update the state of the article overlay.
+        self.articleOverlaid = NO;
+        self.tappedMarker = nil;
+    }
+}
+
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
 {
     /*
-     1. Articles are displayed (list view)
-     2. Full map is displayed, no article overlaid.
-     3. Full map is displayed, article is overlaid.
+     Possible cases:
+     1. Articles are displayed (list view). Tapping a marker goes to article in list view.
+     2. Full map is displayed, no article overlaid. Display article for tapped marker.
+     3. Full map is displayed, article is overlaid. Display article for tapped marker unless it's the same marker as the last one tapped.
      */
     
+    // we are in list mode, meaning the table view of articles is visible beneath the map.
     if (self.listView) {
         if (!self.crosshairs.hidden) [self hideCrosshairs]; // hide the crosshairs if they're not already hidden.
         NSLog(@"index: %lu", (unsigned long)[self.articles indexOfObject:marker.userData]);
         [self setFocusOnArticle:(Article *)marker.userData];
     }
-    // if we are in full-map mode, slide up the article.
+
+    // we are in full-map mode.
     else {
+
         // if no article is already overlaid, display the tapped one.
         if (!self.articleOverlaid) {
            
-            UIView *newArticleView = [[UIView alloc] initWithFrame:self.articleOverlay.frame];
-            newArticleView.backgroundColor = [UIColor blueColor];
-            NSLog(@"article overlay subviews: %@", [self.articleOverlay.subviews description]);
-            [self.articleOverlay addSubview:newArticleView];
-            NSLog(@"article overlay subviews: %@", [self.articleOverlay.subviews description]);
+            // create a subview of self.articleOverlay with the same bounds.
+            UIView *articleOverlaySubview = [[UIView alloc] initWithFrame:self.articleOverlay.bounds];
+            articleOverlaySubview.backgroundColor = [UIColor blueColor]; // for debugging. delete.
+            [self.articleOverlay addSubview:articleOverlaySubview];
 
-            
-            [self.articleOverlay layoutIfNeeded];
+            // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
+            [self.view layoutIfNeeded];
+            self.articleOverlayTopEdgeConstraint.constant -= self.articleOverlayHeightConstraint.constant;
 
-            CGRect articleOverlayVisibleFrame = CGRectMake(self.articleOverlay.frame.origin.x, self.articleOverlay.frame.origin.y - 150, self.articleOverlay.frame.size.width, self.articleOverlay.frame.size.height);
-
-            [UIView animateWithDuration:0.2
-                                  delay:0.0 // we can add delay here (0.3 or more seems necessary) to avoid the user seeing the grey areas of the new map rect that momentarily appear before the new map tiles load.
-                                options:UIViewAnimationOptionCurveLinear
+            [UIView animateWithDuration:0.35
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseInOut
                              animations:^{
-                                 self.articleOverlay.frame = articleOverlayVisibleFrame;
+                                 [self.view layoutIfNeeded];
                              }
                              completion:^(BOOL finished) {
-                                 [self.articleOverlay layoutIfNeeded];
-                                 NSLog(@"article overlay subviews: %@", [self.articleOverlay.subviews description]);
-                                 //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
                              }];
+
+            // update the state of the article overlay.
+            self.articleOverlaid = YES;
+            self.tappedMarker = marker;
             
         }
-        // if an article is overlaid.
+        // an article is already overlaid.
         else {
             // if the tapped article is NOT the one already overlaid, we display the tapped article. (else, do nothing.)
-            /*
             if (![marker isEqual:self.tappedMarker]) {
-                CGRect articleViewHiddenFrame = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.size.height, self.mapView.frame.size.width, 150);
-                self.articleOverlay = [[UIView alloc] initWithFrame:articleViewHiddenFrame];
-                self.articleOverlay.backgroundColor = [UIColor redColor];
-                [self.mapView insertSubview:self.articleOverlay atIndex:[self.mapView.subviews count]];
-            }
-
-            CGRect articleViewVisibleFrame = CGRectMake(self.mapView.frame.origin.x, self.mapView.frame.size.height - 150, self.mapView.frame.size.width, 150);
             
-            [UIView animateWithDuration:0.2
-                                  delay:0.0 // we can add delay here (0.3 or more seems necessary) to avoid the user seeing the grey areas of the new map rect that momentarily appear before the new map tiles load.
-                                options:UIViewAnimationOptionCurveLinear
-                             animations:^{
-                                 self.articleOverlay.frame = articleViewVisibleFrame;
-                             }
-                             completion:^(BOOL finished) {
-                                 //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
-                             }];
-             */
-        }
-        
+                UIView *newArticleOverlaySubview = [[UIView alloc] initWithFrame:self.articleOverlay.bounds];
+                // set the background color to whichever color the current subview's background color isn't.
+                if (CGColorEqualToColor(((UIView *)[self.articleOverlay.subviews objectAtIndex:0]).backgroundColor.CGColor, [UIColor blueColor].CGColor)) newArticleOverlaySubview.backgroundColor = [UIColor purpleColor];
+                else newArticleOverlaySubview.backgroundColor = [UIColor blueColor];
+                [self.articleOverlay addSubview:newArticleOverlaySubview];
+                
+                [UIView transitionWithView:self.articleOverlay
+                                  duration:0.5
+                                   options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight
+                                animations:^{
+                                    [[self.articleOverlay.subviews objectAtIndex:0] removeFromSuperview];
+                                    [self.articleOverlay addSubview:newArticleOverlaySubview];
+                                }
+                                completion:nil];
+                
+                // update the state of the article overlay, namely which marker was last tapped.
+                self.tappedMarker = marker;
 
-        
-         /*
-        [self.view layoutIfNeeded];
-        self.mapViewHeightConstraint.constant = self.mapView.frame.size.height - 140;
-        
-        [UIView animateWithDuration:0.4
-                              delay:0.0 // we can add delay here (0.3 or more seems necessary) to avoid the user seeing the grey areas of the new map rect that momentarily appear before the new map tiles load.
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             [self.view layoutIfNeeded];
-                         }
-                         completion:^(BOOL finished) {
-                             //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
-                         }];
-         */
-        
-    }
-
-    // DELETE [self setFocusOnArticleAtIndex:[NSIndexPath indexPathForRow:[self.articles indexOfObject:marker.userData] inSection:0]]; // marker.userData is the article in self.articles.
-    
-    /* DELETE
-    for (int i = 0; i < [self.articles count]; i++) {
-        Article *article = (Article *)[self.articles objectAtIndex:i];
-        if (article == markersArticle) {
-            [self setFocusOnArticleAtIndex:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
         }
     }
-     */
+
     return YES;
 }
 
@@ -868,6 +869,8 @@
     // show the list, shrink the map
     else {
 
+        [self removeArticleOverlay];
+        
         // we contract the map view by animating the change in its height constraint to its current height (i.e., the whole window) minus the difference between the table view's current y position (very bottom of window) and the original bottom edge of the map view.
         [self.view layoutIfNeeded];
         self.mapViewHeightConstraint.constant = self.mapView.frame.size.height - (self.tableView.frame.origin.y - self.originalMapViewBottomEdgeY);

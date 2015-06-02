@@ -39,7 +39,7 @@
     // authenticate with Google for use of Maps
     [GMSServices provideAPIKey:googleAPIKeyForiOSApplications];
     
-    NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    //NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     
     return YES;
 }
