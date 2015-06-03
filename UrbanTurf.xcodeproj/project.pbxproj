@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */; };
+		1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */; };
 		1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */; };
 		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
 		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
@@ -81,6 +83,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleOverlayView.xib; sourceTree = "<group>"; };
+		1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleOverlayView.h; sourceTree = "<group>"; };
+		1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleOverlayView.m; sourceTree = "<group>"; };
 		1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTabBarController.h; sourceTree = "<group>"; };
 		1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTabBarController.m; sourceTree = "<group>"; };
 		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -256,6 +261,9 @@
 		1AB1A55D1A48E3D900369211 /* UrbanTurf */ = {
 			isa = PBXGroup;
 			children = (
+				1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */,
+				1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */,
+				1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */,
 				1AB7BF061ACDD219003BCCC0 /* Options */,
 				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
 				1AC3FBB01ACEDF4F00933C64 /* Favorite Locations */,
@@ -510,6 +518,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */,
+				1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView.xib in Resources */,
 				1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */,
 				1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */,
 				1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */,
@@ -542,6 +551,7 @@
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
 				1AECA1621AF059E500EAE054 /* AFURLConnectionOperation.m in Sources */,
 				1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */,
+				1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */,
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
 				1AECA1701AF05CD000EAE054 /* GooglePlacesClient.m in Sources */,
 				1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */,
