@@ -13,6 +13,7 @@
 #import "Stylesheet.h"
 #import "GooglePlacesClient.h"
 #import "UIImageView+AFNetworking.h"
+#import "ArticleOverlayView.h"
 
 @interface NewsMap ()
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton;
@@ -628,10 +629,50 @@
         // if no article is already overlaid, display the tapped one.
         if (!self.articleOverlaid) {
            
+            // DELETE SOON. This was before using the custom subclass.
             // create a subview of self.articleOverlay with the same bounds.
-            UIView *articleOverlaySubview = [[UIView alloc] initWithFrame:self.articleOverlay.bounds];
-            articleOverlaySubview.backgroundColor = [UIColor blueColor]; // for debugging. delete.
+            //UIView *articleOverlaySubview = [[UIView alloc] initWithFrame:self.articleOverlay.bounds];
+            
+            // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
+            ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
+            articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
             [self.articleOverlay addSubview:articleOverlaySubview];
+            
+            // pin the top, trailing, bottom, and leading edges
+            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
+                                                                            attribute:NSLayoutAttributeLeading
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self.articleOverlay
+                                                                            attribute:NSLayoutAttributeLeading
+                                                                           multiplier:1.0
+                                                                             constant:0.0]];
+            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
+                                                                            attribute:NSLayoutAttributeTrailing
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self.articleOverlay
+                                                                            attribute:NSLayoutAttributeTrailing
+                                                                           multiplier:1.0
+                                                                             constant:0.0]];
+            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
+                                                                            attribute:NSLayoutAttributeTop
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self.articleOverlay
+                                                                            attribute:NSLayoutAttributeTop
+                                                                           multiplier:1.0
+                                                                             constant:0.0]];
+            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
+                                                                            attribute:NSLayoutAttributeBottom
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self.articleOverlay
+                                                                            attribute:NSLayoutAttributeBottom
+                                                                           multiplier:1.0
+                                                                             constant:0.0]];
+
+
+            
+            
+            articleOverlaySubview.headline.text = @"Hi there!";
+            articleOverlaySubview.backgroundColor = [UIColor blueColor]; // for debugging. delete.
 
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
             [self.view layoutIfNeeded];

@@ -524,7 +524,7 @@
                                     <constraint firstItem="Tcz-a2-ut1" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="top" constant="6" id="z2T-G9-zax"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sal-Vu-s9R" userLabel="Article Overlay" customClass="ArticleOverlayView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sal-Vu-s9R" userLabel="Article Overlay">
                                 <rect key="frame" x="0.0" y="551" width="600" height="150"/>
                                 <color key="backgroundColor" red="0.0" green="1" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
