@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */; };
 		1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */; };
 		1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */; };
 		1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */; };
@@ -30,7 +31,6 @@
 		1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */; };
 		1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */; };
 		1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */; };
-		1AB7BF0F1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF0E1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m */; };
 		1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */; };
 		1AC8126F1ABF904500ABD302 /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126E1ABF904500ABD302 /* Options.m */; };
 		1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC812711ABFDAB000ABD302 /* RadiusOld.m */; };
@@ -83,6 +83,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A04DDA11B2390E5001D9480 /* NewsMapTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTableViewCell.h; sourceTree = "<group>"; };
+		1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTableViewCell.m; sourceTree = "<group>"; };
 		1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleOverlayView.xib; sourceTree = "<group>"; };
 		1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleOverlayView.h; sourceTree = "<group>"; };
 		1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleOverlayView.m; sourceTree = "<group>"; };
@@ -125,8 +127,6 @@
 		1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadiusLabelCell.xib; sourceTree = "<group>"; };
 		1AB7BF071ACDFB6E003BCCC0 /* SearchOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchOptions.h; sourceTree = "<group>"; };
 		1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchOptions.m; sourceTree = "<group>"; };
-		1AB7BF0D1ACE04FB003BCCC0 /* UITableViewController+TableHeight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewController+TableHeight.h"; sourceTree = "<group>"; };
-		1AB7BF0E1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewController+TableHeight.m"; sourceTree = "<group>"; };
 		1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayOrder.h; sourceTree = "<group>"; };
 		1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayOrder.m; sourceTree = "<group>"; };
 		1AC8126D1ABF904500ABD302 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
@@ -270,11 +270,11 @@
 				1AECA1371AF059E500EAE054 /* AFNetworking */,
 				1AECA14B1AF059E500EAE054 /* UIKit+AFNetworking */,
 				1A7DB1DB1ABDFB81003DB53F /* Constants.h */,
+				1A04DDA11B2390E5001D9480 /* NewsMapTableViewCell.h */,
+				1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */,
 				1A7DB1DC1ABDFB81003DB53F /* Constants.m */,
 				1AECA16E1AF05CD000EAE054 /* GooglePlacesClient.h */,
 				1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */,
-				1AB7BF0D1ACE04FB003BCCC0 /* UITableViewController+TableHeight.h */,
-				1AB7BF0E1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m */,
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
@@ -552,6 +552,7 @@
 				1AECA1621AF059E500EAE054 /* AFURLConnectionOperation.m in Sources */,
 				1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */,
 				1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */,
+				1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */,
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
 				1AECA1701AF05CD000EAE054 /* GooglePlacesClient.m in Sources */,
 				1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */,
@@ -563,7 +564,6 @@
 				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,
 				1AECA1671AF059E500EAE054 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				1AF4D2E31AC37D18003168AD /* NewsMap.m in Sources */,
-				1AB7BF0F1ACE04FB003BCCC0 /* UITableViewController+TableHeight.m in Sources */,
 				1AECA16C1AF059E500EAE054 /* UIRefreshControl+AFNetworking.m in Sources */,
 				1AECA1641AF059E500EAE054 /* AFURLResponseSerialization.m in Sources */,
 				1AECA15E1AF059E500EAE054 /* AFHTTPRequestOperationManager.m in Sources */,

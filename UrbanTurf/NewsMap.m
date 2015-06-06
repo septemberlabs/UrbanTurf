@@ -14,6 +14,7 @@
 #import "GooglePlacesClient.h"
 #import "UIImageView+AFNetworking.h"
 #import "ArticleOverlayView.h"
+#import "NewsMapTableViewCell.h"
 
 @interface NewsMap ()
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton;
@@ -344,6 +345,61 @@
             }
             return cell;
         }
+        
+        // The way this works is we have a custom UITableViewCell class called NewsMapTableViewCell. The tableview's prototype cell's custom class in the storyboard is set to this class, as is its identifier. The NewsMapTableViewCell class is simply a container view of a single ArticleOverlayView subview called articleView. ArticleOverlayView is the owner of the correspondingly named xib. In this way we have one custom view designed in a xib (ArticleOverlayView.xib) that can be used both in the table view and as the view that slides up when a marker is tapped in full screen map mode. (The reason we don't simply make the prototype cell's custom class ArticleOverlayView is that that would force ArticleOverlayView to be subclassed from UITableViewCell, which we don't want.)
+        NewsMapTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NewsMapTableViewCell" forIndexPath:indexPath];
+        ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.articleView.bounds];
+        articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.articleView addSubview:articleOverlaySubview];
+        [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell.articleView]; // pin the top, trailing, bottom, and leading edges
+        
+        Article *article = (Article *)self.articles[indexPath.row];
+        articleOverlaySubview.headline.text = article.title;
+        articleOverlaySubview.introduction.text = [article.introduction substringWithRange:NSMakeRange(0, 100)];
+        articleOverlaySubview.metaInfo.text = article.publication;
+
+        NSDictionary *publicationAttributes = @{
+                                                NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
+                                                NSForegroundColorAttributeName: [Stylesheet color1]
+                                                };
+        
+        NSDictionary *dateAttributes = @{
+                                         NSFontAttributeName: [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE],
+                                         NSForegroundColorAttributeName: [Stylesheet color2]
+                                         };
+        
+        // concatenate the publication name and date, separating them with •
+        NSMutableString *metaInfoString = [article.publication mutableCopy];
+        [metaInfoString appendString:[NSString stringWithFormat:@" • %@", article.date]];
+        
+        // make it attributed with publicationAttributes for the whole string
+        NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
+        
+        // re-attribute the date, which begins at the end of the publication string and continues through to the end
+        NSRange rangeOfDateInfo = NSMakeRange([article.publication length], ([metaInfoString length] - [article.publication length]));
+        [metaInfoAttributedString setAttributes:dateAttributes range:rangeOfDateInfo];
+        
+        // set the label with the value
+        articleOverlaySubview.metaInfo.attributedText = metaInfoAttributedString;
+        
+        [articleOverlaySubview.image setImageWithURL:[NSURL URLWithString:article.imageURL]];
+        
+        // this ensures that the background color is reset, lest it be colored due to reuse of a scroll-selected cell.
+        cell.backgroundColor = nil;
+        
+        return cell;
+        
+        /******************** BEGIN - WORKING ******************** commented out 6/6/15 to use custom cell from xib.
+        
+        // this is a unique cell, the last one, and doesn't need much configuration.
+        if (indexPath.row == [self.articles count]) {
+            static NSString *LastCellIdentifier = @"Last Cell - Spacer";
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LastCellIdentifier];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:LastCellIdentifier];
+            }
+            return cell;
+        }
 
         static NSString *CellIdentifier = @"Article Cell";
 
@@ -448,6 +504,9 @@
         cell.backgroundColor = nil;
         
         return cell;
+         
+         ******************** END - WORKING ********************/
+        
         
     }
     
@@ -637,40 +696,8 @@
             ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
             articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
             [self.articleOverlay addSubview:articleOverlaySubview];
-            
-            // pin the top, trailing, bottom, and leading edges
-            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
-                                                                            attribute:NSLayoutAttributeLeading
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:self.articleOverlay
-                                                                            attribute:NSLayoutAttributeLeading
-                                                                           multiplier:1.0
-                                                                             constant:0.0]];
-            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
-                                                                            attribute:NSLayoutAttributeTrailing
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:self.articleOverlay
-                                                                            attribute:NSLayoutAttributeTrailing
-                                                                           multiplier:1.0
-                                                                             constant:0.0]];
-            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
-                                                                            attribute:NSLayoutAttributeTop
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:self.articleOverlay
-                                                                            attribute:NSLayoutAttributeTop
-                                                                           multiplier:1.0
-                                                                             constant:0.0]];
-            [self.articleOverlay addConstraint:[NSLayoutConstraint constraintWithItem:articleOverlaySubview
-                                                                            attribute:NSLayoutAttributeBottom
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:self.articleOverlay
-                                                                            attribute:NSLayoutAttributeBottom
-                                                                           multiplier:1.0
-                                                                             constant:0.0]];
+            [self pinEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay]; // pin the top, trailing, bottom, and leading edges
 
-
-            
-            
             articleOverlaySubview.headline.text = @"Hi there!";
             articleOverlaySubview.backgroundColor = [UIColor blueColor]; // for debugging. delete.
 
@@ -995,5 +1022,37 @@
     }
 }
 */
- 
+
+-(void)pinEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview
+{
+    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                    attribute:NSLayoutAttributeLeading
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:superview
+                                                                    attribute:NSLayoutAttributeLeading
+                                                                   multiplier:1.0
+                                                                     constant:0.0]];
+    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                    attribute:NSLayoutAttributeTrailing
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:superview
+                                                                    attribute:NSLayoutAttributeTrailing
+                                                                   multiplier:1.0
+                                                                     constant:0.0]];
+    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                    attribute:NSLayoutAttributeTop
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:superview
+                                                                    attribute:NSLayoutAttributeTop
+                                                                   multiplier:1.0
+                                                                     constant:0.0]];
+    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
+                                                                    attribute:NSLayoutAttributeBottom
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:superview
+                                                                    attribute:NSLayoutAttributeBottom
+                                                                   multiplier:1.0
+                                                                     constant:0.0]];
+}
+
 @end
