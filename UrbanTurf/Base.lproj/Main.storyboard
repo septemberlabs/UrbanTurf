@@ -346,7 +346,7 @@
             </objects>
             <point key="canvasLocation" x="2339" y="2058"/>
         </scene>
-        <!--Article View Controller-->
+        <!--Article-->
         <scene sceneID="GIx-Za-9E3">
             <objects>
                 <viewController id="7aA-Iq-B5L" customClass="ArticleViewController" sceneMemberID="viewController">
@@ -358,78 +358,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jlh-9q-OD7">
-                                <rect key="frame" x="0.0" y="64" width="600" height="100"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="Hqn-VG-ewa"/>
-                                </constraints>
-                            </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZUO-me-ENy" userLabel="Article Headline">
-                                <rect key="frame" x="16" y="330" width="568" height="62"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="62" id="2fF-ml-5q5"/>
-                                </constraints>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RkF-uo-JEi" userLabel="Article Meta Info">
-                                <rect key="frame" x="16" y="400" width="568" height="29"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="29" id="q6g-QE-z3x"/>
-                                </constraints>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AR8-a0-kRY" userLabel="Article Body">
-                                <rect key="frame" x="16" y="437" width="568" height="105"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="105" id="XdV-Cp-bfE"/>
-                                </constraints>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V4o-ZP-TIb">
-                                <rect key="frame" x="0.0" y="501" width="600" height="50"/>
-                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="SUt-Ie-2P3"/>
-                                </constraints>
-                                <state key="normal" title="Button">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bkH-ls-kmn" customClass="ArticleView">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <color key="backgroundColor" red="0.0" green="1" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="jlh-9q-OD7" secondAttribute="trailing" id="2TK-Gc-SvZ"/>
-                            <constraint firstAttribute="trailing" secondItem="AR8-a0-kRY" secondAttribute="trailing" constant="16" id="3IE-U0-bem"/>
-                            <constraint firstItem="jlh-9q-OD7" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" id="EAW-ZU-MFn"/>
-                            <constraint firstItem="AR8-a0-kRY" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" constant="16" id="O3F-62-sP9"/>
-                            <constraint firstAttribute="bottom" secondItem="V4o-ZP-TIb" secondAttribute="bottom" id="Sea-2F-Jtp"/>
-                            <constraint firstAttribute="trailing" secondItem="V4o-ZP-TIb" secondAttribute="trailing" id="YUJ-ZO-jwR"/>
-                            <constraint firstItem="AR8-a0-kRY" firstAttribute="top" secondItem="RkF-uo-JEi" secondAttribute="bottom" constant="8" id="aq2-Cl-Lod"/>
-                            <constraint firstItem="RkF-uo-JEi" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" constant="16" id="i3a-az-i34"/>
-                            <constraint firstItem="V4o-ZP-TIb" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" id="m9l-L8-En3"/>
-                            <constraint firstAttribute="trailing" secondItem="RkF-uo-JEi" secondAttribute="trailing" constant="16" id="qdC-uw-Oy3"/>
-                            <constraint firstItem="ZUO-me-ENy" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" constant="16" id="t1i-C5-uoO"/>
-                            <constraint firstItem="RkF-uo-JEi" firstAttribute="top" secondItem="ZUO-me-ENy" secondAttribute="bottom" constant="8" id="tK3-6e-KP3"/>
-                            <constraint firstAttribute="trailing" secondItem="ZUO-me-ENy" secondAttribute="trailing" constant="16" id="u8r-li-Grg"/>
-                            <constraint firstItem="jlh-9q-OD7" firstAttribute="top" secondItem="oCi-Sl-dUh" secondAttribute="bottom" id="xQC-w1-DOg"/>
+                            <constraint firstAttribute="trailing" secondItem="bkH-ls-kmn" secondAttribute="trailing" id="0me-7l-Djb"/>
+                            <constraint firstItem="bkH-ls-kmn" firstAttribute="top" secondItem="oCi-Sl-dUh" secondAttribute="bottom" id="jkb-sg-Iv0"/>
+                            <constraint firstItem="r7t-AJ-wtd" firstAttribute="top" secondItem="bkH-ls-kmn" secondAttribute="bottom" id="r1W-eJ-fQt"/>
+                            <constraint firstItem="bkH-ls-kmn" firstAttribute="leading" secondItem="wmA-ey-Kp8" secondAttribute="leading" id="w3d-hZ-l0R"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="l7p-QK-rsR"/>
+                    <navigationItem key="navigationItem" title="Article" id="l7p-QK-rsR">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="W4t-ad-mp4"/>
+                    </navigationItem>
                     <connections>
-                        <outlet property="articleBody" destination="AR8-a0-kRY" id="7Pi-cq-EYw"/>
-                        <outlet property="articleHeadline" destination="ZUO-me-ENy" id="wMv-FV-0gc"/>
-                        <outlet property="articleImage" destination="jlh-9q-OD7" id="UuP-0R-oVy"/>
-                        <outlet property="articleMetaInfo" destination="RkF-uo-JEi" id="NgB-iU-sPE"/>
-                        <outlet property="viewArticleButton" destination="V4o-ZP-TIb" id="w4Z-fj-L2X"/>
+                        <outlet property="articleView" destination="bkH-ls-kmn" id="QGi-Ml-1Il"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="trh-16-xt8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -583,7 +529,7 @@
                         <outlet property="searchFiltersButton" destination="iRU-d9-LkK" id="Q72-R1-iyl"/>
                         <outlet property="tableView" destination="Z6b-sw-l5K" id="blO-gm-OV3"/>
                         <outlet property="toggleViewButton" destination="Tcz-a2-ut1" id="yGK-pP-weL"/>
-                        <segue destination="tA3-C2-ynY" kind="show" id="LMH-YW-LRE"/>
+                        <segue destination="tA3-C2-ynY" kind="show" identifier="DisplayArticleSegue" id="LMH-YW-LRE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Atw-Q7-w20" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -15,6 +15,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "ArticleOverlayView.h"
 #import "NewsMapTableViewCell.h"
+#import "ArticleViewController.h"
 
 @interface NewsMap ()
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton;
@@ -91,6 +92,10 @@
     self.longitude = office.longitude;
     
     self.gestureInitiatedMapMove = NO;
+    
+    // this sets the back button text of the subsequent vc, not the visible vc. confusing.
+    // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
+    //self.navigationBar.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     [self fetchData];
 }
@@ -346,7 +351,7 @@
             return cell;
         }
         
-        // The way this works is we have a custom UITableViewCell class called NewsMapTableViewCell. The tableview's prototype cell's custom class in the storyboard is set to this class, as is its identifier. The NewsMapTableViewCell class is simply a container view of a single ArticleOverlayView subview called articleView. ArticleOverlayView is the owner of the correspondingly named xib. In this way we have one custom view designed in a xib (ArticleOverlayView.xib) that can be used both in the table view and as the view that slides up when a marker is tapped in full screen map mode. (The reason we don't simply make the prototype cell's custom class ArticleOverlayView is that that would force ArticleOverlayView to be subclassed from UITableViewCell, which we don't want.)
+        // The way this works is we have a custom UITableViewCell class called NewsMapTableViewCell. The tableview's prototype cell's custom class in the storyboard is set to this class, as is its identifier. The NewsMapTableViewCell class is simply a container view of a single ArticleOverlayView subview called articleView. ArticleOverlayView is the owner of the correspondingly named xib. In this way we have one custom view designed in a xib (ArticleOverlayView.xib) that can be used both in the table view and as the view that slides up when a marker is tapped in full screen map mode. (The reason we don't simply make the prototype cell's custom class ArticleOverlayView is that that would force ArticleOverlayView to be subclassed from UITableViewCell, which we don't want.) Thank you: http://www.pumpmybicep.com/2014/07/21/designing-a-custom-uitableviewcell-in-interface-builder/
         NewsMapTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NewsMapTableViewCell" forIndexPath:indexPath];
         ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.articleView.bounds];
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
@@ -568,6 +573,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    // if the table view sending the message is the articles table view
+    if (tableView == self.tableView) {
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+        [self performSegueWithIdentifier:@"DisplayArticleSegue" sender:self];
+    }
+    
     // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         
@@ -1005,12 +1017,11 @@
     return NO;
 }
 
-/*
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"showArticleSegue"]) {
+    if ([segue.identifier isEqualToString:@"DisplayArticleSegue"]) {
         if ([segue.destinationViewController isKindOfClass:[UINavigationController class]]) {
             if ([[segue.destinationViewController viewControllers][0] isKindOfClass:[ArticleViewController class]]) {
                 ArticleViewController *articleVC = (ArticleViewController *)[segue.destinationViewController viewControllers][0];
@@ -1021,7 +1032,8 @@
         }
     }
 }
-*/
+
+#pragma mark - Misc
 
 -(void)pinEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview
 {

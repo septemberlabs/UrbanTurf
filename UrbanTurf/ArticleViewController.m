@@ -7,14 +7,11 @@
 //
 
 #import "ArticleViewController.h"
+#import "ArticleView.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface ArticleViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *articleImage;
-@property (weak, nonatomic) IBOutlet UITextView *articleHeadline;
-@property (weak, nonatomic) IBOutlet UITextView *articleMetaInfo;
-@property (weak, nonatomic) IBOutlet UITextView *articleBody;
-@property (weak, nonatomic) IBOutlet UIButton *viewArticleButton;
-
+@property (weak, nonatomic) IBOutlet ArticleView *articleView;
 @end
 
 @implementation ArticleViewController
@@ -27,12 +24,10 @@
 - (void)setArticle:(Article *)article
 {
     _article = article;
-/*
-    self.articleImage = ;
-    self.articleHeadline = article[@"headline"];
-    self.articleMetaInfo = article[@"publication"];
-    self.articleBody = article[@"introduction"];
- */
+    [self.articleView.image setImageWithURL:[NSURL URLWithString:article.imageURL]];
+    self.articleView.headline.text = @"Headline!";
+    self.articleView.introduction.text = @"Introduction!";
+    self.articleView.metaInfo.text = @"Meta Info!";
 }
 
 @end

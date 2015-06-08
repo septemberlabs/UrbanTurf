@@ -1,17 +1,14 @@
 //
-//  ArticleOverlayView.m
+//  ArticleView.m
 //  UrbanTurf
 //
-//  Created by Will Smith on 6/3/15.
+//  Created by Will Smith on 6/7/15.
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
-//
-//  Thank you: http://qnoid.com/2013/03/20/How-to-implement-a-reusable-UIView.html
-//
 
-#import "ArticleOverlayView.h"
+#import "ArticleView.h"
 
-@implementation ArticleOverlayView
+@implementation ArticleView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -51,7 +48,7 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(subview);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|" options:0 metrics:nil views:views]];
-
+    
     return self;
 }
 

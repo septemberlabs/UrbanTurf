@@ -68,6 +68,8 @@
 		1AECA1701AF05CD000EAE054 /* GooglePlacesClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */; };
 		1AF4D2E31AC37D18003168AD /* NewsMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4D2E21AC37D18003168AD /* NewsMap.m */; };
 		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
+		1AF7ADB41B251BB4009164F6 /* ArticleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB31B251BB4009164F6 /* ArticleView.xib */; };
+		1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB61B251D17009164F6 /* ArticleView.m */; };
 		1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9B1371ACCADF8004F3A5B /* Radius.m */; };
 		1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */; };
 /* End PBXBuildFile section */
@@ -190,6 +192,9 @@
 		1AF4D2E21AC37D18003168AD /* NewsMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMap.m; sourceTree = "<group>"; };
 		1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontIconViewController.h; sourceTree = "<group>"; };
 		1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontIconViewController.m; sourceTree = "<group>"; };
+		1AF7ADB31B251BB4009164F6 /* ArticleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleView.xib; sourceTree = "<group>"; };
+		1AF7ADB51B251D17009164F6 /* ArticleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleView.h; sourceTree = "<group>"; };
+		1AF7ADB61B251D17009164F6 /* ArticleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleView.m; sourceTree = "<group>"; };
 		1AF9B1361ACCADF8004F3A5B /* Radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Radius.h; sourceTree = "<group>"; };
 		1AF9B1371ACCADF8004F3A5B /* Radius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Radius.m; sourceTree = "<group>"; };
 		1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteLocationsTVC.h; sourceTree = "<group>"; };
@@ -264,6 +269,9 @@
 				1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */,
 				1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */,
 				1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */,
+				1AF7ADB51B251D17009164F6 /* ArticleView.h */,
+				1AF7ADB61B251D17009164F6 /* ArticleView.m */,
+				1AF7ADB31B251BB4009164F6 /* ArticleView.xib */,
 				1AB7BF061ACDD219003BCCC0 /* Options */,
 				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
 				1AC3FBB01ACEDF4F00933C64 /* Favorite Locations */,
@@ -517,6 +525,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AF7ADB41B251BB4009164F6 /* ArticleView.xib in Resources */,
 				1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */,
 				1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView.xib in Resources */,
 				1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */,
@@ -547,6 +556,7 @@
 				1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */,
 				1AECA1691AF059E500EAE054 /* UIButton+AFNetworking.m in Sources */,
 				1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */,
+				1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */,
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
 				1AECA1621AF059E500EAE054 /* AFURLConnectionOperation.m in Sources */,
