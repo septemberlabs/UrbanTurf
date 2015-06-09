@@ -407,7 +407,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="articleView" destination="10j-Y6-3Uc" id="FK9-c6-bTs"/>
-                                            <segue destination="SSZ-7q-03J" kind="show" identifier="DisplayArticleSegue" id="eyJ-fe-ALq"/>
+                                            <segue destination="MZg-7W-uEy" kind="show" identifier="DisplayArticleSegue" id="66M-JD-OPz"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -598,7 +598,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="suk-Hk-MIg">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="350"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vXx-PJ-ORA" customClass="ArticleView">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
@@ -614,6 +614,7 @@
                                     <constraint firstItem="vXx-PJ-ORA" firstAttribute="top" secondItem="suk-Hk-MIg" secondAttribute="top" id="L08-hk-Rs9"/>
                                     <constraint firstAttribute="trailing" secondItem="vXx-PJ-ORA" secondAttribute="trailing" id="UTq-O2-rj6"/>
                                     <constraint firstItem="vXx-PJ-ORA" firstAttribute="leading" secondItem="suk-Hk-MIg" secondAttribute="leading" id="uLE-6c-DsY"/>
+                                    <constraint firstAttribute="height" constant="350" id="xZY-SH-nMp"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
@@ -621,11 +622,11 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="suk-Hk-MIg" secondAttribute="trailing" id="3Bu-uO-KHs"/>
                             <constraint firstItem="suk-Hk-MIg" firstAttribute="leading" secondItem="BAD-Db-7hh" secondAttribute="leading" id="AA0-1L-YKa"/>
-                            <constraint firstItem="bXw-DM-byG" firstAttribute="top" secondItem="suk-Hk-MIg" secondAttribute="bottom" id="HgE-PG-Jak"/>
                             <constraint firstItem="suk-Hk-MIg" firstAttribute="top" secondItem="VQG-hc-llb" secondAttribute="bottom" id="Z0G-jX-bZr"/>
                             <constraint firstAttribute="width" secondItem="vXx-PJ-ORA" secondAttribute="width" id="drX-DL-bkm"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Article" id="oYa-NH-nPj"/>
                     <connections>
                         <outlet property="articleScrollView" destination="suk-Hk-MIg" id="M5J-pZ-B79"/>
@@ -635,7 +636,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y3u-4v-cik" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1928" y="446"/>
+            <point key="canvasLocation" x="770" y="458"/>
         </scene>
         <!--Favorite Locations-->
         <scene sceneID="dPT-HX-wJh">
@@ -853,24 +854,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sIA-hd-61i" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-168" y="2058"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="fsB-nJ-cZF">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SSZ-7q-03J" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hkS-1u-Blb">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="MZg-7W-uEy" kind="relationship" relationship="rootViewController" id="GoK-1U-tkR"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Hx7-9M-zi0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1116" y="446"/>
         </scene>
     </scenes>
     <resources>

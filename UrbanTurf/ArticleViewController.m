@@ -16,79 +16,27 @@
 @property (strong, nonatomic) IBOutlet ArticleView *articleView;
 @end
 
+/*
+ Took a while to get scroll view working with the ArticleView nib. Finally, this was how:
+ * Added typical constraints to scroll view in Interface Builder (leading, trailing, top, bottom all 0).
+ * Added a UIView as a subview of the scroll view and set its custom class to be ArticleView. Added typical constraints to it (leading, trailing, top, bottom all 0).
+ * Added two more key constraints: 1) Set the ArticleView width equal to the view controller view's width (NOT the scroll view's width) and 2) set the ArticleView height to an arbitrary value of 800. Then in viewWillLayoutSubviews (below), I changed that height constraint to a dynamically-calculated value returned from a custom method in the ArticleView class that sums the heights of all the UI elements including spacing constraints.
+ 
+ The key idea here is that for the scroll view and Auto Layout to work in concert, the scroll view needed a well-defined width and height on which to base its own sizing. We used the view controller's view for the width and an arbitrary value of 800 for the height, with the idea that at runtime we would replace that height value with the actual value.
+ */
+
 @implementation ArticleViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    NSLog(@"viewDidLoad");
-
-    NSLog(@"scroll view frame size: %@", NSStringFromCGSize(self.articleScrollView.frame.size));
-    NSLog(@"scroll view contentSize: %@", NSStringFromCGSize(self.articleScrollView.contentSize));
-    /*
-    self.articleView = [[ArticleView alloc] initWithFrame:CGRectMake(0, 0, 1000, 2000)];
-    [self.articleScrollView addSubview:self.articleView];
-     */
-    
-    /*
-    self.articleView = [[ArticleView alloc] initWithFrame:CGRectMake(0, 0, self.articleScrollView.frame.size.width, self.articleScrollView.frame.size.height)];
-    NSLog(@"frame size: %@", NSStringFromCGSize(self.articleScrollView.frame.size));
-    [self.articleScrollView addSubview:self.articleView];
-    self.articleScrollView.contentSize = self.articleView.frame.size;
-    NSLog(@"frame size: %@", NSStringFromCGSize(self.articleView.frame.size));
-     */
-
-    /*
-    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:self.articleView
-                                                                      attribute:NSLayoutAttributeLeading
-                                                                      relatedBy:0
-                                                                         toItem:self.view
-                                                                      attribute:NSLayoutAttributeLeft
-                                                                     multiplier:1.0
-                                                                       constant:0];
-    [self.view addConstraint:leftConstraint];
-    
-    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:self.articleView
-                                                                       attribute:NSLayoutAttributeTrailing
-                                                                       relatedBy:0
-                                                                          toItem:self.view
-                                                                       attribute:NSLayoutAttributeRight
-                                                                      multiplier:1.0
-                                                                        constant:0];
-    [self.view addConstraint:rightConstraint];
-     */
-
-}
 
 - (void)viewWillLayoutSubviews
 {
-    NSLog(@"viewWillLayoutSubviews");
-    NSLog(@"scroll view frame size: %@", NSStringFromCGSize(self.articleScrollView.frame.size));
-    NSLog(@"scroll view contentSize: %@", NSStringFromCGSize(self.articleScrollView.contentSize));
-
-    //self.articleView = [[ArticleView alloc] initWithFrame:CGRectMake(0, 0, self.articleScrollView.frame.size.width, self.articleScrollView.frame.size.height)];
-    //[self.articleScrollView addSubview:self.articleView];
-    //self.articleScrollView.contentSize = self.articleView.frame.size;
-
-    NSLog(@"article view frame size: %@", NSStringFromCGSize(self.articleView.frame.size));
-    
-    //CGSize calculatedArticleViewSize = [self.articleView sizeThatFits:self.articleScrollView.frame.size];
     self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
-    //CGFloat newHeight = [self.articleView dynamicallyCalculatedHeight];
-    //self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
-
 }
 
 - (void)viewDidLayoutSubviews
 {
-    /*
-    NSLog(@"viewDidLayoutSubviews");
-    NSLog(@"scroll view frame size: %@", NSStringFromCGSize(self.articleScrollView.frame.size));
-    NSLog(@"scroll view contentSize: %@", NSStringFromCGSize(self.articleScrollView.contentSize));
-    //self.articleScrollView.contentSize = CGSizeMake(1000.00, 1000.0);
-    NSLog(@"scroll view frame size: %@", NSStringFromCGSize(self.articleScrollView.frame.size));
-    NSLog(@"scroll view contentSize: %@", NSStringFromCGSize(self.articleScrollView.contentSize));
-     */
+    //[self listSubviewsOfView:self.view];
+    //NSLog(@"%@", self.view);
+    //NSLog(@"%@", self.navigationController.view);
 }
 
 - (void)setArticle:(Article *)article
@@ -98,6 +46,15 @@
     self.articleView.headline.text = @"Headline!";
     self.articleView.introduction.text = @"Introduction!";
     self.articleView.metaInfo.text = @"Meta Info!";
+}
+
+- (void)listSubviewsOfView:(UIView *)view
+{
+    NSArray *subviews = [view subviews]; // Get the subviews of the view.
+    for (UIView *subview in subviews) {
+        NSLog(@"%@", subview);
+        [self listSubviewsOfView:subview]; // recursion.
+    }
 }
 
 @end
