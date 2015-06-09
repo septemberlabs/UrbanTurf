@@ -7,10 +7,20 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ArticleView">
             <connections>
+                <outlet property="betweenHeadlineAndIntro" destination="srS-Xn-sRD" id="pNt-a4-Ut8"/>
+                <outlet property="betweenImageAndHeadline" destination="Zr2-rk-jYz" id="DN4-7c-MBY"/>
+                <outlet property="betweenIntroAndMetaInfo" destination="mub-zg-UCl" id="RD2-o9-cYC"/>
+                <outlet property="betweenMetaInfoAndButton" destination="rbj-0F-7sv" id="NEL-Yr-bkP"/>
+                <outlet property="betweenSuperviewAndImage" destination="gBb-Zg-F10" id="6Ef-W8-3sb"/>
+                <outlet property="goToURLButton" destination="Iki-9X-H3N" id="kzq-6w-tXm"/>
                 <outlet property="headline" destination="9Mz-zQ-adZ" id="EKe-7O-hXz"/>
+                <outlet property="headlineHeight" destination="aBV-qd-4e1" id="OAZ-dZ-KGl"/>
                 <outlet property="image" destination="573-eQ-Tzs" id="gOW-pQ-Afy"/>
+                <outlet property="imageHeight" destination="E1R-ph-9A8" id="Dcn-fd-JBU"/>
+                <outlet property="introHeight" destination="Zzk-x8-Weo" id="pdB-Tg-Ldi"/>
                 <outlet property="introduction" destination="s8z-0d-eiQ" id="MnK-tu-XMh"/>
                 <outlet property="metaInfo" destination="A8o-Cl-qrh" id="asi-yd-c4y"/>
+                <outlet property="metaInfoHeight" destination="Qok-Gm-ORE" id="KPQ-YM-jnY"/>
                 <outlet property="viewArticleButton" destination="Iki-9X-H3N" id="6uJ-Q2-t7X"/>
             </connections>
         </placeholder>
@@ -20,7 +30,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Headline" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Mz-zQ-adZ">
-                    <rect key="frame" x="8" y="516" width="584" height="47"/>
+                    <rect key="frame" x="8" y="316" width="584" height="47"/>
                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="47" id="aBV-qd-4e1"/>
@@ -30,7 +40,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Introduction" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s8z-0d-eiQ">
-                    <rect key="frame" x="8" y="571" width="584" height="117"/>
+                    <rect key="frame" x="8" y="371" width="584" height="117"/>
                     <color key="backgroundColor" red="0.0" green="1" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="117" id="Zzk-x8-Weo"/>
@@ -40,7 +50,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meta Info" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A8o-Cl-qrh">
-                    <rect key="frame" x="8" y="696" width="584" height="36"/>
+                    <rect key="frame" x="8" y="496" width="584" height="36"/>
                     <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="36" id="Qok-Gm-ORE"/>
@@ -50,16 +60,17 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iki-9X-H3N">
-                    <rect key="frame" x="244" y="740" width="112" height="30"/>
+                    <rect key="frame" x="244" y="540" width="112" height="30"/>
                     <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Read Full Article">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="573-eQ-Tzs">
-                    <rect key="frame" x="8" y="8" width="584" height="500"/>
+                    <rect key="frame" x="8" y="8" width="584" height="300"/>
+                    <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="500" id="E1R-ph-9A8"/>
+                        <constraint firstAttribute="height" constant="300" id="E1R-ph-9A8"/>
                     </constraints>
                 </imageView>
             </subviews>
@@ -81,7 +92,7 @@
                 <constraint firstAttribute="trailing" secondItem="9Mz-zQ-adZ" secondAttribute="trailing" constant="8" id="tqG-25-NXd"/>
                 <constraint firstItem="s8z-0d-eiQ" firstAttribute="leading" secondItem="A8o-Cl-qrh" secondAttribute="leading" id="vPX-4S-8HB"/>
             </constraints>
-            <point key="canvasLocation" x="538" y="368"/>
+            <point key="canvasLocation" x="425" y="339"/>
         </view>
     </objects>
 </document>

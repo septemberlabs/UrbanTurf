@@ -52,4 +52,47 @@
     return self;
 }
 
+- (CGFloat)dynamicallyCalculatedHeight
+{
+    CGFloat height =
+    self.betweenSuperviewAndImage.constant +
+    self.imageHeight.constant +
+    self.betweenImageAndHeadline.constant +
+    self.headlineHeight.constant +
+    self.betweenHeadlineAndIntro.constant +
+    self.introHeight.constant +
+    self.betweenIntroAndMetaInfo.constant +
+    self.metaInfoHeight.constant +
+    self.betweenMetaInfoAndButton.constant +
+    self.goToURLButton.frame.size.height;
+    
+    return height;
+}
+
+
+/*
+- (CGSize)sizeThatFits:(CGSize)size
+{
+    NSLog(@"current size: %@", NSStringFromCGSize(self.frame.size));
+    
+    CGFloat width = self.frame.size.width;
+    
+    CGFloat height =
+        self.betweenSuperviewAndImage.constant +
+        self.imageHeight.constant +
+        self.betweenImageAndHeadline.constant +
+        self.headlineHeight.constant +
+        self.betweenHeadlineAndIntro.constant +
+        self.introHeight.constant +
+        self.betweenIntroAndMetaInfo.constant +
+        self.metaInfoHeight.constant +
+        self.betweenMetaInfoAndButton.constant +
+        self.goToURLButton.frame.size.height;
+
+    NSLog(@"new size: %@", NSStringFromCGSize(self.frame.size));
+    
+    return CGSizeMake(width, height);
+}
+*/
+ 
 @end
