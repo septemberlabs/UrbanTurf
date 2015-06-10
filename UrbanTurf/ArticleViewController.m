@@ -27,6 +27,13 @@
 
 @implementation ArticleViewController
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    // turn on the navigation bar, which we want for the Back button.
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
 - (void)viewWillLayoutSubviews
 {
     self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];

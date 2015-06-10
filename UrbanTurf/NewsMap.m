@@ -49,7 +49,16 @@
 
 @synthesize searchResults = _searchResults;
 
-- (void)viewDidLoad {
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // turn off the navigation bar, which we only want to see when we load an article.
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     // configure the table view
