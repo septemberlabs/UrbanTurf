@@ -15,6 +15,7 @@
                 <outlet property="betweenMapAndHeadline" destination="hFC-kU-Pg4" id="WoT-XP-djl"/>
                 <outlet property="betweenMetaInfoAndIntro" destination="GMi-TL-MWY" id="Kdh-ha-vRo"/>
                 <outlet property="betweenSuperviewAndImage" destination="X1Q-vg-Xm9" id="jUV-u3-0UD"/>
+                <outlet property="bottomPaddingView" destination="s9G-23-F7Q" id="fMF-M9-fOg"/>
                 <outlet property="headline" destination="9Mz-zQ-adZ" id="EKe-7O-hXz"/>
                 <outlet property="headlineHeight" destination="v2e-2q-hZt" id="c4t-SP-eyQ"/>
                 <outlet property="image" destination="573-eQ-Tzs" id="gOW-pQ-Afy"/>
@@ -117,7 +118,7 @@
                 <constraint firstAttribute="trailing" secondItem="s9G-23-F7Q" secondAttribute="trailing" constant="8" id="y93-9w-aw4"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="423" y="1094.5"/>
+            <point key="canvasLocation" x="33" y="1060.5"/>
         </view>
     </objects>
 </document>

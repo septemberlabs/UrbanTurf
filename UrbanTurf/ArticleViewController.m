@@ -11,6 +11,7 @@
 #import "AFHTTPSessionManager.h"
 #import "UIImageView+AFNetworking.h"
 #import "Constants.h"
+#import "Stylesheet.h"
 
 @interface ArticleViewController ()
 @property (weak, nonatomic) IBOutlet UIScrollView *articleScrollView;
@@ -36,9 +37,57 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     [self.articleView.image setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
-    self.articleView.headline.text = @"Headline........";
-    self.articleView.introduction.text = @"Introduction.......";
-    self.articleView.metaInfo.text = @"Meta Info.......";
+    
+    // headline.
+    self.articleView.headline.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
+    self.articleView.headline.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:FONT_POINT_SIZE];
+    self.articleView.headline.numberOfLines = 2;
+    self.articleView.headline.text = self.article.title;
+    NSLog(@"headline: %@", self.article.title);
+    
+    // introduction.
+    self.articleView.introduction.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
+    self.articleView.introduction.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleBody] fontWithSize:FONT_POINT_SIZE];
+    //self.articleView.introduction.numberOfLines = 2;
+    self.articleView.introduction.text = self.article.introduction;
+    
+    // meta info.
+    [self metaInfoAttributedString];
+    
+    // padding view.
+    self.articleView.bottomPaddingView.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)metaInfoAttributedString
+{
+    // set the background color to white since it may be some other color used for storyboard layout.
+    self.articleView.metaInfo.backgroundColor = [UIColor whiteColor];
+    
+    self.articleView.metaInfo.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE];
+    // UNCOMMENT THIS? self.articleView.metaInfo.text = self.article.publication;
+    NSDictionary *publicationAttributes = @{
+                                            NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
+                                            NSForegroundColorAttributeName: [Stylesheet color1]
+                                            };
+    
+    NSDictionary *dateAttributes = @{
+                                     NSFontAttributeName: [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE],
+                                     NSForegroundColorAttributeName: [Stylesheet color2]
+                                     };
+    
+    // concatenate the publication name and date, separating them with •
+    NSMutableString *metaInfoString = [self.article.publication mutableCopy];
+    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", self.article.date]];
+    
+    // make it attributed with publicationAttributes for the whole string.
+    NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
+    
+    // re-attribute the date, which begins at the end of the publication string and continues through to the end.
+    NSRange rangeOfDateInfo = NSMakeRange([self.article.publication length], ([metaInfoString length] - [self.article.publication length]));
+    [metaInfoAttributedString setAttributes:dateAttributes range:rangeOfDateInfo];
+    
+    // set the label with the value
+    self.articleView.metaInfo.attributedText = metaInfoAttributedString;
 }
 
 - (void)viewWillLayoutSubviews
@@ -61,14 +110,14 @@
                              @"zoom" : @"15",
                              @"size" : mapDimensions,
                              @"maptype" : @"roadmap",
-                             @"markers" : latlonString
+                             @"markers" : latlonString,
+                             @"scale" : @"2"
                              };
     NSString *mapImageURL = googleStaticMapBaseURL;
     for (NSString *paramKey in [params allKeys]) {
         NSString *paramValue = (NSString *)[params objectForKey:paramKey];
         mapImageURL = [mapImageURL stringByAppendingFormat:@"%@=%@&", paramKey, [paramValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     }
-    NSLog(@"mapImageURL: %@", mapImageURL);
     return [NSURL URLWithString:mapImageURL];
 }
 

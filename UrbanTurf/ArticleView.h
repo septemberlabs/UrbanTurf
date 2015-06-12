@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *metaInfo;
 @property (weak, nonatomic) IBOutlet UILabel *introduction;
 @property (weak, nonatomic) IBOutlet UIButton *viewArticleButton;
+@property (weak, nonatomic) IBOutlet UIView *bottomPaddingView;
 
 // vertical spacing constraints, used to calculate height in sizeThatFits
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenSuperviewAndImage;

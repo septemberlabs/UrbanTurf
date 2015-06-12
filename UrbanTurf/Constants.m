@@ -43,6 +43,9 @@ const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
 //const float LATLON_RADIUS = 0.5; // radius from the given lat/lon for which to return photos
 //#define LATLON_RADIUS (0.5) // used to define it thusly in HoodieTVC.m
 
+// UI
+float const FONT_POINT_SIZE = 12.0;
+
 NSString * const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articles?";
 double const LATLON_RADIUS = 0.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;

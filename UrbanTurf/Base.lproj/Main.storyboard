@@ -608,7 +608,6 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="vXx-PJ-ORA" secondAttribute="bottom" id="RzU-fK-Q19"/>
                                     <constraint firstItem="vXx-PJ-ORA" firstAttribute="leading" secondItem="suk-Hk-MIg" secondAttribute="leading" id="UDu-ea-mBj"/>
@@ -617,7 +616,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="bXw-DM-byG" firstAttribute="top" secondItem="suk-Hk-MIg" secondAttribute="bottom" id="ObU-3V-Nnh"/>
                             <constraint firstItem="suk-Hk-MIg" firstAttribute="leading" secondItem="BAD-Db-7hh" secondAttribute="leading" id="PJS-1Q-IoA"/>

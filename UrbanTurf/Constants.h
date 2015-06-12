@@ -44,6 +44,9 @@ extern CLLocationCoordinate2D const kingsCloister;
 extern CLLocationCoordinate2D const jacksonHoleSquare;
 //extern float const LATLON_RADIUS;
 
+// UI
+extern float const FONT_POINT_SIZE;
+
 extern NSString *const API_ADDRESS;
 extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items
 extern double const DEFAULT_ZOOM_LEVEL; // default zoom level at which to set the map
