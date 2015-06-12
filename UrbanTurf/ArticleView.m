@@ -54,17 +54,25 @@
 
 - (CGFloat)dynamicallyCalculatedHeight
 {
+    
+    float headlineHeight = self.headlineHeight.multiplier * self.mapHeight.constant;
+    float metaInfoHeight = self.metaInfoHeight.multiplier * headlineHeight;
+    
     CGFloat height =
     self.betweenSuperviewAndImage.constant +
     self.imageHeight.constant +
-    self.betweenImageAndHeadline.constant +
-    self.headlineHeight.constant +
-    self.betweenHeadlineAndIntro.constant +
+    self.betweenImageAndMap.constant +
+    self.mapHeight.constant +
+    self.betweenMapAndHeadline.constant +
+    headlineHeight +
+    self.betweenHeadlineAndMetaInfo.constant +
+    metaInfoHeight +
+    self.betweenMetaInfoAndIntro.constant +
     self.introHeight.constant +
-    self.betweenIntroAndMetaInfo.constant +
-    self.metaInfoHeight.constant +
-    self.betweenMetaInfoAndButton.constant +
-    self.goToURLButton.frame.size.height;
+    self.betweenIntroAndButton.constant +
+    self.viewArticleButton.frame.size.height +
+    self.betweenButtonAndPaddingView.constant +
+    self.paddingViewHeight.constant;
     
     return height;
 }

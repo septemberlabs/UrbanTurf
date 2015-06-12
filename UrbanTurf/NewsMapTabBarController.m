@@ -70,10 +70,13 @@
 {
     // loop through the view controllers until the NewsMap is found, then set its location and select it as the active tab.
     for (id vc in self.viewControllers) {
-        if ([vc isKindOfClass:[NewsMap class]]) {
-            NewsMap *newsMap = (NewsMap *)vc;
-            [newsMap setLocationWithLatitude:location.latitude andLongitude:location.longitude];
-            self.selectedViewController = newsMap;
+        if ([vc isKindOfClass:[UINavigationController class]]) {  // the NewsMap is embedded in a navigation controller, so check for that first.
+            UINavigationController *navigationController = (UINavigationController *)vc;
+            if ([navigationController.viewControllers[0] isKindOfClass:[NewsMap class]]) {
+                NewsMap *newsMap = (NewsMap *)navigationController.viewControllers[0];
+                [newsMap setLocationWithLatitude:location.latitude andLongitude:location.longitude];
+                self.selectedViewController = navigationController;
+            }
         }
     }
 }

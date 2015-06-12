@@ -19,8 +19,8 @@
 
 @implementation FavoriteLocationsTVC
 
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 
     self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
@@ -32,9 +32,6 @@
     // this sets the back button text of the subsequent vc, not the visible vc. confusing.
     // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
     self.navigationBar.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:nil action:nil];
-
-    //self.edgesForExtendedLayout = UIRectEdgeBottom;
-
 }
 
 - (void)viewWillAppear:(BOOL)animated

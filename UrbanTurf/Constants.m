@@ -13,6 +13,7 @@
 
 NSString * const googleAPIKeyForBrowserApplications = @"AIzaSyA0b_bOTi257UdLINlcn7JGOjrSiYM-kBk";
 NSString * const googleAPIKeyForiOSApplications = @"AIzaSyDs6Xda8mpENemqpNEkCULatxluYJl0HIc";
+NSString * const googleStaticMapBaseURL = @"https://maps.googleapis.com/maps/api/staticmap?";
 
 #pragma mark - USER DEFAULTS
 

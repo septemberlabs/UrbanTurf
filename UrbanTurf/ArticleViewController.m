@@ -8,7 +8,9 @@
 
 #import "ArticleViewController.h"
 #import "ArticleView.h"
+#import "AFHTTPSessionManager.h"
 #import "UIImageView+AFNetworking.h"
+#import "Constants.h"
 
 @interface ArticleViewController ()
 @property (weak, nonatomic) IBOutlet UIScrollView *articleScrollView;
@@ -32,6 +34,11 @@
     [super viewWillAppear:animated];
     // turn on the navigation bar, which we want for the Back button.
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
+    [self.articleView.image setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
+    self.articleView.headline.text = @"Headline........";
+    self.articleView.introduction.text = @"Introduction.......";
+    self.articleView.metaInfo.text = @"Meta Info.......";
 }
 
 - (void)viewWillLayoutSubviews
@@ -41,18 +48,28 @@
 
 - (void)viewDidLayoutSubviews
 {
-    //[self listSubviewsOfView:self.view];
-    //NSLog(@"%@", self.view);
-    //NSLog(@"%@", self.navigationController.view);
+    [self.articleView.mapImageView setImageWithURL:[self googleStaticMapURL]];
 }
 
-- (void)setArticle:(Article *)article
+- (NSURL *)googleStaticMapURL
 {
-    _article = article;
-    [self.articleView.image setImageWithURL:[NSURL URLWithString:article.imageURL]];
-    self.articleView.headline.text = @"Headline!";
-    self.articleView.introduction.text = @"Introduction!";
-    self.articleView.metaInfo.text = @"Meta Info!";
+    // format here: https://developers.google.com/maps/documentation/staticmaps/
+    NSString *latlonString = [NSString stringWithFormat:@"%f,%f", self.article.coordinate.latitude, self.article.coordinate.longitude];
+    NSString *mapDimensions = [NSString stringWithFormat:@"%dx%d", (int)self.articleView.mapImageView.frame.size.width, (int)self.articleView.mapImageView.frame.size.height];
+    NSDictionary *params = @{
+                             @"center" : latlonString,
+                             @"zoom" : @"15",
+                             @"size" : mapDimensions,
+                             @"maptype" : @"roadmap",
+                             @"markers" : latlonString
+                             };
+    NSString *mapImageURL = googleStaticMapBaseURL;
+    for (NSString *paramKey in [params allKeys]) {
+        NSString *paramValue = (NSString *)[params objectForKey:paramKey];
+        mapImageURL = [mapImageURL stringByAppendingFormat:@"%@=%@&", paramKey, [paramValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }
+    NSLog(@"mapImageURL: %@", mapImageURL);
+    return [NSURL URLWithString:mapImageURL];
 }
 
 - (void)listSubviewsOfView:(UIView *)view

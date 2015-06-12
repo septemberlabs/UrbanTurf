@@ -584,12 +584,9 @@
 {
     
     // if the table view sending the message is the articles table view
-    /*
     if (tableView == self.tableView) {
         [tableView deselectRowAtIndexPath:indexPath animated:NO];
-        [self performSegueWithIdentifier:@"DisplayArticleSegue" sender:self];
     }
-     */
     
     // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -1032,20 +1029,6 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    /*
-    if ([segue.identifier isEqualToString:@"DisplayArticleSegue"]) {
-        if ([segue.destinationViewController isKindOfClass:[UINavigationController class]]) {
-            NSLog(@"destination view controller: %@", segue.destinationViewController);
-            if ([[segue.destinationViewController viewControllers][0] isKindOfClass:[ArticleViewController class]]) {
-                ArticleViewController *articleVC = (ArticleViewController *)[segue.destinationViewController viewControllers][0];
-                NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-                Article *articleToDisplay = (Article *)self.articles[indexPath.row];
-                articleVC.article = articleToDisplay;
-            }
-        }
-    }
-     */
-    
     if ([segue.identifier isEqualToString:@"DisplayArticleSegue"]) {
         if ([segue.destinationViewController isKindOfClass:[ArticleViewController class]]) {
             ArticleViewController *articleVC = (ArticleViewController *)segue.destinationViewController;
@@ -1054,7 +1037,6 @@
             articleVC.article = articleToDisplay;
         }
     }
-
 }
 
 #pragma mark - Misc

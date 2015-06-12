@@ -30,8 +30,8 @@ NSString * const googlePlaceDetailsPath = @"details/";
     return _sharedGooglePlacesClient;
 }
 
-- (void)getPlacesLike:(NSString *)searchString atLocation:(CLLocationCoordinate2D)locationToSearchAround delegate:(id<GooglePlacesView>)delegate {
-    
+- (void)getPlacesLike:(NSString *)searchString atLocation:(CLLocationCoordinate2D)locationToSearchAround delegate:(id<GooglePlacesView>)delegate
+{
     NSDictionary *params = @{
                              @"input" : searchString,
                              @"location" : [NSString stringWithFormat:@"%f,%f", locationToSearchAround.latitude, locationToSearchAround.longitude],

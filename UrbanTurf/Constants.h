@@ -12,6 +12,7 @@
 
 extern NSString * const googleAPIKeyForBrowserApplications;
 extern NSString * const googleAPIKeyForiOSApplications;
+extern NSString * const googleStaticMapBaseURL;
 
 #pragma mark - USER DEFAULTS
 
