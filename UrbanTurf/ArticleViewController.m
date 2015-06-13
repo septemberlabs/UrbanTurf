@@ -37,15 +37,19 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     [self.articleView.imageView setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
-    self.articleView.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    NSLog(@"width: %f, height: %f", self.articleView.imageView.image.size.width, self.articleView.imageView.image.size.height);
     
+    // the only way I found to make the image fill the full width (or height, if portrait layout) of the image view, then have the image view shrink its height to fit the exact height of the image is to 1) set the content mode to UIViewContentModeScaleAspectFit here, then 2) in viewWillLayoutSubviews change the height of the image view height to the image's new height after being adjusted by setting the content mode below, then 3) change the content mode of the image view to UIViewContentModeScaleToFill.
+    self.articleView.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    // map.
+    self.articleView.mapImageView.layer.borderWidth = 1.0f;
+    self.articleView.mapImageView.layer.borderColor = [Stylesheet color2].CGColor;
+   
     // headline.
     self.articleView.headlineLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
-    self.articleView.headlineLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:FONT_POINT_SIZE];
-    self.articleView.headlineLabel.numberOfLines = 2;
+    self.articleView.headlineLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:18.0];
+    //self.articleView.headlineLabel.numberOfLines = 2;
     self.articleView.headlineLabel.text = self.article.title;
-    NSLog(@"headline: %@", self.article.title);
     
     // introduction.
     self.articleView.introductionLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
@@ -56,30 +60,35 @@
     // meta info.
     [self metaInfoAttributedString];
     
+    // button.
+    self.articleView.viewArticleButton.backgroundColor = [Stylesheet color1];
+    
     // padding view.
     self.articleView.bottomPaddingView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewWillLayoutSubviews
 {
-    self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
     [self processImage];
 }
 
 - (void)viewDidLayoutSubviews
 {
+    [super viewDidLayoutSubviews];
+
+    // wait to load the map image until here since the map views's frame size won't be known earlier, and it is a required parameter for the URL.
     [self.articleView.mapImageView setImageWithURL:[self googleStaticMapURL]];
+
+    // calculate the final article view height now that all the dynamic content has been loaded, and force one more layout.
+    self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
+    [self.view layoutIfNeeded];
 }
 
 - (void)processImage
 {
-    
-    
-    NSLog(@"width: %f, height: %f", self.articleView.imageView.image.size.width, self.articleView.imageView.image.size.height);
-    //NSLog(@"constant height: %f", self.articleView.imageHeight.constant);
+    //NSLog(@"width: %f, height: %f", self.articleView.imageView.image.size.width, self.articleView.imageView.image.size.height);
     self.articleView.imageHeight.constant = self.articleView.imageView.image.size.height;
     self.articleView.imageView.contentMode = UIViewContentModeScaleToFill;
-    //NSLog(@"constant height: %f", self.articleView.imageHeight.constant);
 }
 
 - (void)metaInfoAttributedString
@@ -132,6 +141,7 @@
         NSString *paramValue = (NSString *)[params objectForKey:paramKey];
         mapImageURL = [mapImageURL stringByAppendingFormat:@"%@=%@&", paramKey, [paramValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     }
+    NSLog(@"google static map url: %@", mapImageURL);
     return [NSURL URLWithString:mapImageURL];
 }
 

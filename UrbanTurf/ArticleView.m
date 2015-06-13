@@ -54,53 +54,21 @@
 
 - (CGFloat)dynamicallyCalculatedHeight
 {
-    
-    float headlineHeight = self.headlineHeight.multiplier * self.mapHeight.constant;
-    float metaInfoHeight = self.metaInfoHeight.multiplier * headlineHeight;
-    
-    CGFloat height =
+    return
     self.betweenSuperviewAndImage.constant +
-    self.imageHeight.constant +
+    self.imageView.frame.size.height +
     self.betweenImageAndMap.constant +
     self.mapHeight.constant +
     self.betweenMapAndHeadline.constant +
-    headlineHeight +
+    self.headlineLabel.frame.size.height +
     self.betweenHeadlineAndMetaInfo.constant +
-    metaInfoHeight +
+    self.metaInfoLabel.frame.size.height +
     self.betweenMetaInfoAndIntro.constant +
-    self.introHeight.constant +
+    self.introductionLabel.frame.size.height +
     self.betweenIntroAndButton.constant +
     self.viewArticleButton.frame.size.height +
     self.betweenButtonAndPaddingView.constant +
     self.paddingViewHeight.constant;
-    
-    return height;
 }
 
-
-/*
-- (CGSize)sizeThatFits:(CGSize)size
-{
-    NSLog(@"current size: %@", NSStringFromCGSize(self.frame.size));
-    
-    CGFloat width = self.frame.size.width;
-    
-    CGFloat height =
-        self.betweenSuperviewAndImage.constant +
-        self.imageHeight.constant +
-        self.betweenImageAndHeadline.constant +
-        self.headlineHeight.constant +
-        self.betweenHeadlineAndIntro.constant +
-        self.introHeight.constant +
-        self.betweenIntroAndMetaInfo.constant +
-        self.metaInfoHeight.constant +
-        self.betweenMetaInfoAndButton.constant +
-        self.goToURLButton.frame.size.height;
-
-    NSLog(@"new size: %@", NSStringFromCGSize(self.frame.size));
-    
-    return CGSizeMake(width, height);
-}
-*/
- 
 @end
