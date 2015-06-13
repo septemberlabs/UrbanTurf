@@ -13,11 +13,11 @@
 
 - (CGFloat)dynamicallyCalculatedHeight;
 
-@property (weak, nonatomic) IBOutlet UIImageView *image;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *mapImageView;
-@property (weak, nonatomic) IBOutlet UILabel *headline;
-@property (weak, nonatomic) IBOutlet UILabel *metaInfo;
-@property (weak, nonatomic) IBOutlet UILabel *introduction;
+@property (weak, nonatomic) IBOutlet UILabel *headlineLabel;
+@property (weak, nonatomic) IBOutlet UILabel *metaInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *introductionLabel;
 @property (weak, nonatomic) IBOutlet UIButton *viewArticleButton;
 @property (weak, nonatomic) IBOutlet UIView *bottomPaddingView;
 

@@ -36,20 +36,22 @@
     // turn on the navigation bar, which we want for the Back button.
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
-    [self.articleView.image setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
+    [self.articleView.imageView setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
+    self.articleView.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    NSLog(@"width: %f, height: %f", self.articleView.imageView.image.size.width, self.articleView.imageView.image.size.height);
     
     // headline.
-    self.articleView.headline.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
-    self.articleView.headline.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:FONT_POINT_SIZE];
-    self.articleView.headline.numberOfLines = 2;
-    self.articleView.headline.text = self.article.title;
+    self.articleView.headlineLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
+    self.articleView.headlineLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:FONT_POINT_SIZE];
+    self.articleView.headlineLabel.numberOfLines = 2;
+    self.articleView.headlineLabel.text = self.article.title;
     NSLog(@"headline: %@", self.article.title);
     
     // introduction.
-    self.articleView.introduction.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
-    self.articleView.introduction.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleBody] fontWithSize:FONT_POINT_SIZE];
-    //self.articleView.introduction.numberOfLines = 2;
-    self.articleView.introduction.text = self.article.introduction;
+    self.articleView.introductionLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
+    self.articleView.introductionLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleBody] fontWithSize:FONT_POINT_SIZE];
+    //self.articleView.introductionLabel.numberOfLines = 2;
+    self.articleView.introductionLabel.text = self.article.introduction;
     
     // meta info.
     [self metaInfoAttributedString];
@@ -58,12 +60,34 @@
     self.articleView.bottomPaddingView.backgroundColor = [UIColor whiteColor];
 }
 
+- (void)viewWillLayoutSubviews
+{
+    self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
+    [self processImage];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [self.articleView.mapImageView setImageWithURL:[self googleStaticMapURL]];
+}
+
+- (void)processImage
+{
+    
+    
+    NSLog(@"width: %f, height: %f", self.articleView.imageView.image.size.width, self.articleView.imageView.image.size.height);
+    //NSLog(@"constant height: %f", self.articleView.imageHeight.constant);
+    self.articleView.imageHeight.constant = self.articleView.imageView.image.size.height;
+    self.articleView.imageView.contentMode = UIViewContentModeScaleToFill;
+    //NSLog(@"constant height: %f", self.articleView.imageHeight.constant);
+}
+
 - (void)metaInfoAttributedString
 {
     // set the background color to white since it may be some other color used for storyboard layout.
-    self.articleView.metaInfo.backgroundColor = [UIColor whiteColor];
+    self.articleView.metaInfoLabel.backgroundColor = [UIColor whiteColor];
     
-    self.articleView.metaInfo.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE];
+    self.articleView.metaInfoLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE];
     // UNCOMMENT THIS? self.articleView.metaInfo.text = self.article.publication;
     NSDictionary *publicationAttributes = @{
                                             NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
@@ -87,17 +111,7 @@
     [metaInfoAttributedString setAttributes:dateAttributes range:rangeOfDateInfo];
     
     // set the label with the value
-    self.articleView.metaInfo.attributedText = metaInfoAttributedString;
-}
-
-- (void)viewWillLayoutSubviews
-{
-    self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
-}
-
-- (void)viewDidLayoutSubviews
-{
-    [self.articleView.mapImageView setImageWithURL:[self googleStaticMapURL]];
+    self.articleView.metaInfoLabel.attributedText = metaInfoAttributedString;
 }
 
 - (NSURL *)googleStaticMapURL
