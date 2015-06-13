@@ -12,6 +12,7 @@
 + (UIColor*)color1;
 + (UIColor*)color2;
 + (UIColor*)color3;
++ (UIColor*)color4;
 + (NSString*)fonticons;
 + (CGFloat)searchBarFontIconSize;
 + (CGFloat)tabBarFontIconSize;

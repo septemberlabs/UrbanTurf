@@ -12,10 +12,11 @@
 
 #pragma mark Cache
 
-static UIColor* _color1 = nil;
-static UIColor* _color2 = nil;
-static UIColor* _color3 = nil;
-static NSString* _fonticons = nil;
+static UIColor *_color1 = nil;
+static UIColor *_color2 = nil;
+static UIColor *_color3 = nil;
+static UIColor *_color4 = nil;
+static NSString *_fonticons = nil;
 static CGFloat _searchBarFontIconSize;
 static CGFloat _tabBarFontIconSize;
 
@@ -67,6 +68,9 @@ static CGFloat _tabBarFontIconSize;
     // RGB: 229, 255, 226. Hex: #E5FFE2. Green used for scroll-selecting articles.
     // lightened color1 using this: http://www.cssfontstack.com/oldsites/hexcolortool/
     _color3 = [UIColor colorWithRed:(229/255.f) green:(255/255.f) blue:(226/255.f) alpha: 1];
+    
+    // RGB: 236, 236, 237. Hex: #ECECED. Light grey used for border on map in article view.
+    _color4 = [UIColor colorWithRed:(236/255.f) green:(236/255.f) blue:(237/255.f) alpha: 1];
     
     _fonticons = @"fontello";
     

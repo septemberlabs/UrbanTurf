@@ -43,7 +43,7 @@
     
     // map.
     self.articleView.mapImageView.layer.borderWidth = 1.0f;
-    self.articleView.mapImageView.layer.borderColor = [Stylesheet color2].CGColor;
+    self.articleView.mapImageView.layer.borderColor = [Stylesheet color4].CGColor;
    
     // headline.
     self.articleView.headlineLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
