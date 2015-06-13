@@ -368,35 +368,7 @@
         [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell.articleView]; // pin the top, trailing, bottom, and leading edges
         
         Article *article = (Article *)self.articles[indexPath.row];
-        articleOverlaySubview.headline.text = article.title;
-        articleOverlaySubview.introduction.text = [article.introduction substringWithRange:NSMakeRange(0, 100)];
-        articleOverlaySubview.metaInfo.text = article.publication;
-
-        NSDictionary *publicationAttributes = @{
-                                                NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
-                                                NSForegroundColorAttributeName: [Stylesheet color1]
-                                                };
-        
-        NSDictionary *dateAttributes = @{
-                                         NSFontAttributeName: [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE],
-                                         NSForegroundColorAttributeName: [Stylesheet color2]
-                                         };
-        
-        // concatenate the publication name and date, separating them with •
-        NSMutableString *metaInfoString = [article.publication mutableCopy];
-        [metaInfoString appendString:[NSString stringWithFormat:@" • %@", article.date]];
-        
-        // make it attributed with publicationAttributes for the whole string
-        NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
-        
-        // re-attribute the date, which begins at the end of the publication string and continues through to the end
-        NSRange rangeOfDateInfo = NSMakeRange([article.publication length], ([metaInfoString length] - [article.publication length]));
-        [metaInfoAttributedString setAttributes:dateAttributes range:rangeOfDateInfo];
-        
-        // set the label with the value
-        articleOverlaySubview.metaInfo.attributedText = metaInfoAttributedString;
-        
-        [articleOverlaySubview.image setImageWithURL:[NSURL URLWithString:article.imageURL]];
+        [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:article];
         
         // this ensures that the background color is reset, lest it be colored due to reuse of a scroll-selected cell.
         cell.backgroundColor = nil;
@@ -708,19 +680,19 @@
         // if no article is already overlaid, display the tapped one.
         if (!self.articleOverlaid) {
            
-            // DELETE SOON. This was before using the custom subclass.
-            // create a subview of self.articleOverlay with the same bounds.
-            //UIView *articleOverlaySubview = [[UIView alloc] initWithFrame:self.articleOverlay.bounds];
-            
             // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
             ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
             articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
             [self.articleOverlay addSubview:articleOverlaySubview];
             [self pinEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay]; // pin the top, trailing, bottom, and leading edges
+            [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:(Article *)marker.userData]; // set the values for the article overlay view's various components.
 
-            articleOverlaySubview.headline.text = @"Hi there!";
-            articleOverlaySubview.backgroundColor = [UIColor blueColor]; // for debugging. delete.
 
+            NSLog(@"self.articleOverlayHeightConstraint.constant: %f", self.articleOverlayHeightConstraint.constant);
+            self.articleOverlayHeightConstraint.constant = [articleOverlaySubview dynamicallyCalculatedHeight];
+            NSLog(@"self.articleOverlayHeightConstraint.constant: %f", self.articleOverlayHeightConstraint.constant);
+            
+            
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
             [self.view layoutIfNeeded];
             self.articleOverlayTopEdgeConstraint.constant -= self.articleOverlayHeightConstraint.constant;
@@ -744,11 +716,13 @@
             // if the tapped article is NOT the one already overlaid, we display the tapped article. (else, do nothing.)
             if (![marker isEqual:self.tappedMarker]) {
             
-                UIView *newArticleOverlaySubview = [[UIView alloc] initWithFrame:self.articleOverlay.bounds];
+                ArticleOverlayView *newArticleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
                 // set the background color to whichever color the current subview's background color isn't.
-                if (CGColorEqualToColor(((UIView *)[self.articleOverlay.subviews objectAtIndex:0]).backgroundColor.CGColor, [UIColor blueColor].CGColor)) newArticleOverlaySubview.backgroundColor = [UIColor purpleColor];
-                else newArticleOverlaySubview.backgroundColor = [UIColor blueColor];
+                // debugging stuff - delete soon:
+                // if (CGColorEqualToColor(((UIView *)[self.articleOverlay.subviews objectAtIndex:0]).backgroundColor.CGColor, [UIColor blueColor].CGColor)) newArticleOverlaySubview.backgroundColor = [UIColor purpleColor];
+                // else newArticleOverlaySubview.backgroundColor = [UIColor blueColor];
                 [self.articleOverlay addSubview:newArticleOverlaySubview];
+                [self configureArticleTeaserForSubview:newArticleOverlaySubview withArticle:(Article *)marker.userData]; // set the values for the article overlay view's various components.
                 
                 [UIView transitionWithView:self.articleOverlay
                                   duration:0.5
@@ -1040,6 +1014,43 @@
 }
 
 #pragma mark - Misc
+
+-(void)configureArticleTeaserForSubview:(ArticleOverlayView *)articleOverlaySubview withArticle:(Article *)article
+{
+    [articleOverlaySubview.imageView setImageWithURL:[NSURL URLWithString:article.imageURL]]; // image
+    articleOverlaySubview.headlineLabel.text = article.title; // headline
+    articleOverlaySubview.introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)]; // body
+    [self prepareMetaInfoStringForSubview:articleOverlaySubview withArticle:article]; // meta info
+}
+
+-(void)prepareMetaInfoStringForSubview:(ArticleOverlayView *)articleOverlaySubview withArticle:(Article *)article
+{
+    articleOverlaySubview.metaInfoLabel.text = article.publication;
+    
+    NSDictionary *publicationAttributes = @{
+                                            NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:FONT_POINT_SIZE], // this is a magic font; couldn't figure out how to bold this programmatically, resorted to hard coding the font name.
+                                            NSForegroundColorAttributeName: [Stylesheet color1]
+                                            };
+    
+    NSDictionary *dateAttributes = @{
+                                     NSFontAttributeName: [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE],
+                                     NSForegroundColorAttributeName: [Stylesheet color2]
+                                     };
+    
+    // concatenate the publication name and date, separating them with •
+    NSMutableString *metaInfoString = [article.publication mutableCopy];
+    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", article.date]];
+    
+    // make it attributed with publicationAttributes for the whole string
+    NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
+    
+    // re-attribute the date, which begins at the end of the publication string and continues through to the end
+    NSRange rangeOfDateInfo = NSMakeRange([article.publication length], ([metaInfoString length] - [article.publication length]));
+    [metaInfoAttributedString setAttributes:dateAttributes range:rangeOfDateInfo];
+    
+    // set the label with the value
+    articleOverlaySubview.metaInfoLabel.attributedText = metaInfoAttributedString;
+}
 
 -(void)pinEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview
 {

@@ -9,8 +9,17 @@
 #import <UIKit/UIKit.h>
 
 @interface ArticleOverlayView : UIView
-@property (weak, nonatomic) IBOutlet UIImageView *image;
-@property (weak, nonatomic) IBOutlet UILabel *headline;
-@property (weak, nonatomic) IBOutlet UILabel *introduction;
-@property (weak, nonatomic) IBOutlet UILabel *metaInfo;
+
+- (CGFloat)dynamicallyCalculatedHeight;
+
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UILabel *headlineLabel;
+@property (weak, nonatomic) IBOutlet UILabel *introLabel;
+@property (weak, nonatomic) IBOutlet UILabel *metaInfoLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenImageViewAndSuperview;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenHeadlineAndSuperview;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenIntroAndHeadline;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenMetaInfoAndIntro;
+
 @end

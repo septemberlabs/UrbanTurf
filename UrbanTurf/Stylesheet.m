@@ -70,7 +70,7 @@ static CGFloat _tabBarFontIconSize;
     _color3 = [UIColor colorWithRed:(229/255.f) green:(255/255.f) blue:(226/255.f) alpha: 1];
     
     // RGB: 236, 236, 237. Hex: #ECECED. Light grey used for border on map in article view.
-    _color4 = [UIColor colorWithRed:(236/255.f) green:(236/255.f) blue:(237/255.f) alpha: 1];
+    _color4 = [UIColor colorWithRed:(211/255.f) green:(211/255.f) blue:(212/255.f) alpha: 1];
     
     _fonticons = @"fontello";
     
@@ -84,6 +84,7 @@ static CGFloat _tabBarFontIconSize;
 + (UIColor*)color1 { return _color1; }
 + (UIColor*)color2 { return _color2; }
 + (UIColor*)color3 { return _color3; }
++ (UIColor*)color4 { return _color4; }
 + (NSString*)fonticons { return _fonticons; }
 + (CGFloat)searchBarFontIconSize { return _searchBarFontIconSize; }
 + (CGFloat)tabBarFontIconSize { return _tabBarFontIconSize; }

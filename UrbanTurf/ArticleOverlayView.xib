@@ -7,10 +7,15 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ArticleOverlayView">
             <connections>
-                <outlet property="headline" destination="4El-ev-rGr" id="VzV-sz-7oV"/>
-                <outlet property="image" destination="ToK-KZ-qGc" id="3SD-Vq-G2g"/>
-                <outlet property="introduction" destination="cPA-xM-sww" id="mmS-2h-pcL"/>
-                <outlet property="metaInfo" destination="Laq-K4-8aI" id="vaO-e5-5LJ"/>
+                <outlet property="betweenHeadlineAndSuperview" destination="8hQ-Ob-8iP" id="Zaq-rJ-cEY"/>
+                <outlet property="betweenImageViewAndSuperview" destination="8hQ-Ob-8iP" id="7um-GP-AGy"/>
+                <outlet property="betweenIntroAndHeadline" destination="lUg-ek-imw" id="mGl-bA-pah"/>
+                <outlet property="betweenMetaInfoAndIntro" destination="00c-yP-6DZ" id="AcF-Z6-z6o"/>
+                <outlet property="headlineLabel" destination="4El-ev-rGr" id="DWl-2n-9Ro"/>
+                <outlet property="imageView" destination="ToK-KZ-qGc" id="HfA-qj-8kA"/>
+                <outlet property="imageViewHeight" destination="ZFn-tR-VVO" id="YW7-rz-zfu"/>
+                <outlet property="introLabel" destination="cPA-xM-sww" id="ois-pb-THg"/>
+                <outlet property="metaInfoLabel" destination="Laq-K4-8aI" id="lQE-ZJ-g0x"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -26,50 +31,53 @@
                         <constraint firstAttribute="height" constant="100" id="ZFn-tR-VVO"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Headline Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4El-ev-rGr">
-                    <rect key="frame" x="116" y="8" width="476" height="30"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Headline" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4El-ev-rGr">
+                    <rect key="frame" x="116" y="8" width="476" height="15"/>
                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="Cxu-xz-HeX"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="Cxu-xz-HeX"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Article Introduction" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cPA-xM-sww">
-                    <rect key="frame" x="116" y="43" width="476" height="30"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cPA-xM-sww" userLabel="Article Introduction Label">
+                    <rect key="frame" x="116" y="31" width="476" height="15"/>
                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="aMG-g3-6JT"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Article Meta Info" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Laq-K4-8aI">
-                    <rect key="frame" x="116" y="81" width="476" height="15"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meta Info" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Laq-K4-8aI" userLabel="Article Meta Info Label">
+                    <rect key="frame" x="116" y="54" width="476" height="15"/>
                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="15" id="mXO-tN-bbm"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="10" id="mXO-tN-bbm"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="4El-ev-rGr" firstAttribute="trailing" secondItem="cPA-xM-sww" secondAttribute="trailing" id="Dpc-kd-PlP"/>
-                <constraint firstItem="Laq-K4-8aI" firstAttribute="top" secondItem="cPA-xM-sww" secondAttribute="bottom" constant="8" id="HDW-7Q-2gE"/>
-                <constraint firstItem="4El-ev-rGr" firstAttribute="height" secondItem="cPA-xM-sww" secondAttribute="height" id="KJU-HU-4Rn"/>
-                <constraint firstItem="4El-ev-rGr" firstAttribute="top" secondItem="AyF-iB-iGx" secondAttribute="top" constant="8" id="Q5b-xT-yGI"/>
-                <constraint firstItem="4El-ev-rGr" firstAttribute="leading" secondItem="cPA-xM-sww" secondAttribute="leading" id="WgY-XS-igF"/>
-                <constraint firstItem="ToK-KZ-qGc" firstAttribute="top" secondItem="AyF-iB-iGx" secondAttribute="top" constant="8" id="fxu-cA-CzJ"/>
-                <constraint firstItem="Laq-K4-8aI" firstAttribute="trailing" secondItem="cPA-xM-sww" secondAttribute="trailing" id="gDP-QF-8PY"/>
-                <constraint firstItem="cPA-xM-sww" firstAttribute="centerY" secondItem="ToK-KZ-qGc" secondAttribute="centerY" id="hlD-3R-FCH"/>
-                <constraint firstItem="Laq-K4-8aI" firstAttribute="leading" secondItem="cPA-xM-sww" secondAttribute="leading" id="oxa-DK-Gd9"/>
-                <constraint firstItem="4El-ev-rGr" firstAttribute="leading" secondItem="ToK-KZ-qGc" secondAttribute="trailing" constant="8" id="tK4-Go-Ep8"/>
-                <constraint firstAttribute="trailing" secondItem="4El-ev-rGr" secondAttribute="trailing" constant="8" id="uWm-Se-fYo"/>
-                <constraint firstItem="ToK-KZ-qGc" firstAttribute="leading" secondItem="AyF-iB-iGx" secondAttribute="leading" constant="8" id="yjC-Jf-32e"/>
+                <constraint firstItem="Laq-K4-8aI" firstAttribute="top" secondItem="cPA-xM-sww" secondAttribute="bottom" constant="8" id="00c-yP-6DZ"/>
+                <constraint firstItem="ToK-KZ-qGc" firstAttribute="leading" secondItem="AyF-iB-iGx" secondAttribute="leading" constant="8" id="21g-Xm-S9Y"/>
+                <constraint firstItem="ToK-KZ-qGc" firstAttribute="top" secondItem="AyF-iB-iGx" secondAttribute="top" constant="8" id="8hQ-Ob-8iP"/>
+                <constraint firstAttribute="bottom" secondItem="ToK-KZ-qGc" secondAttribute="bottom" constant="8" id="Bdc-yq-Y9F"/>
+                <constraint firstItem="4El-ev-rGr" firstAttribute="top" secondItem="ToK-KZ-qGc" secondAttribute="top" id="GZQ-ja-pyb"/>
+                <constraint firstAttribute="trailing" secondItem="Laq-K4-8aI" secondAttribute="trailing" constant="8" id="Hj0-WK-N4V"/>
+                <constraint firstAttribute="trailing" secondItem="cPA-xM-sww" secondAttribute="trailing" constant="8" id="I5j-sO-MKa"/>
+                <constraint firstItem="cPA-xM-sww" firstAttribute="leading" secondItem="ToK-KZ-qGc" secondAttribute="trailing" constant="8" id="L11-Zh-ipC"/>
+                <constraint firstItem="4El-ev-rGr" firstAttribute="leading" secondItem="ToK-KZ-qGc" secondAttribute="trailing" constant="8" id="Pio-mq-jB3"/>
+                <constraint firstAttribute="trailing" secondItem="4El-ev-rGr" secondAttribute="trailing" constant="8" id="VIC-1u-Fbw"/>
+                <constraint firstItem="cPA-xM-sww" firstAttribute="top" secondItem="4El-ev-rGr" secondAttribute="bottom" constant="8" id="lUg-ek-imw"/>
+                <constraint firstItem="Laq-K4-8aI" firstAttribute="leading" secondItem="ToK-KZ-qGc" secondAttribute="trailing" constant="8" id="wes-c6-ast"/>
             </constraints>
-            <point key="canvasLocation" x="958" y="397"/>
+            <point key="canvasLocation" x="398" y="137"/>
         </view>
     </objects>
 </document>
