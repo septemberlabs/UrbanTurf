@@ -16,6 +16,7 @@ static UIColor *_color1 = nil;
 static UIColor *_color2 = nil;
 static UIColor *_color3 = nil;
 static UIColor *_color4 = nil;
+static UIColor *_color5 = nil;
 static NSString *_fonticons = nil;
 static CGFloat _searchBarFontIconSize;
 static CGFloat _tabBarFontIconSize;
@@ -72,6 +73,9 @@ static CGFloat _tabBarFontIconSize;
     // RGB: 236, 236, 237. Hex: #ECECED. Light grey used for border on map in article view.
     _color4 = [UIColor colorWithRed:(211/255.f) green:(211/255.f) blue:(212/255.f) alpha: 1];
     
+    // Light grey used for border between map and views beneath.
+    _color5 = [UIColor lightGrayColor];
+    
     _fonticons = @"fontello";
     
     _searchBarFontIconSize = 22.0;
@@ -85,6 +89,7 @@ static CGFloat _tabBarFontIconSize;
 + (UIColor*)color2 { return _color2; }
 + (UIColor*)color3 { return _color3; }
 + (UIColor*)color4 { return _color4; }
++ (UIColor*)color5 { return _color5; }
 + (NSString*)fonticons { return _fonticons; }
 + (CGFloat)searchBarFontIconSize { return _searchBarFontIconSize; }
 + (CGFloat)tabBarFontIconSize { return _tabBarFontIconSize; }

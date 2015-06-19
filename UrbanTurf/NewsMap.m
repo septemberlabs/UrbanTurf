@@ -16,6 +16,7 @@
 #import "ArticleOverlayView.h"
 #import "NewsMapTableViewCell.h"
 #import "ArticleViewController.h"
+#import "UIView+AddBorders.h"
 
 @interface NewsMap ()
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton;
@@ -684,14 +685,10 @@
             ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
             articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
             [self.articleOverlay addSubview:articleOverlaySubview];
-            [self pinEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay]; // pin the top, trailing, bottom, and leading edges
+            [self pinEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay]; // pin the top, trailing, bottom, and leading edges.
             [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:(Article *)marker.userData]; // set the values for the article overlay view's various components.
-
-
-            NSLog(@"self.articleOverlayHeightConstraint.constant: %f", self.articleOverlayHeightConstraint.constant);
-            self.articleOverlayHeightConstraint.constant = [articleOverlaySubview dynamicallyCalculatedHeight];
-            NSLog(@"self.articleOverlayHeightConstraint.constant: %f", self.articleOverlayHeightConstraint.constant);
-            
+            [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
+            [articleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
             
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
             [self.view layoutIfNeeded];
@@ -723,7 +720,9 @@
                 // else newArticleOverlaySubview.backgroundColor = [UIColor blueColor];
                 [self.articleOverlay addSubview:newArticleOverlaySubview];
                 [self configureArticleTeaserForSubview:newArticleOverlaySubview withArticle:(Article *)marker.userData]; // set the values for the article overlay view's various components.
-                
+                [newArticleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
+                [newArticleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
+
                 [UIView transitionWithView:self.articleOverlay
                                   duration:0.5
                                    options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight
@@ -1021,6 +1020,7 @@
     articleOverlaySubview.headlineLabel.text = article.title; // headline
     articleOverlaySubview.introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)]; // body
     [self prepareMetaInfoStringForSubview:articleOverlaySubview withArticle:article]; // meta info
+    [articleOverlaySubview layoutIfNeeded];
 }
 
 -(void)prepareMetaInfoStringForSubview:(ArticleOverlayView *)articleOverlaySubview withArticle:(Article *)article
@@ -1082,6 +1082,14 @@
                                                                     attribute:NSLayoutAttributeBottom
                                                                    multiplier:1.0
                                                                      constant:0.0]];
+}
+
+- (void)loadArticle:(UITapGestureRecognizer *)gestureRecognizer
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
+    ArticleViewController *articleVC = (ArticleViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ArticleViewController"];
+    articleVC.article = (Article *)self.tappedMarker.userData;
+    [self.navigationController pushViewController:articleVC animated:YES];
 }
 
 @end

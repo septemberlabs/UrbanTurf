@@ -62,6 +62,7 @@
     
     // button.
     self.articleView.viewArticleButton.backgroundColor = [Stylesheet color1];
+    self.articleView.viewArticleButton.titleLabel.text = @"";
     
     // padding view.
     self.articleView.bottomPaddingView.backgroundColor = [UIColor whiteColor];

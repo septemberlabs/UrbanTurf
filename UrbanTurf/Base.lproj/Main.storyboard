@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="nAp-W2-Chy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="nAp-W2-Chy">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -459,10 +459,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sal-Vu-s9R" userLabel="Article Overlay">
-                                <rect key="frame" x="0.0" y="551" width="600" height="150"/>
+                                <rect key="frame" x="0.0" y="551" width="600" height="124"/>
                                 <color key="backgroundColor" red="0.0" green="1" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="Arp-Th-NNN"/>
+                                    <constraint firstAttribute="height" constant="124" id="Arp-Th-NNN"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -588,7 +588,7 @@
         <!--Article View Controller-->
         <scene sceneID="FfH-hu-e6l">
             <objects>
-                <viewController title="Article View Controller" id="MZg-7W-uEy" customClass="ArticleViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ArticleViewController" title="Article View Controller" id="MZg-7W-uEy" customClass="ArticleViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="VQG-hc-llb"/>
                         <viewControllerLayoutGuide type="bottom" id="bXw-DM-byG"/>

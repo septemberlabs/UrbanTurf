@@ -10,6 +10,7 @@
 		1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */; };
 		1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */; };
 		1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */; };
+		1A0E1DA11B3394A2002F3DF9 /* UIView+AddBorders.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */; };
 		1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */; };
 		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
 		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
@@ -90,6 +91,8 @@
 		1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleOverlayView.xib; sourceTree = "<group>"; };
 		1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleOverlayView.h; sourceTree = "<group>"; };
 		1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleOverlayView.m; sourceTree = "<group>"; };
+		1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AddBorders.h"; sourceTree = "<group>"; };
+		1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AddBorders.m"; sourceTree = "<group>"; };
 		1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTabBarController.h; sourceTree = "<group>"; };
 		1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTabBarController.m; sourceTree = "<group>"; };
 		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -266,6 +269,8 @@
 		1AB1A55D1A48E3D900369211 /* UrbanTurf */ = {
 			isa = PBXGroup;
 			children = (
+				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
+				1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */,
 				1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */,
 				1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */,
 				1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */,
@@ -561,6 +566,7 @@
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
 				1AECA1621AF059E500EAE054 /* AFURLConnectionOperation.m in Sources */,
 				1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */,
+				1A0E1DA11B3394A2002F3DF9 /* UIView+AddBorders.m in Sources */,
 				1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */,
 				1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */,
 				1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */,
