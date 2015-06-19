@@ -10,7 +10,5 @@
 #import "ArticleOverlayView.h"
 
 @interface NewsMapTableViewCell : UITableViewCell
-
 @property (weak, nonatomic) IBOutlet ArticleOverlayView *articleView;
-
 @end

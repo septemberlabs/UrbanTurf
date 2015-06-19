@@ -62,8 +62,11 @@
     
     // button.
     self.articleView.viewArticleButton.backgroundColor = [Stylesheet color1];
-    self.articleView.viewArticleButton.titleLabel.text = @"";
-    
+    NSString *buttonTitle = [@"Read full article\nat " stringByAppendingString:self.article.publication];
+    self.articleView.viewArticleButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    self.articleView.viewArticleButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.articleView.viewArticleButton setTitle:buttonTitle forState:UIControlStateNormal];
+
     // padding view.
     self.articleView.bottomPaddingView.backgroundColor = [UIColor whiteColor];
 }

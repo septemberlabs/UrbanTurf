@@ -12,6 +12,10 @@
 #import "ArticleOverlayView.h"
 #import "Stylesheet.h"
 
+@interface ArticleOverlayView ()
+@property (strong, nonatomic) UIView *customViewFromXib;
+@end
+
 @implementation ArticleOverlayView
 
 - (id)initWithFrame:(CGRect)frame
@@ -33,6 +37,9 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|" options:0 metrics:nil views:views]];
     
     [self configureUI];
+    
+    // save a pointer to the custom view loaded from the xib.
+    self.customViewFromXib = subview;
     
     return self;
 }
@@ -56,16 +63,24 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|" options:0 metrics:nil views:views]];
 
     [self configureUI];
+
+    // save a pointer to the custom view loaded from the xib.
+    self.customViewFromXib = subview;
     
     return self;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    self.customViewFromXib.backgroundColor = backgroundColor;
 }
 
 - (void)configureUI
 {
     // reset the background colors to white in case some other color used in IB for debugging.
-    self.headlineLabel.backgroundColor = [UIColor whiteColor];
-    self.metaInfoLabel.backgroundColor = [UIColor whiteColor];
-    self.introLabel.backgroundColor = [UIColor whiteColor];
+    self.headlineLabel.backgroundColor = [UIColor clearColor];
+    self.metaInfoLabel.backgroundColor = [UIColor clearColor];
+    self.introLabel.backgroundColor = [UIColor clearColor];
     
     // add a light border around the images.
     self.imageView.layer.borderWidth = 1.0f;

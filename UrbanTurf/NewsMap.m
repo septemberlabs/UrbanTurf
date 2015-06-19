@@ -361,7 +361,21 @@
             return cell;
         }
         
-        // The way this works is we have a custom UITableViewCell class called NewsMapTableViewCell. The tableview's prototype cell's custom class in the storyboard is set to this class, as is its identifier. The NewsMapTableViewCell class is simply a container view of a single ArticleOverlayView subview called articleView. ArticleOverlayView is the owner of the correspondingly named xib. In this way we have one custom view designed in a xib (ArticleOverlayView.xib) that can be used both in the table view and as the view that slides up when a marker is tapped in full screen map mode. (The reason we don't simply make the prototype cell's custom class ArticleOverlayView is that that would force ArticleOverlayView to be subclassed from UITableViewCell, which we don't want.) Thank you: http://www.pumpmybicep.com/2014/07/21/designing-a-custom-uitableviewcell-in-interface-builder/
+        // The way this works is we have a custom UITableViewCell class called NewsMapTableViewCell. The table view prototype cell's custom class in the storyboard is set to this class, as is its identifier. The NewsMapTableViewCell class is simply a container view of a single ArticleOverlayView subview called articleView. ArticleOverlayView is the owner of the correspondingly named xib. In this way we have one custom view designed in a xib (ArticleOverlayView.xib) that can be used both in the table view and as the view that slides up when a marker is tapped in full screen map mode. (The reason we don't simply make the prototype cell's custom class ArticleOverlayView is that that would force ArticleOverlayView to be subclassed from UITableViewCell, which we don't want.) Thank you: http://www.pumpmybicep.com/2014/07/21/designing-a-custom-uitableviewcell-in-interface-builder/
+        NewsMapTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NewsMapTableViewCell" forIndexPath:indexPath];
+        ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.bounds];
+        articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell addSubview:articleOverlaySubview];
+        cell.articleView = articleOverlaySubview;
+        [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell]; // pin the top, trailing, bottom, and leading edges
+        
+        Article *article = (Article *)self.articles[indexPath.row];
+        [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:article];
+        
+        // this ensures that the background color is reset, lest it be colored due to reuse of a scroll-selected cell.
+        cell.articleView.backgroundColor = [UIColor whiteColor];
+
+        /*
         NewsMapTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NewsMapTableViewCell" forIndexPath:indexPath];
         ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.articleView.bounds];
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
@@ -372,7 +386,8 @@
         [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:article];
         
         // this ensures that the background color is reset, lest it be colored due to reuse of a scroll-selected cell.
-        cell.backgroundColor = nil;
+        cell.articleView.backgroundColor = nil;
+         */
         
         return cell;
         
@@ -851,15 +866,15 @@
 - (void)setFocusOnArticle:(Article *)articleToReceiveFocus
 {
     // Three things need to happen to visually focus on a new article/cell:
-    // 3. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
     // 1. De-highlight the currently-focused one, if it exists.
     // 2. Move the map camera to the newly-focused article's location.
+    // 3. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
     
     // 1
     if (self.articleWithFocus) {
         NSIndexPath *indexPathWithCurrentFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
-        UITableViewCell *cellWithCurrentFocus = [self.tableView cellForRowAtIndexPath:indexPathWithCurrentFocus];
-        cellWithCurrentFocus.backgroundColor = nil;
+        NewsMapTableViewCell *cellWithCurrentFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathWithCurrentFocus];
+        cellWithCurrentFocus.articleView.backgroundColor = [UIColor whiteColor];
     }
     self.articleWithFocus = articleToReceiveFocus; // save the newly focused article.
     
@@ -872,12 +887,12 @@
     [self.tableView scrollToRowAtIndexPath:indexPathToReceiveFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
     // we need to do the following for the case when scrollToRowAtIndexPath causes no scroll because either a) articleToReceiveFocus is the topmost cell and the user got there by pull-dragging to the top or b) the exceedingly rare case where the user has stopped scrolling on the exact pixel between two cells so no further scroll is necessary. In either of those cases, the backgroundColor animation (i.e., highlighting) would not have occurred because scrollViewDidEndScrollingAnimation would never be called.
-    UITableViewCell *cellToReceiveFocus = [self.tableView cellForRowAtIndexPath:indexPathToReceiveFocus];
+    NewsMapTableViewCell *cellToReceiveFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathToReceiveFocus];
     CGPoint cellOriginInWindowCoordinateSystem = [cellToReceiveFocus convertPoint:cellToReceiveFocus.bounds.origin toView:nil];
     CGPoint tableViewOriginInWindowCoordinateSystem = [self.tableView convertPoint:self.tableView.bounds.origin toView:nil];
     if (cellOriginInWindowCoordinateSystem.y == tableViewOriginInWindowCoordinateSystem.y) {
         [UIView animateWithDuration:0.5 animations:^{
-            cellToReceiveFocus.backgroundColor = [Stylesheet color3];
+            cellToReceiveFocus.articleView.backgroundColor = [Stylesheet color3];
         }];
     }
     
@@ -969,11 +984,10 @@
     // at the end of scrolling, the topmost visible row will be the one we want to give focus.
     //NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
     NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
-    UITableViewCell *cellToFocus = [self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
-
+    NewsMapTableViewCell *cellToFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
     // fade in the highlighting color.
     [UIView animateWithDuration:0.5 animations:^{
-        cellToFocus.backgroundColor = [Stylesheet color3];
+        cellToFocus.articleView.backgroundColor = [Stylesheet color3];
     }];
 }
 
