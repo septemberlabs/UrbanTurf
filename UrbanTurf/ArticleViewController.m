@@ -46,13 +46,13 @@
     self.articleView.mapImageView.layer.borderColor = [Stylesheet color4].CGColor;
    
     // headline.
-    self.articleView.headlineLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
+    self.articleView.headlineLabel.backgroundColor = [UIColor clearColor]; // reset to clear in case some other color for debugging.
     self.articleView.headlineLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:18.0];
     //self.articleView.headlineLabel.numberOfLines = 2;
     self.articleView.headlineLabel.text = self.article.title;
     
     // introduction.
-    self.articleView.introductionLabel.backgroundColor = [UIColor whiteColor]; // reset to white in case some other color for debugging.
+    self.articleView.introductionLabel.backgroundColor = [UIColor clearColor]; // reset to clear in case some other color for debugging.
     self.articleView.introductionLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleBody] fontWithSize:FONT_POINT_SIZE];
     //self.articleView.introductionLabel.numberOfLines = 2;
     self.articleView.introductionLabel.text = self.article.introduction;
@@ -68,7 +68,7 @@
     [self.articleView.viewArticleButton setTitle:buttonTitle forState:UIControlStateNormal];
 
     // padding view.
-    self.articleView.bottomPaddingView.backgroundColor = [UIColor whiteColor];
+    self.articleView.bottomPaddingView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewWillLayoutSubviews
@@ -97,8 +97,8 @@
 
 - (void)metaInfoAttributedString
 {
-    // set the background color to white since it may be some other color used for storyboard layout.
-    self.articleView.metaInfoLabel.backgroundColor = [UIColor whiteColor];
+    // set the background color to clear since it may be some other color used for storyboard layout.
+    self.articleView.metaInfoLabel.backgroundColor = [UIColor clearColor];
     
     self.articleView.metaInfoLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline] fontWithSize:FONT_POINT_SIZE];
     // UNCOMMENT THIS? self.articleView.metaInfo.text = self.article.publication;
@@ -145,7 +145,7 @@
         NSString *paramValue = (NSString *)[params objectForKey:paramKey];
         mapImageURL = [mapImageURL stringByAppendingFormat:@"%@=%@&", paramKey, [paramValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     }
-    NSLog(@"google static map url: %@", mapImageURL);
+    //NSLog(@"google static map url: %@", mapImageURL);
     return [NSURL URLWithString:mapImageURL];
 }
 
