@@ -9,7 +9,6 @@
 #import "NewsMap.h"
 #import "Constants.h"
 #import "UrbanTurfFetcher.h"
-#import "Article.h"
 #import "Stylesheet.h"
 #import "GooglePlacesClient.h"
 #import "UIImageView+AFNetworking.h"
@@ -176,7 +175,7 @@
 
 - (void)receiveData:(NSArray *)fetchedResults
 {
-    NSLog(@"fetchedResults called.");
+    //NSLog(@"fetchedResults called.");
     NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
     //NSLog(@"results: %@", fetchedResults);
     for (NSDictionary *article in fetchedResults) {
@@ -546,7 +545,12 @@
         
         // update the state of the article overlay.
         self.articleOverlaid = NO;
-        self.tappedMarker = nil;
+        if (self.tappedMarker) {
+            // reset the tapped marker to its default color.
+            self.tappedMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
+            // nullify the self.tappedMarker pointer to indicate that there is no tapped marker. the marker continues to exist because there is another pointer to it.
+            self.tappedMarker = nil;
+        }
     }
 }
 
@@ -562,7 +566,7 @@
     // we are in list mode, meaning the table view of articles is visible beneath the map.
     if (self.listView) {
         if (!self.crosshairs.hidden) [self hideCrosshairs]; // hide the crosshairs if they're not already hidden.
-        NSLog(@"index: %lu", (unsigned long)[self.articles indexOfObject:marker.userData]);
+        //NSLog(@"index: %lu", (unsigned long)[self.articles indexOfObject:marker.userData]);
         [self setFocusOnArticle:(Article *)marker.userData];
     }
 
@@ -593,11 +597,13 @@
                              }
                              completion:^(BOOL finished) {
                              }];
+            
+            // make the marker green.
+            marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
 
             // update the state of the article overlay.
             self.articleOverlaid = YES;
             self.tappedMarker = marker;
-            
         }
         // an article is already overlaid.
         else {
@@ -618,6 +624,10 @@
                                     [self.articleOverlay addSubview:newArticleOverlaySubview];
                                 }
                                 completion:nil];
+                
+                // reset the existing tapped marker back to the default color and make the newly tapped marker green.
+                self.tappedMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
+                marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
                 
                 // update the state of the article overlay, namely which marker was last tapped.
                 self.tappedMarker = marker;
@@ -751,7 +761,7 @@
     self.articleWithFocus = articleToReceiveFocus; // save the newly focused article.
     
     // 2
-    [self setFocusOnArticleAtIndexWithAnnotation:articleToReceiveFocus];
+    [self moveCameraToArticle:articleToReceiveFocus highlightMarker:YES];
 
     // 3
     // when the scrolling finishes, delegate method scrollViewDidEndScrollingAnimation will do the actual highlighting.
@@ -775,7 +785,7 @@
     [self setFocusOnArticle:(Article *)timer.userInfo[@"articleToReceiveFocus"]];
 }
 
-- (void)setFocusOnArticleAtIndexWithAnnotation:(Article *)articleToReceiveFocus
+- (void)moveCameraToArticle:(Article *)articleToReceiveFocus highlightMarker:(BOOL)highlightMarker
 {
     // reset all the markers to the default color, red.
     for (Article *article in self.articles) {
@@ -783,7 +793,9 @@
     }
     // move the map set the newly focused article's location and set the corresponding marker to green.
     [self.mapView animateToLocation:articleToReceiveFocus.coordinate];
-    articleToReceiveFocus.marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+    if (highlightMarker) {
+        articleToReceiveFocus.marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+    }
 }
 
 - (IBAction)pressToggleViewButton:(id)sender

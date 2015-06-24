@@ -8,6 +8,6 @@
 
 #import "Article.h"
 
-@interface ArticleViewController : UIViewController
+@interface ArticleViewController : UIViewController <UINavigationControllerDelegate>
 @property (strong, nonatomic) Article *article;
 @end

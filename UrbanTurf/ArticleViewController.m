@@ -12,6 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "Constants.h"
 #import "Stylesheet.h"
+#import "NewsMap.h"
 
 @interface ArticleViewController ()
 @property (weak, nonatomic) IBOutlet UIScrollView *articleScrollView;
@@ -35,9 +36,11 @@
     [super viewWillAppear:animated];
     // turn on the navigation bar, which we want for the Back button.
     [self.navigationController setNavigationBarHidden:NO animated:YES];
-    
+    // set self to the delegate so we can capture and act on the action of the user tapping Back.
+    self.navigationController.delegate = self;
+
+    // image.
     [self.articleView.imageView setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
-    
     // the only way I found to make the image fill the full width (or height, if portrait layout) of the image view, then have the image view shrink its height to fit the exact height of the image is to 1) set the content mode to UIViewContentModeScaleAspectFit here, then 2) in viewWillLayoutSubviews change the height of the image view height to the image's new height after being adjusted by setting the content mode below, then 3) change the content mode of the image view to UIViewContentModeScaleToFill.
     self.articleView.imageView.contentMode = UIViewContentModeScaleAspectFit;
     
@@ -147,6 +150,19 @@
     }
     //NSLog(@"google static map url: %@", mapImageURL);
     return [NSURL URLWithString:mapImageURL];
+}
+
+// below we set the focus of the NewsMap to the article currently displayed in this VC.
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    // verify that the VC about to be shown is the NewsMap.
+    if ([viewController isKindOfClass:[NewsMap class]]) {
+        NewsMap *newsMap = (NewsMap *)viewController;
+        [newsMap setFocusOnArticle:self.article];
+        
+        // unset this VC from being the nav bar's delegate since it has no need to be the delegate anymore so we should nullify that relationship.
+        self.navigationController.delegate = nil;
+    }
 }
 
 - (void)listSubviewsOfView:(UIView *)view
