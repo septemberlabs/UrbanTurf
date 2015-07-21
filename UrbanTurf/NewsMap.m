@@ -201,6 +201,7 @@
         [self.mapView clear]; // clear off existing markers
         for (Article *article in self.articles) {
             GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
+            marker.icon = [UIImage imageNamed:@"red marker 36x36"];
             marker.snippet = @"Hello World";
             marker.appearAnimation = kGMSMarkerAnimationPop;
             marker.map = self.mapView;
