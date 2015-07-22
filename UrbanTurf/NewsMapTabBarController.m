@@ -10,6 +10,7 @@
 #import "Stylesheet.h"
 #import "FavoriteLocationsTVC.h"
 #import "NewsMap.h"
+#import "Constants.h"
 
 @interface NewsMapTabBarController ()
 
@@ -74,7 +75,7 @@
             UINavigationController *navigationController = (UINavigationController *)vc;
             if ([navigationController.viewControllers[0] isKindOfClass:[NewsMap class]]) {
                 NewsMap *newsMap = (NewsMap *)navigationController.viewControllers[0];
-                [newsMap setLocationWithLatitude:location.latitude andLongitude:location.longitude];
+                [newsMap setLocationWithLatitude:location.latitude andLongitude:location.longitude zoom:DEFAULT_ZOOM_LEVEL];
                 self.selectedViewController = navigationController;
             }
         }

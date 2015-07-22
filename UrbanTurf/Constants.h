@@ -46,6 +46,8 @@ extern CLLocationCoordinate2D const jacksonHoleSquare;
 
 // UI
 extern float const FONT_POINT_SIZE;
+extern NSString * const map_marker_default;
+extern NSString * const map_marker_selected;
 
 extern NSString *const API_ADDRESS;
 extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items

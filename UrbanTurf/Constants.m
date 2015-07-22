@@ -45,6 +45,8 @@ const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
 
 // UI
 float const FONT_POINT_SIZE = 12.0;
+NSString * const map_marker_default = @"red marker 36x36";
+NSString * const map_marker_selected = @"green marker 36x36";
 
 NSString * const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articles?";
 double const LATLON_RADIUS = 0.5;

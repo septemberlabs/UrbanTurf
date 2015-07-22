@@ -148,13 +148,24 @@
     });
 }
 
-- (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude
+- (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude zoom:(float)zoom
 {
     self.latitude = latitude;
     self.longitude = longitude;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.mapView moveCamera:[GMSCameraUpdate setTarget:CLLocationCoordinate2DMake(latitude, longitude) zoom:DEFAULT_ZOOM_LEVEL]];
-    });
+    
+    // if the caller wants to control the zoom level, it will be a positive value. otherwise it will be -1.
+    if (zoom > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[self.mapView moveCamera:[GMSCameraUpdate setTarget:CLLocationCoordinate2DMake(latitude, longitude) zoom:DEFAULT_ZOOM_LEVEL]];
+            [self.mapView animateToCameraPosition:[GMSCameraPosition cameraWithLatitude:latitude longitude:longitude zoom:zoom bearing:0 viewingAngle:0]];
+        });
+    }
+    else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[self.mapView moveCamera:[GMSCameraUpdate setTarget:CLLocationCoordinate2DMake(latitude, longitude)]];
+            [self.mapView animateToCameraPosition:[GMSCameraPosition cameraWithLatitude:latitude longitude:longitude zoom:self.mapView.camera.zoom bearing:0 viewingAngle:0]];
+        });
+    }
     [self fetchData];
 }
 
@@ -201,8 +212,7 @@
         [self.mapView clear]; // clear off existing markers
         for (Article *article in self.articles) {
             GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
-            marker.icon = [UIImage imageNamed:@"red marker 36x36"];
-            marker.snippet = @"Hello World";
+            marker.icon = [UIImage imageNamed:map_marker_default];
             marker.appearAnimation = kGMSMarkerAnimationPop;
             marker.map = self.mapView;
             marker.userData = article;
@@ -497,7 +507,7 @@
     CLLocationCoordinate2D selectedLocation = CLLocationCoordinate2DMake([[fetchedPlace valueForKeyPath:@"result.geometry.location.lat"] doubleValue], [[fetchedPlace valueForKeyPath:@"result.geometry.location.lng"] doubleValue]);
     
     // store it in an instance variable, which will trigger a fetch of articles at that location.
-    [self setLocationWithLatitude:selectedLocation.latitude andLongitude:selectedLocation.longitude];
+    [self setLocationWithLatitude:selectedLocation.latitude andLongitude:selectedLocation.longitude zoom:DEFAULT_ZOOM_LEVEL];
     
     // on the main queue update the UI (map and table view).
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -516,7 +526,7 @@
 {
     if (self.gestureInitiatedMapMove) {
         self.gestureInitiatedMapMove = NO;
-        [self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude];
+        [self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude zoom:-1];
     }
 }
 
@@ -548,7 +558,7 @@
         self.articleOverlaid = NO;
         if (self.tappedMarker) {
             // reset the tapped marker to its default color.
-            self.tappedMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
+            self.tappedMarker.icon = [UIImage imageNamed:map_marker_default];
             // nullify the self.tappedMarker pointer to indicate that there is no tapped marker. the marker continues to exist because there is another pointer to it.
             self.tappedMarker = nil;
         }
@@ -600,7 +610,7 @@
                              }];
             
             // make the marker green.
-            marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+            marker.icon = [UIImage imageNamed:map_marker_selected];
 
             // update the state of the article overlay.
             self.articleOverlaid = YES;
@@ -627,8 +637,8 @@
                                 completion:nil];
                 
                 // reset the existing tapped marker back to the default color and make the newly tapped marker green.
-                self.tappedMarker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
-                marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+                self.tappedMarker.icon = [UIImage imageNamed:map_marker_default];
+                marker.icon = [UIImage imageNamed:map_marker_selected];
                 
                 // update the state of the article overlay, namely which marker was last tapped.
                 self.tappedMarker = marker;
@@ -788,14 +798,14 @@
 
 - (void)moveCameraToArticle:(Article *)articleToReceiveFocus highlightMarker:(BOOL)highlightMarker
 {
-    // reset all the markers to the default color, red.
+    // reset all the markers to the default color.
     for (Article *article in self.articles) {
-        article.marker.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
+        article.marker.icon = [UIImage imageNamed:map_marker_default];
     }
-    // move the map set the newly focused article's location and set the corresponding marker to green.
+    // move the map to the newly focused article's location and set the corresponding marker to selected.
     [self.mapView animateToLocation:articleToReceiveFocus.coordinate];
     if (highlightMarker) {
-        articleToReceiveFocus.marker.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+        articleToReceiveFocus.marker.icon = [UIImage imageNamed:map_marker_selected];
     }
 }
 
