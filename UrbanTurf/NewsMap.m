@@ -921,6 +921,16 @@
     }
 }
 
+#pragma mark - Zoom buttons
+
+- (IBAction)zoomIn:(id)sender {
+    [self.mapView animateWithCameraUpdate:[GMSCameraUpdate zoomIn]];
+}
+
+- (IBAction)zoomOut:(id)sender {
+    [self.mapView animateWithCameraUpdate:[GMSCameraUpdate zoomOut]];
+}
+
 #pragma mark - Misc
 
 -(void)configureArticleTeaserForSubview:(ArticleOverlayView *)articleOverlaySubview withArticle:(Article *)article
