@@ -73,6 +73,8 @@ NSString * const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articl
 double const LATLON_RADIUS = 0.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 
+double const MARKER_OVERLAP_DISTANCE = 0.05;
+
 @implementation Constants
 
 // thank you: http://stackoverflow.com/questions/20544616/static-nsarray-of-strings-how-where-to-initialize-in-a-view-controller

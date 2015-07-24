@@ -221,6 +221,78 @@
     });
 }
 
+- (void)organizeMarkers
+{
+    NSMutableArray *markers = [[NSMutableArray alloc] init];
+
+    /*
+    - foreach article, loop through the markers
+    - if a marker doesn't exist at that location, add a marker at that location, putting the article in userData.
+    - if a marker does already exist at that location
+        - create a new array of articles
+        - stick the article that belongs to the existing marker as the first element in the array.
+        - stick the new article as the second element.
+        - count the elements in the array and set the icon for the corresponding number.
+    - wait til the end to loop through all the markers again, adding them to the map.
+    */
+    
+    for (Article *article in self.articles) {
+        // confirm the markers array isn't empty.
+        if ([markers count]) {
+            for (GMSMarker *marker in markers) {
+                
+                // if the marker's location has already been associated with 2 or more articles, its userData will be an array (of Articles). otherwise, it will be an Article.
+                CLLocationCoordinate2D markerCoordinate;
+                if ([marker.userData isMemberOfClass:[NSMutableArray class]]) {
+                    // just use the first article in the array for its coordinate. doesn't matter which we choose; the point is that they're all the same location.
+                    markerCoordinate = ((Article *)[marker.userData firstObject]).coordinate;
+                }
+                else {
+                    markerCoordinate = ((Article *)marker.userData).coordinate;
+                }
+                
+                // if the article's location is found to exist at one of the markers,
+                if (1) { // change this to: if (distance between A and B is less than MARKER_OVERLAP_DISTANCE)
+                    NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] init];
+                    [articlesAtLocation addObject:marker.userData];
+                    [articlesAtLocation addObject:article];
+                    break;
+                }
+            }
+            GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
+            newMarker.userData = article;
+            article.marker = newMarker;
+
+        }
+        // if markers is empty, add the marker for the first article.
+        else {
+            GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
+            newMarker.userData = article;
+            article.marker = newMarker;
+        }
+    }
+
+    for (GMSMarker *marker in markers) {
+        marker.map = self.mapView;
+        marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+        marker.appearAnimation = kGMSMarkerAnimationPop;
+    }
+    
+    
+    for (Article *article in self.articles) {
+        GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
+        marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+        marker.appearAnimation = kGMSMarkerAnimationPop;
+        marker.map = self.mapView;
+        marker.userData = article;
+        article.marker = marker;
+    }
+}
+
+
+
+
+
 #pragma mark - TVC methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
