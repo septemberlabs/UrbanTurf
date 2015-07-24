@@ -384,26 +384,26 @@
                                     <constraint firstAttribute="height" constant="150" id="pgg-4k-MOo"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e51-0l-SMi" userLabel="Zoom Out">
-                                <rect key="frame" x="8" y="127" width="25" height="25"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e51-0l-SMi" userLabel="Zoom Out">
+                                <rect key="frame" x="8" y="114" width="35" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="25" id="43I-rD-ogY"/>
-                                    <constraint firstAttribute="height" constant="25" id="IqK-4t-4QO"/>
+                                    <constraint firstAttribute="width" constant="35" id="43I-rD-ogY"/>
+                                    <constraint firstAttribute="height" constant="50" id="IqK-4t-4QO"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="SmallMinusButton">
+                                <state key="normal" image="SmallMinusButton">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="zoomOut:" destination="STl-BS-KjN" eventType="touchUpInside" id="87h-xA-eh4"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BEe-6N-fhL" userLabel="Zoom In">
-                                <rect key="frame" x="567" y="127" width="25" height="25"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BEe-6N-fhL" userLabel="Zoom In">
+                                <rect key="frame" x="557" y="114" width="35" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="25" id="3o5-yb-bEx"/>
-                                    <constraint firstAttribute="height" constant="25" id="pCl-Gs-M5b"/>
+                                    <constraint firstAttribute="width" constant="35" id="3o5-yb-bEx"/>
+                                    <constraint firstAttribute="height" constant="50" id="pCl-Gs-M5b"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="SmallPlusButton"/>
+                                <state key="normal" image="SmallPlusButton"/>
                                 <connections>
                                     <action selector="zoomIn:" destination="STl-BS-KjN" eventType="touchUpInside" id="CSy-Rv-eD9"/>
                                 </connections>

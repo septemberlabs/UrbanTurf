@@ -45,8 +45,29 @@ const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
 
 // UI
 float const FONT_POINT_SIZE = 12.0;
-NSString * const map_marker_default = @"red marker 36x36";
-NSString * const map_marker_selected = @"green marker 36x36";
+NSString * const map_marker_default = @"red marker 48x48";
+NSString * const map_marker_default_1 = @"red marker 48x48 - 1";
+NSString * const map_marker_default_2 = @"red marker 48x48 - 2";
+NSString * const map_marker_default_3 = @"red marker 48x48 - 3";
+NSString * const map_marker_default_4 = @"red marker 48x48 - 4";
+NSString * const map_marker_default_5 = @"red marker 48x48 - 5";
+NSString * const map_marker_default_6 = @"red marker 48x48 - 6";
+NSString * const map_marker_default_7 = @"red marker 48x48 - 7";
+NSString * const map_marker_default_8 = @"red marker 48x48 - 8";
+NSString * const map_marker_default_9 = @"red marker 48x48 - 9";
+NSString * const map_marker_default_9plus = @"red marker 48x48 - 9 plus";
+NSString * const map_marker_selected = @"green marker 48x48";
+NSString * const map_marker_selected_1 = @"green marker 48x48 - 1";
+NSString * const map_marker_selected_2 = @"green marker 48x48 - 2";
+NSString * const map_marker_selected_3 = @"green marker 48x48 - 3";
+NSString * const map_marker_selected_4 = @"green marker 48x48 - 4";
+NSString * const map_marker_selected_5 = @"green marker 48x48 - 5";
+NSString * const map_marker_selected_6 = @"green marker 48x48 - 6";
+NSString * const map_marker_selected_7 = @"green marker 48x48 - 7";
+NSString * const map_marker_selected_8 = @"green marker 48x48 - 8";
+NSString * const map_marker_selected_9 = @"green marker 48x48 - 9";
+NSString * const map_marker_selected_9plus = @"green marker 48x48 - 9 plus";
+NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
 
 NSString * const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articles?";
 double const LATLON_RADIUS = 0.5;

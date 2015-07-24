@@ -212,7 +212,7 @@
         [self.mapView clear]; // clear off existing markers
         for (Article *article in self.articles) {
             GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
-            marker.icon = [UIImage imageNamed:map_marker_default];
+            marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
             marker.appearAnimation = kGMSMarkerAnimationPop;
             marker.map = self.mapView;
             marker.userData = article;
@@ -558,7 +558,7 @@
         self.articleOverlaid = NO;
         if (self.tappedMarker) {
             // reset the tapped marker to its default color.
-            self.tappedMarker.icon = [UIImage imageNamed:map_marker_default];
+            self.tappedMarker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
             // nullify the self.tappedMarker pointer to indicate that there is no tapped marker. the marker continues to exist because there is another pointer to it.
             self.tappedMarker = nil;
         }
@@ -610,7 +610,7 @@
                              }];
             
             // make the marker green.
-            marker.icon = [UIImage imageNamed:map_marker_selected];
+            marker.icon = [[UIImage imageNamed:map_marker_selected] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
 
             // update the state of the article overlay.
             self.articleOverlaid = YES;
@@ -637,8 +637,8 @@
                                 completion:nil];
                 
                 // reset the existing tapped marker back to the default color and make the newly tapped marker green.
-                self.tappedMarker.icon = [UIImage imageNamed:map_marker_default];
-                marker.icon = [UIImage imageNamed:map_marker_selected];
+                self.tappedMarker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+                marker.icon = [[UIImage imageNamed:map_marker_selected] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];;
                 
                 // update the state of the article overlay, namely which marker was last tapped.
                 self.tappedMarker = marker;
@@ -800,12 +800,12 @@
 {
     // reset all the markers to the default color.
     for (Article *article in self.articles) {
-        article.marker.icon = [UIImage imageNamed:map_marker_default];
+        article.marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
     }
     // move the map to the newly focused article's location and set the corresponding marker to selected.
     [self.mapView animateToLocation:articleToReceiveFocus.coordinate];
     if (highlightMarker) {
-        articleToReceiveFocus.marker.icon = [UIImage imageNamed:map_marker_selected];
+        articleToReceiveFocus.marker.icon = [[UIImage imageNamed:map_marker_selected] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
     }
 }
 
@@ -832,6 +832,15 @@
                          }
                          completion:^(BOOL finished) {
                              //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
+
+                             // upon completion, if there was a selected article, de-select it in the table view and on the map.
+                             if (self.articleWithFocus) {
+                                 NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
+                                 NewsMapTableViewCell *cellWithFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellWithFocus];
+                                 cellWithFocus.articleView.backgroundColor = [UIColor whiteColor];
+                                 self.articleWithFocus.marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+                                 self.articleWithFocus = nil; // update the state.
+                             }
                          }];
         
         self.listView = NO; // save the state so we know whether to expand or contract next time the button is pressed.
