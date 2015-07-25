@@ -239,54 +239,74 @@
     for (Article *article in self.articles) {
         // confirm the markers array isn't empty.
         if ([markers count]) {
+            
+            BOOL locationMatchedExistingMarker = FALSE;
+            
             for (GMSMarker *marker in markers) {
                 
-                // if the marker's location has already been associated with 2 or more articles, its userData will be an array (of Articles). otherwise, it will be an Article.
                 CLLocationCoordinate2D markerCoordinate;
-                if ([marker.userData isMemberOfClass:[NSMutableArray class]]) {
+                
+                // if the marker's location has already been associated with 2 or more articles, its userData will be an array (of Articles).
+                if ([marker.userData isMemberOfClass:[NSMutableArray class]]) { // there are already 2 or more articles at the current marker's location.
+                    NSMutableArray *articlesAtLocation = (NSMutableArray *)marker.userData;
                     // just use the first article in the array for its coordinate. doesn't matter which we choose; the point is that they're all the same location.
-                    markerCoordinate = ((Article *)[marker.userData firstObject]).coordinate;
-                }
-                else {
-                    markerCoordinate = ((Article *)marker.userData).coordinate;
+                    markerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
+                    // test whether the location associated with this marker is the same as the current article. if it is, append this article to the array of articles for this marker.
+                    if (1) { // change this to: if (distance between A and B is less than MARKER_OVERLAP_DISTANCE)
+                        [articlesAtLocation addObject:article];
+                        article.marker = marker;
+                        locationMatchedExistingMarker = TRUE;
+                        break;
+                    }
                 }
                 
-                // if the article's location is found to exist at one of the markers,
-                if (1) { // change this to: if (distance between A and B is less than MARKER_OVERLAP_DISTANCE)
-                    NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] init];
-                    [articlesAtLocation addObject:marker.userData];
-                    [articlesAtLocation addObject:article];
-                    break;
+                // otherwise, it will be an Article.
+                else {
+                    markerCoordinate = ((Article *)marker.userData).coordinate;
+                    if (1) { // change this to: if (distance between A and B is less than MARKER_OVERLAP_DISTANCE)
+                        NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:marker.userData, article, nil];
+                        marker.userData = articlesAtLocation;
+                        article.marker = marker;
+                        locationMatchedExistingMarker = TRUE;
+                        break;
+                    }
                 }
+                
             }
-            GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
-            newMarker.userData = article;
-            article.marker = newMarker;
-
+            
+            // if the article's location was not found to exist at one of the markers, add a new marker for it.
+            if (!locationMatchedExistingMarker) {
+                GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
+                newMarker.userData = article;
+                article.marker = newMarker;
+                [markers addObject:newMarker];
+            }
+    
         }
         // if markers is empty, add the marker for the first article.
         else {
             GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
             newMarker.userData = article;
             article.marker = newMarker;
+            [markers addObject:newMarker];
         }
     }
 
+    // go through all the markers setting their icons.
     for (GMSMarker *marker in markers) {
+        
+        // if the marker's userData is an array, it means there are multiple articles for the location.
+        if ([marker.userData isMemberOfClass:[NSMutableArray class]]) {
+            NSInteger numberOfArticlesAtMarker = [((NSArray *)marker.userData) count];
+            // HERE. Construct the marker name to be used based on numberOfArticlesAtMarker.
+        }
+        else {
+            marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+        }
         marker.map = self.mapView;
-        marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
         marker.appearAnimation = kGMSMarkerAnimationPop;
     }
-    
-    
-    for (Article *article in self.articles) {
-        GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
-        marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
-        marker.appearAnimation = kGMSMarkerAnimationPop;
-        marker.map = self.mapView;
-        marker.userData = article;
-        article.marker = marker;
-    }
+
 }
 
 
