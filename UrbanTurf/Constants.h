@@ -47,34 +47,15 @@ extern CLLocationCoordinate2D const jacksonHoleSquare;
 // UI
 extern float const FONT_POINT_SIZE;
 extern NSString * const map_marker_default;
-extern NSString * const map_marker_default_1;
-extern NSString * const map_marker_default_2;
-extern NSString * const map_marker_default_3;
-extern NSString * const map_marker_default_4;
-extern NSString * const map_marker_default_5;
-extern NSString * const map_marker_default_6;
-extern NSString * const map_marker_default_7;
-extern NSString * const map_marker_default_8;
-extern NSString * const map_marker_default_9;
-extern NSString * const map_marker_default_9plus;
++ (NSArray *)mapMarkersDefault;
 extern NSString * const map_marker_selected;
-extern NSString * const map_marker_selected_1;
-extern NSString * const map_marker_selected_2;
-extern NSString * const map_marker_selected_3;
-extern NSString * const map_marker_selected_4;
-extern NSString * const map_marker_selected_5;
-extern NSString * const map_marker_selected_6;
-extern NSString * const map_marker_selected_7;
-extern NSString * const map_marker_selected_8;
-extern NSString * const map_marker_selected_9;
-extern NSString * const map_marker_selected_9plus;
-
++ (NSArray *)mapMarkersSelected;
 extern NSString * const map_marker_insets;
 
 extern NSString *const API_ADDRESS;
 extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items
 extern double const DEFAULT_ZOOM_LEVEL; // default zoom level at which to set the map
 
-extern double const MARKER_OVERLAP_DISTANCE; // the distance under which two locations are consolidated under one map marker
+extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker
 
 @end
