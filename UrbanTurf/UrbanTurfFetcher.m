@@ -25,7 +25,7 @@
         longitude = testLocation.longitude;
     }
     
-    NSString *urlToLoad = [NSString stringWithFormat:@"%@near=%f,%f&radius=%f", API_ADDRESS, latitude, longitude, radius];
+    NSString *urlToLoad = [NSString stringWithFormat:@"%@near=%f,%f&radius=%f&limit=10&units=metric", API_ADDRESS, latitude, longitude, radius];
     //NSLog(@"URL we're loading: %@", urlToLoad);
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlToLoad]];
     NSURLSessionDownloadTask *task = [self.urlSession downloadTaskWithRequest:request completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {

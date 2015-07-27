@@ -211,7 +211,7 @@
         // add all the markers to the map
         [self.mapView clear]; // clear off existing markers
         [self layDownMarkers];
-        /*
+        /* DELETE AFTER 8/1 IF NUMBERED MARKERS ARE WORKING
         for (Article *article in self.articles) {
             GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
             marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
@@ -561,7 +561,7 @@
         self.articleOverlaid = NO;
         if (self.tappedMarker) {
             // reset the tapped marker to its default color.
-            self.tappedMarker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+            self.tappedMarker.icon = [self getIconForMarker:self.tappedMarker selected:NO];
             // nullify the self.tappedMarker pointer to indicate that there is no tapped marker. the marker continues to exist because there is another pointer to it.
             self.tappedMarker = nil;
         }
@@ -581,7 +581,7 @@
     if (self.listView) {
         if (!self.crosshairs.hidden) [self hideCrosshairs]; // hide the crosshairs if they're not already hidden.
         //NSLog(@"index: %lu", (unsigned long)[self.articles indexOfObject:marker.userData]);
-        [self setFocusOnArticle:(Article *)marker.userData];
+        [self setFocusOnArticle:[self getArticleFromMarker:marker]];
     }
 
     // we are in full-map mode.
@@ -595,7 +595,7 @@
             articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
             [self.articleOverlay addSubview:articleOverlaySubview];
             [self pinEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
-            [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:(Article *)marker.userData]; // set the values for the article overlay view's various components.
+            [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:[self getArticleFromMarker:marker]]; // set the values for the article overlay view's various components.
             [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
             [articleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
             
@@ -613,7 +613,7 @@
                              }];
             
             // make the marker green.
-            marker.icon = [[UIImage imageNamed:map_marker_selected] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+            marker.icon = [self getIconForMarker:marker selected:YES];
 
             // update the state of the article overlay.
             self.articleOverlaid = YES;
@@ -626,7 +626,7 @@
             
                 ArticleOverlayView *newArticleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
                 [self.articleOverlay addSubview:newArticleOverlaySubview];
-                [self configureArticleTeaserForSubview:newArticleOverlaySubview withArticle:(Article *)marker.userData]; // set the values for the article overlay view's various components.
+                [self configureArticleTeaserForSubview:newArticleOverlaySubview withArticle:[self getArticleFromMarker:marker]]; // set the values for the article overlay view's various components.
                 [newArticleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
                 [newArticleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
 
@@ -640,8 +640,8 @@
                                 completion:nil];
                 
                 // reset the existing tapped marker back to the default color and make the newly tapped marker green.
-                self.tappedMarker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
-                marker.icon = [[UIImage imageNamed:map_marker_selected] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];;
+                self.tappedMarker.icon = [self getIconForMarker:self.tappedMarker selected:NO];
+                marker.icon = [self getIconForMarker:marker selected:YES];
                 
                 // update the state of the article overlay, namely which marker was last tapped.
                 self.tappedMarker = marker;
@@ -803,12 +803,12 @@
 {
     // reset all the markers to the default color.
     for (Article *article in self.articles) {
-        article.marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+        article.marker.icon = [self getIconForMarker:article.marker selected:NO];
     }
     // move the map to the newly focused article's location and set the corresponding marker to selected.
     [self.mapView animateToLocation:articleToReceiveFocus.coordinate];
     if (highlightMarker) {
-        articleToReceiveFocus.marker.icon = [[UIImage imageNamed:map_marker_selected] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+        articleToReceiveFocus.marker.icon = [self getIconForMarker:articleToReceiveFocus.marker selected:YES];
     }
 }
 
@@ -841,7 +841,7 @@
                                  NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.articles indexOfObject:self.articleWithFocus] inSection:0];
                                  NewsMapTableViewCell *cellWithFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellWithFocus];
                                  cellWithFocus.articleView.backgroundColor = [UIColor whiteColor];
-                                 self.articleWithFocus.marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+                                 self.articleWithFocus.marker.icon = [self getIconForMarker:self.articleWithFocus.marker selected:NO];
                                  self.articleWithFocus = nil; // update the state.
                              }
                          }];
@@ -1019,7 +1019,7 @@
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
     ArticleViewController *articleVC = (ArticleViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ArticleViewController"];
-    articleVC.article = (Article *)self.tappedMarker.userData;
+    articleVC.article = [self getArticleFromMarker:self.tappedMarker];
     [self.navigationController pushViewController:articleVC animated:YES];
 }
 
@@ -1038,10 +1038,12 @@
      - wait til the end to loop through all the markers again, adding them to the map.
      */
     
+    NSLog(@"number of articles: %d", (int)[self.articles count]);
+    
     int i = 1;
     for (Article *article in self.articles) {
         
-        NSLog(@"article: %d", i);
+        //NSLog(@"article: %d", i);
         
         CLLocation *articleLocation = [[CLLocation alloc] initWithLatitude:article.coordinate.latitude longitude:article.coordinate.longitude];
         
@@ -1054,7 +1056,7 @@
             
             for (GMSMarker *marker in markers) {
 
-                NSLog(@"marker: %d", j);
+                //NSLog(@"marker: %d", j);
                 
                 CLLocationCoordinate2D markerCoordinate;
                 
@@ -1078,8 +1080,8 @@
                     markerCoordinate = ((Article *)marker.userData).coordinate;
                     CLLocation *markerLocation = [[CLLocation alloc] initWithLatitude:markerCoordinate.latitude longitude:markerCoordinate.longitude];
                     
-                    NSLog(@"marker latitude: %f, longitude: %f", markerLocation.coordinate.latitude, markerLocation.coordinate.longitude);
-                    NSLog(@"article latitude: %f, longitude: %f", articleLocation.coordinate.latitude, articleLocation.coordinate.longitude);
+                    //NSLog(@"marker latitude: %f, longitude: %f", markerLocation.coordinate.latitude, markerLocation.coordinate.longitude);
+                    //NSLog(@"article latitude: %f, longitude: %f", articleLocation.coordinate.latitude, articleLocation.coordinate.longitude);
                     
                     if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
                         NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:marker.userData, article, nil];
@@ -1114,20 +1116,45 @@
     
     // go through all the markers setting their icons.
     for (GMSMarker *marker in markers) {
-        
-        // if the marker's userData is an array, it means there are multiple articles for the location.
-        if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
-            NSString *imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[((NSArray *)marker.userData) count]];
-            //NSLog(@"imageName: %@", imageName);
-            marker.icon = [[UIImage imageNamed:imageName] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
-        }
-        else {
-            marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
-        }
+        marker.icon = [self getIconForMarker:marker selected:NO];
         marker.map = self.mapView;
         marker.appearAnimation = kGMSMarkerAnimationPop;
     }
 }
 
+- (Article *)getArticleFromMarker:(GMSMarker *)marker
+{
+    if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+        return (Article *)[(NSMutableArray *)marker.userData firstObject];
+    }
+    else {
+        return (Article *)marker.userData;
+    }
+}
+
+- (UIImage *)getIconForMarker:(GMSMarker *)marker selected:(BOOL)selected
+{
+    NSString *imageName;
+
+    // if the marker's userData is an array, it means there are multiple articles for the location.
+    if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+        if (selected) {
+            imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[((NSArray *)marker.userData) count]];
+        }
+        else {
+            imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[((NSArray *)marker.userData) count]];
+        }
+    }
+    else {
+        if (selected) {
+            imageName = map_marker_selected;
+        }
+        else {
+            imageName = map_marker_default;
+        }
+    }
+    //NSLog(@"imageName: %@", imageName);
+    return [[UIImage imageNamed:imageName] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+}
 
 @end

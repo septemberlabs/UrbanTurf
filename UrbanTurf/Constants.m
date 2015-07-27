@@ -48,12 +48,11 @@ float const FONT_POINT_SIZE = 12.0;
 NSString * const map_marker_default = @"red marker 48x48";
 NSString * const map_marker_selected = @"green marker 48x48";
 NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
+CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
 
 NSString * const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articles?";
 double const LATLON_RADIUS = 0.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;
-
-CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1000.0; // in meters. 91.44 m = 300 ft.
 
 @implementation Constants
 
@@ -74,7 +73,8 @@ CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1000.0; // in meters. 91.44 m
     static NSArray *mapMarkersDefault;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        mapMarkersDefault = @[@"red marker 48x48 - 1",
+        mapMarkersDefault = @[@"INVALID",
+                              @"red marker 48x48 - 1",
                               @"red marker 48x48 - 2",
                               @"red marker 48x48 - 3",
                               @"red marker 48x48 - 4",
@@ -94,7 +94,8 @@ CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1000.0; // in meters. 91.44 m
     static NSArray *mapMarkersSelected;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        mapMarkersSelected = @[@"green marker 48x48 - 1",
+        mapMarkersSelected = @[@"INVALID",
+                               @"green marker 48x48 - 1",
                                @"green marker 48x48 - 2",
                                @"green marker 48x48 - 3",
                                @"green marker 48x48 - 4",
