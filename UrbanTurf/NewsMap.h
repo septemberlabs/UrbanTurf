@@ -18,6 +18,6 @@
 @property (nonatomic) CLLocationDegrees longitude;
 
 - (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude zoom:(float)zoom;
-- (void)setFocusOnArticle:(Article *)articleToReceiveFocus;
+- (void)setFocusOnMarker:(GMSMarker *)markerToReceiveFocus;
 
 @end
