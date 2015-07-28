@@ -36,6 +36,7 @@
 @property (nonatomic) BOOL gestureInitiatedMapMove;
 @property (strong, nonatomic) NSArray *markers; // of GMSMarkers
 @property (strong, nonatomic) GMSMarker *markerWithFocus; // marker with current focus, if any. list-view mode.
+@property (strong, nonatomic) ArticleOverlayView *movableArticleView;
 
 // various states and constraints of the UI related to the article overlay effect in full-map mode.
 @property (nonatomic) BOOL listView;
@@ -251,6 +252,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // the markers on the map correlate one-to-one with the cells in the table view.
     if (tableView == self.tableView) {
         return [self.markers count] + 1; // the extra one is for the last cell, a spacer cell.
     }
@@ -335,7 +337,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // if the table view sending the message is the articles table view
+    // if the table view sending the message is the articles table view.
     if (tableView == self.tableView) {
         // if the row is the last one, it's the bottom buffer cell so give it an arbitrarily tall height.
         if (indexPath.row == [self.markers count]) {
@@ -366,7 +368,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // if the table view sending the message is the articles table view
+    // if the table view sending the message is the articles table view.
     if (tableView == self.tableView) {
         
         // this is a unique cell, the last one, and doesn't need much configuration.
@@ -396,6 +398,13 @@
         [cell addSubview:articleOverlaySubview];
         cell.articleView = articleOverlaySubview;
         [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+        
+        // set up the gesture recognizer.
+        UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
+        [cell.articleView addGestureRecognizer:panRecognizer];
+
+        
+        
 
         //Article *article = (Article *)self.articles[indexPath.row];
         Article *article = (Article *)[self getArticleFromMarker:self.markers[indexPath.row]];
@@ -469,7 +478,12 @@
     // if the table view sending the message is the articles table view
     if (tableView == self.tableView) {
         //[tableView deselectRowAtIndexPath:indexPath animated:NO];
-        [self performSegueWithIdentifier:@"DisplayArticleSegue" sender:self];
+        if (indexPath.row == 0) {
+            [self performSegueWithIdentifier:@"MultipleArticlesAtMarker" sender:self];
+        }
+        else {
+            [self performSegueWithIdentifier:@"DisplayArticleSegue" sender:self];
+        }
     }
     
     // if the table view sending the message is the search controller TVC
@@ -768,9 +782,9 @@
 
 - (void)setFocusOnMarker:(GMSMarker *)markerToReceiveFocus
 {
-    // Three things need to happen to visually focus on a new article/cell:
+    // Three things need to happen to visually focus on a new marker/cell:
     // 1. De-highlight the currently-focused one, if it exists.
-    // 2. Move the map camera to the newly-focused article's location.
+    // 2. Move the map camera to the newly-focused marker's location.
     // 3. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
     
     // 1
@@ -789,7 +803,7 @@
     NSIndexPath *indexPathToReceiveFocus = [NSIndexPath indexPathForRow:[self.markers indexOfObject:markerToReceiveFocus] inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPathToReceiveFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
-    // we need to do the following for the case when scrollToRowAtIndexPath causes no scroll because either a) articleToReceiveFocus is the topmost cell and the user got there by pull-dragging to the top or b) the exceedingly rare case where the user has stopped scrolling on the exact pixel between two cells so no further scroll is necessary. In either of those cases, the backgroundColor animation (i.e., highlighting) would not have occurred because scrollViewDidEndScrollingAnimation would never be called.
+    // we need to do the following for the case when scrollToRowAtIndexPath causes no scroll because either a) markerToReceiveFocus is the topmost cell and the user got there by pull-dragging to the top or b) the exceedingly rare case where the user has stopped scrolling on the exact pixel between two cells so no further scroll is necessary. In either of those cases, the backgroundColor animation (i.e., highlighting) would not have occurred because scrollViewDidEndScrollingAnimation would never be called.
     NewsMapTableViewCell *cellToReceiveFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathToReceiveFocus];
     CGPoint cellOriginInWindowCoordinateSystem = [cellToReceiveFocus convertPoint:cellToReceiveFocus.bounds.origin toView:nil];
     CGPoint tableViewOriginInWindowCoordinateSystem = [self.tableView convertPoint:self.tableView.bounds.origin toView:nil];
@@ -939,6 +953,10 @@
             articleVC.article = articleToDisplay;
         }
     }
+    
+    if ([segue.identifier isEqualToString:@"MultipleArticlesAtMarker"]) {
+        
+    }
 }
 
 #pragma mark - Zoom buttons
@@ -1036,15 +1054,16 @@
     NSMutableArray *markers = [[NSMutableArray alloc] init];
     
     /*
-     - foreach article, loop through the markers
-     - if a marker doesn't exist at that location, add a marker at that location, putting the article in userData.
-     - if a marker does already exist at that location
-     - create a new array of articles
-     - stick the article that belongs to the existing marker as the first element in the array.
-     - stick the new article as the second element.
-     - count the elements in the array and set the icon for the corresponding number.
-     - wait til the end to loop through all the markers again, adding them to the map.
-     */
+     - we have self.articles, which is the result of the fetch and is an arry of articles.
+     - we loop through this array to create a corresponding array of markers.
+     - markers will store pointers to the articles whose location they visually represent on the map.
+     - important: some articles have locations that are very close or identical. we cluster such articles under a single marker.
+     - in such cases, the marker's userData will point to an array of the articles at that location. the number of elements in the array is the number of articles at that location.
+     - in all other cases, the marker's userData will point directly to the single article it represents.
+     - therefore, there is a one-to-many relationship between markers and articles, not one-to-one.
+     - there is a one-to-one relationship of between markers and the rows in the table view. for cells that represent markers with multiple stories at its location, the user taps to see the full list in a transition to a new table view.
+     - this function sets all this up, including building the self.markers array, each marker's userData, and laying the markers down on the map.
+    */
     
     NSLog(@"number of articles: %d", (int)[self.articles count]);
     
@@ -1165,6 +1184,26 @@
     }
     //NSLog(@"imageName: %@", imageName);
     return [[UIImage imageNamed:imageName] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
+}
+
+#pragma mark - Gestures
+
+- (void)panArticleTeaser:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    NSLog(@"registered pan: %ld", gestureRecognizer.state);
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        NewsMapTableViewCell *selectedCell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
+        self.movableArticleView = selectedCell.articleView;
+    }
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        self.movableArticleView.center = CGPointMake([gestureRecognizer locationInView:self.tableView].x, self.movableArticleView.center.y);
+    }
+
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    }
+
 }
 
 @end
