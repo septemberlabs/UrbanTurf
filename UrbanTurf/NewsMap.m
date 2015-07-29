@@ -37,6 +37,7 @@
 @property (strong, nonatomic) NSArray *markers; // of GMSMarkers
 @property (strong, nonatomic) GMSMarker *markerWithFocus; // marker with current focus, if any. list-view mode.
 @property (strong, nonatomic) ArticleOverlayView *movableArticleView;
+@property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
 
 // various states and constraints of the UI related to the article overlay effect in full-map mode.
 @property (nonatomic) BOOL listView;
@@ -103,6 +104,8 @@
     
     self.latitude = office.latitude;
     self.longitude = office.longitude;
+    
+    self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
     
     self.gestureInitiatedMapMove = NO;
     
@@ -397,29 +400,28 @@
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
         [cell addSubview:articleOverlaySubview];
         cell.articleView = articleOverlaySubview;
-        cell.articleView.constraintsWithSuperview = [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-        
-        // set up the gesture recognizer.
-        /*
-        UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
-        [cell.articleView addGestureRecognizer:panRecognizer];
-        panRecognizer.delegate = self;
-         */
-        UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
-        [cell.articleView addGestureRecognizer:swipeRecognizer];
-        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
-        swipeRecognizer.delegate = self;
-        
-
-        
-        
+        cell.articleView.constraintsWithSuperview = [self setEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
 
         //Article *article = (Article *)self.articles[indexPath.row];
         Article *article = (Article *)[self getArticleFromMarker:self.markers[indexPath.row]];
         [self configureArticleTeaserForSubview:cell.articleView withArticle:article];
-        
+
         // this ensures that the background color is reset, lest it be colored due to reuse of a scroll-selected cell.
         cell.articleView.backgroundColor = [UIColor whiteColor];
+        
+        // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
+        GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
+        if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+            UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
+            [cell.articleView addGestureRecognizer:swipeRecognizer];
+            swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
+            swipeRecognizer.delegate = self;
+        }
+        else {
+             UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
+             [cell.articleView addGestureRecognizer:panRecognizer];
+             panRecognizer.delegate = self;
+        }
 
         return cell;
     }
@@ -623,7 +625,7 @@
             ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
             articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
             [self.articleOverlay addSubview:articleOverlaySubview];
-            [self pinEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
+            [self setEdgesOfSubview:articleOverlaySubview toSuperview:self.articleOverlay leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
             [self configureArticleTeaserForSubview:articleOverlaySubview withArticle:[self getArticleFromMarker:marker]]; // set the values for the article overlay view's various components.
             [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
             [articleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
@@ -981,6 +983,7 @@
 
 -(void)configureArticleTeaserForSubview:(ArticleOverlayView *)articleOverlaySubview withArticle:(Article *)article
 {
+    articleOverlaySubview.article = article;
     [articleOverlaySubview.imageView setImageWithURL:[NSURL URLWithString:article.imageURL]]; // image
     articleOverlaySubview.headlineLabel.text = article.title; // headline
     articleOverlaySubview.introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)]; // body
@@ -1017,7 +1020,7 @@
     articleOverlaySubview.metaInfoLabel.attributedText = metaInfoAttributedString;
 }
 
--(NSArray *)pinEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant
+-(NSArray *)setEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant
 {
     NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:subview
                                                                attribute:NSLayoutAttributeLeading
@@ -1026,6 +1029,7 @@
                                                                attribute:NSLayoutAttributeLeading
                                                               multiplier:1.0
                                                                 constant:leadingConstant];
+    
     NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:subview
                                                                attribute:NSLayoutAttributeTrailing
                                                                relatedBy:NSLayoutRelationEqual
@@ -1033,6 +1037,7 @@
                                                                attribute:NSLayoutAttributeTrailing
                                                               multiplier:1.0
                                                                 constant:trailingConstant];
+    
     NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:subview
                                                            attribute:NSLayoutAttributeTop
                                                            relatedBy:NSLayoutRelationEqual
@@ -1040,6 +1045,7 @@
                                                            attribute:NSLayoutAttributeTop
                                                           multiplier:1.0
                                                             constant:topConstant];
+    
     NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:subview
                                                               attribute:NSLayoutAttributeBottom
                                                               relatedBy:NSLayoutRelationEqual
@@ -1047,7 +1053,13 @@
                                                               attribute:NSLayoutAttributeBottom
                                                              multiplier:1.0
                                                                constant:bottomConstant];
-    
+    /*
+     For reference elsewhere:
+     index 0: leading
+     index 1: trailing
+     index 2: top
+     index 3: bottom
+     */
     NSArray *arrayOfConstraints = [NSArray arrayWithObjects:leadingConstraint, trailingConstraint, topConstraint, bottomConstraint, nil];
     
     for (NSLayoutConstraint *constraint in arrayOfConstraints) {
@@ -1211,6 +1223,8 @@
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         NewsMapTableViewCell *selectedCell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
         self.movableArticleView = selectedCell.articleView;
+        
+        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
     }
     
     if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
@@ -1243,7 +1257,7 @@
             animate the current articleView back to its original position
             animate the neighboring articleView back to its original position
          */
-         
+        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
 
     }
 
@@ -1253,52 +1267,96 @@
 {
     NSLog(@"registered swipe: %ld", gestureRecognizer.state);
 
-    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) { // FYI UIGestureRecognizerStateRecognized == UIGestureRecognizerStateEnded == equals 3
+    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) { // FYI UIGestureRecognizerStateRecognized == UIGestureRecognizerStateEnded == 3
 
+        BOOL executeSwipe = FALSE;
+        
+        // get the cell where the user swiped.
         NewsMapTableViewCell *cell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
-        //self.movableArticleView = cell.articleView; MAYBE DELETE self.movableArticleView?
-        
-        ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
-        articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
-        articleOverlaySubview.backgroundColor = [UIColor redColor];
-        [cell addSubview:articleOverlaySubview];
-        articleOverlaySubview.constraintsWithSuperview = [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:cell.frame.size.width trailing:cell.frame.size.width top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-        
-        //[cell removeConstraints:cell.articleView.constraintsWithSuperview];
-        NSLayoutConstraint *leadingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:0]; // this is hard-coded. we know the index from pinEdgesOfSubview.
-        NSLayoutConstraint *trailingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:1]; // this is hard-coded. we know the index from pinEdgesOfSubview.
-        NSLayoutConstraint *leadingConstraintSwipedInView = [articleOverlaySubview.constraintsWithSuperview objectAtIndex:0]; // this is hard-coded. we know the index from pinEdgesOfSubview.
-        NSLayoutConstraint *trailingConstraintSwipedInView = [articleOverlaySubview.constraintsWithSuperview objectAtIndex:1]; // this is hard-coded. we know the index from pinEdgesOfSubview.
-        
-        //cell.articleView.constraintsWithSuperview = [self pinEdgesOfSubview:cell.articleView toSuperview:cell leading:-50 trailing:-50 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-        
-        [cell layoutIfNeeded];
-        leadingConstraintSwipedOutView.constant = leadingConstraintSwipedOutView.constant - cell.frame.size.width;
-        trailingConstraintSwipedOutView.constant = trailingConstraintSwipedOutView.constant - cell.frame.size.width;
-        leadingConstraintSwipedInView.constant = leadingConstraintSwipedInView.constant - cell.frame.size.width;
-        trailingConstraintSwipedInView.constant = trailingConstraintSwipedInView.constant - cell.frame.size.width;
-        
-        [UIView animateWithDuration:0.2
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             [cell layoutIfNeeded];
-                         }
-                         completion:^(BOOL finished) {
-                             //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
-                             //self.borderBetweenMapAndTable.opacity = 1.0; // display the border instantly once the animation has completed.
-                         }];
-        
 
-
-        cell.articleView = articleOverlaySubview;
+        // look at the array of articles at the marker represented by the cell to see if one exists at the previous/next index from the article currently displayed. that is, confirm we're not at the first/last article in the array.
+        Article *articleToSwipeOut = cell.articleView.article;
+        GMSMarker *marker = articleToSwipeOut.marker;
+        NSUInteger indexOfArticleToSwipeOut = [marker.userData indexOfObject:articleToSwipeOut];
+        CGFloat leadingTrailingConstraint = 0.0; // only used if swipe is executed.
+        NSUInteger indexOfArticleToSwipeIn = -1; // only used if swipe is executed.
+        if (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+            // swiped right so check we're not at the first article.
+            if (indexOfArticleToSwipeOut > 0) {
+                // proceed
+                executeSwipe = TRUE;
+                // if the user swiped right, the leading/trailing constraints should be the cell's width to the left (meaning, negative).
+                leadingTrailingConstraint = -cell.frame.size.width;
+                // and the index should be one less (we're decrementing through the array by going right).
+                indexOfArticleToSwipeIn = indexOfArticleToSwipeOut - 1;
+            }
+        }
+        else {
+            // swiped left so check we're not at the last article.
+            if (indexOfArticleToSwipeOut < ([marker.userData count] - 1)) {
+                // proceed
+                executeSwipe = TRUE;
+                // if the user swiped left, the leading/trailing constraints should be the cell's width to the right (meaning, positive)
+                leadingTrailingConstraint = cell.frame.size.width;
+                // and the index should be one less (we're decrementing through the array by going right).
+                indexOfArticleToSwipeIn = indexOfArticleToSwipeOut + 1;
+            }
+        }
         
+        if (executeSwipe) {
+            
+            // create the new article display offscreen, immediately to
+            ArticleOverlayView *articleOverlaySubviewOfArticleToSwipeIn = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
+            articleOverlaySubviewOfArticleToSwipeIn.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell addSubview:articleOverlaySubviewOfArticleToSwipeIn];
+            cell.articleView = articleOverlaySubviewOfArticleToSwipeIn;
+            articleOverlaySubviewOfArticleToSwipeIn.constraintsWithSuperview = [self setEdgesOfSubview:articleOverlaySubviewOfArticleToSwipeIn toSuperview:cell leading:leadingTrailingConstraint trailing:leadingTrailingConstraint top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+            
+            [self configureArticleTeaserForSubview:articleOverlaySubviewOfArticleToSwipeIn withArticle:[marker.userData objectAtIndex:indexOfArticleToSwipeIn]];
+            articleOverlaySubviewOfArticleToSwipeIn.backgroundColor = cell.articleView.backgroundColor;
+
+            // add the gesture recognizer to the new subview.
+            UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
+            [cell.articleView addGestureRecognizer:swipeRecognizer];
+            swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
+            swipeRecognizer.delegate = self;
+            
+            // we know the indices for leading/trailing from setEdgesOfSubview.
+            NSLayoutConstraint *leadingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:0];
+            NSLayoutConstraint *trailingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:1];
+            NSLayoutConstraint *leadingConstraintSwipedInView = [articleOverlaySubviewOfArticleToSwipeIn.constraintsWithSuperview objectAtIndex:0];
+            NSLayoutConstraint *trailingConstraintSwipedInView = [articleOverlaySubviewOfArticleToSwipeIn.constraintsWithSuperview objectAtIndex:1];
+
+            [cell layoutIfNeeded]; // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
+            
+            // by subtracting the leadingTrailingConstraint from each one, we are effectively adding X value to the leading/trailing boundaries in the case of a right swipe (by negating the negative leadingTrailing), and subtracting X value in the case of left swipe.
+            leadingConstraintSwipedOutView.constant = leadingConstraintSwipedOutView.constant - leadingTrailingConstraint;
+            trailingConstraintSwipedOutView.constant = trailingConstraintSwipedOutView.constant - leadingTrailingConstraint;
+            leadingConstraintSwipedInView.constant = leadingConstraintSwipedInView.constant - leadingTrailingConstraint;
+            trailingConstraintSwipedInView.constant = trailingConstraintSwipedInView.constant - leadingTrailingConstraint;
+            
+            // finally, to animate the swipe set the new constraints by calling layoutIfNeeded as the body of the animation.
+            [UIView animateWithDuration:0.2
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 [cell layoutIfNeeded];
+                             }
+                             completion:^(BOOL finished) {
+                                 //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
+                                 //self.borderBetweenMapAndTable.opacity = 1.0; // display the border instantly once the animation has completed.
+                             }];
+
+            cell.articleView = articleOverlaySubviewOfArticleToSwipeIn;
+
+        }
     }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called.");
+    //return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
     return YES;
 }
 

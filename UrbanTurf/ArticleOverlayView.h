@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Article.h"
 
 @interface ArticleOverlayView : UIView
 
 - (CGFloat)dynamicallyCalculatedHeight;
+
+@property (strong, nonatomic) Article *article; // store a reference to the article being displayed to be able to identify which article it is.
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *headlineLabel;
