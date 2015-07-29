@@ -397,11 +397,19 @@
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
         [cell addSubview:articleOverlaySubview];
         cell.articleView = articleOverlaySubview;
-        [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+        cell.articleView.constraintsWithSuperview = [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
         
         // set up the gesture recognizer.
+        /*
         UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
         [cell.articleView addGestureRecognizer:panRecognizer];
+        panRecognizer.delegate = self;
+         */
+        UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
+        [cell.articleView addGestureRecognizer:swipeRecognizer];
+        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
+        swipeRecognizer.delegate = self;
+        
 
         
         
@@ -1009,36 +1017,44 @@
     articleOverlaySubview.metaInfoLabel.attributedText = metaInfoAttributedString;
 }
 
--(void)pinEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview leading:(CGFloat)leading trailing:(CGFloat)trailing top:(CGFloat)top bottom:(CGFloat)bottom
+-(NSArray *)pinEdgesOfSubview:(UIView *)subview toSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant
 {
-    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
-                                                          attribute:NSLayoutAttributeLeading
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:superview
-                                                          attribute:NSLayoutAttributeLeading
-                                                         multiplier:1.0
-                                                           constant:leading]];
-    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
-                                                          attribute:NSLayoutAttributeTrailing
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:superview
-                                                          attribute:NSLayoutAttributeTrailing
-                                                         multiplier:1.0
-                                                           constant:trailing]];
-    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
-                                                          attribute:NSLayoutAttributeTop
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:superview
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0
-                                                           constant:top]];
-    [superview addConstraint:[NSLayoutConstraint constraintWithItem:subview
-                                                          attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:superview
-                                                          attribute:NSLayoutAttributeBottom
-                                                         multiplier:1.0
-                                                           constant:bottom]];
+    NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:subview
+                                                               attribute:NSLayoutAttributeLeading
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:superview
+                                                               attribute:NSLayoutAttributeLeading
+                                                              multiplier:1.0
+                                                                constant:leadingConstant];
+    NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:subview
+                                                               attribute:NSLayoutAttributeTrailing
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:superview
+                                                               attribute:NSLayoutAttributeTrailing
+                                                              multiplier:1.0
+                                                                constant:trailingConstant];
+    NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:subview
+                                                           attribute:NSLayoutAttributeTop
+                                                           relatedBy:NSLayoutRelationEqual
+                                                              toItem:superview
+                                                           attribute:NSLayoutAttributeTop
+                                                          multiplier:1.0
+                                                            constant:topConstant];
+    NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:subview
+                                                              attribute:NSLayoutAttributeBottom
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:superview
+                                                              attribute:NSLayoutAttributeBottom
+                                                             multiplier:1.0
+                                                               constant:bottomConstant];
+    
+    NSArray *arrayOfConstraints = [NSArray arrayWithObjects:leadingConstraint, trailingConstraint, topConstraint, bottomConstraint, nil];
+    
+    for (NSLayoutConstraint *constraint in arrayOfConstraints) {
+        [superview addConstraint:constraint];
+    }
+
+    return arrayOfConstraints;
 }
 
 - (void)loadArticle:(UITapGestureRecognizer *)gestureRecognizer
@@ -1198,12 +1214,92 @@
     }
     
     if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        /*
+         if moved to the left or right 10+ percent
+            if another article exists at the neighboring index in the userData array of articles
+                if has already been displayed
+                    display it be scrolling it in alongside the current articles
+                if it hasn't
+                    set it up and display it with some effect as you scroll it in alongside the current article
+         
+         if moved to the left 50+%
+         
+         
+         
+         if moved to the right 25+%
+         if moved to the right 50+%
+         */
         self.movableArticleView.center = CGPointMake([gestureRecognizer locationInView:self.tableView].x, self.movableArticleView.center.y);
     }
 
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        
+        /*
+         if moved to the left or right 50+ percent
+            animate fully off the screen the current articleView
+            animate fully on the screen the neighboring articleView
+            save state to indicate what the new displayed article is
+         else
+            animate the current articleView back to its original position
+            animate the neighboring articleView back to its original position
+         */
+         
+
     }
 
+}
+
+- (void)swipeArticleTeaser:(UISwipeGestureRecognizer *)gestureRecognizer
+{
+    NSLog(@"registered swipe: %ld", gestureRecognizer.state);
+
+    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) { // FYI UIGestureRecognizerStateRecognized == UIGestureRecognizerStateEnded == equals 3
+
+        NewsMapTableViewCell *cell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
+        //self.movableArticleView = cell.articleView; MAYBE DELETE self.movableArticleView?
+        
+        ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
+        articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
+        articleOverlaySubview.backgroundColor = [UIColor redColor];
+        [cell addSubview:articleOverlaySubview];
+        articleOverlaySubview.constraintsWithSuperview = [self pinEdgesOfSubview:articleOverlaySubview toSuperview:cell leading:cell.frame.size.width trailing:cell.frame.size.width top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+        
+        //[cell removeConstraints:cell.articleView.constraintsWithSuperview];
+        NSLayoutConstraint *leadingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:0]; // this is hard-coded. we know the index from pinEdgesOfSubview.
+        NSLayoutConstraint *trailingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:1]; // this is hard-coded. we know the index from pinEdgesOfSubview.
+        NSLayoutConstraint *leadingConstraintSwipedInView = [articleOverlaySubview.constraintsWithSuperview objectAtIndex:0]; // this is hard-coded. we know the index from pinEdgesOfSubview.
+        NSLayoutConstraint *trailingConstraintSwipedInView = [articleOverlaySubview.constraintsWithSuperview objectAtIndex:1]; // this is hard-coded. we know the index from pinEdgesOfSubview.
+        
+        //cell.articleView.constraintsWithSuperview = [self pinEdgesOfSubview:cell.articleView toSuperview:cell leading:-50 trailing:-50 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+        
+        [cell layoutIfNeeded];
+        leadingConstraintSwipedOutView.constant = leadingConstraintSwipedOutView.constant - cell.frame.size.width;
+        trailingConstraintSwipedOutView.constant = trailingConstraintSwipedOutView.constant - cell.frame.size.width;
+        leadingConstraintSwipedInView.constant = leadingConstraintSwipedInView.constant - cell.frame.size.width;
+        trailingConstraintSwipedInView.constant = trailingConstraintSwipedInView.constant - cell.frame.size.width;
+        
+        [UIView animateWithDuration:0.2
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [cell layoutIfNeeded];
+                         }
+                         completion:^(BOOL finished) {
+                             //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
+                             //self.borderBetweenMapAndTable.opacity = 1.0; // display the border instantly once the animation has completed.
+                         }];
+        
+
+
+        cell.articleView = articleOverlaySubview;
+        
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called.");
+    return YES;
 }
 
 @end

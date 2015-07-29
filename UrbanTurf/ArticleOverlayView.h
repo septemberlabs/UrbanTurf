@@ -21,5 +21,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenHeadlineAndSuperview;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenIntroAndHeadline;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenMetaInfoAndIntro;
+@property (strong, nonatomic) NSArray *constraintsWithSuperview;
 
 @end
