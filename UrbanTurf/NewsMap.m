@@ -38,6 +38,7 @@
 @property (strong, nonatomic) GMSMarker *markerWithFocus; // marker with current focus, if any. list-view mode.
 @property (strong, nonatomic) ArticleOverlayView *movableArticleView;
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
+@property (strong, nonatomic) NSMutableArray *tableViewPanGestureRecognizers; // of panGestureRecognizers.
 
 // various states and constraints of the UI related to the article overlay effect in full-map mode.
 @property (nonatomic) BOOL listView;
@@ -108,6 +109,8 @@
     self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
     
     self.gestureInitiatedMapMove = NO;
+    
+    self.tableViewPanGestureRecognizers = [[NSMutableArray alloc] init];
     
     // this sets the back button text of the subsequent vc, not the visible vc. confusing.
     // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
@@ -412,15 +415,19 @@
         // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
         GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
         if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+            UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
+            [cell.articleView addGestureRecognizer:panRecognizer];
+            panRecognizer.delegate = self;
+            // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
+            [self.tableViewPanGestureRecognizers addObject:panRecognizer];
+            /*
             UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
             [cell.articleView addGestureRecognizer:swipeRecognizer];
             swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
             swipeRecognizer.delegate = self;
+             */
         }
         else {
-             UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
-             [cell.articleView addGestureRecognizer:panRecognizer];
-             panRecognizer.delegate = self;
         }
 
         return cell;
@@ -731,14 +738,24 @@
 {
     // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
     if (!self.crosshairs.hidden) [self hideCrosshairs];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self startMapReorientation];
+    
+    // disable all the pan GRs on the table items that correspond to markers with multiple stories.
+    for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
+        panGR.enabled = FALSE;
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    // re-enable all the pan GRs that were disabled at the beginning of the scroll.
+    for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
+        panGR.enabled = TRUE;
+    }
+
+    [self startMapReorientation];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     [self startMapReorientation];
 }
@@ -1356,8 +1373,8 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called.");
-    //return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
-    return YES;
+    return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
+    //return YES;
 }
 
 @end
