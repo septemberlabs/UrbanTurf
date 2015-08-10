@@ -49,8 +49,9 @@ NSString * const map_marker_default = @"red marker 48x48";
 NSString * const map_marker_selected = @"green marker 48x48";
 NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
 CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
+double const PAN_THRESHOLD = 10;
 
-NSString * const API_ADDRESS = @"http://hoodie.staging.logicbrush.com/api/articles?";
+NSString * const API_ADDRESS = @"http://app.urbanturf.com/api/articles?";
 double const LATLON_RADIUS = 0.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 

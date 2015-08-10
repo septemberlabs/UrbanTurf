@@ -37,8 +37,11 @@
 @property (strong, nonatomic) NSArray *markers; // of GMSMarkers
 @property (strong, nonatomic) GMSMarker *markerWithFocus; // marker with current focus, if any. list-view mode.
 @property (strong, nonatomic) ArticleOverlayView *movableArticleView;
+
+// related to panning cells that represent multiple articles.
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
 @property (strong, nonatomic) NSMutableArray *tableViewPanGestureRecognizers; // of panGestureRecognizers.
+@property (nonatomic) BOOL panTriggered;
 
 // various states and constraints of the UI related to the article overlay effect in full-map mode.
 @property (nonatomic) BOOL listView;
@@ -111,6 +114,7 @@
     self.gestureInitiatedMapMove = NO;
     
     self.tableViewPanGestureRecognizers = [[NSMutableArray alloc] init];
+    self.panTriggered = FALSE;
     
     // this sets the back button text of the subsequent vc, not the visible vc. confusing.
     // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
@@ -1235,13 +1239,12 @@
 
 - (void)panArticleTeaser:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"registered pan: %ld", gestureRecognizer.state);
+    //NSLog(@"registered pan: %ld", (long)gestureRecognizer.state);
     
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         NewsMapTableViewCell *selectedCell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
         self.movableArticleView = selectedCell.articleView;
-        
-        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
+        self.panTriggered = FALSE;
     }
     
     if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
@@ -1260,11 +1263,23 @@
          if moved to the right 25+%
          if moved to the right 50+%
          */
-        self.movableArticleView.center = CGPointMake([gestureRecognizer locationInView:self.tableView].x, self.movableArticleView.center.y);
+        
+
+        // wait to execute the actual panning until the user's finger has moved right/left panThreshold pixels. only then allow the pan (ie, flip the panThreshold toggle).
+        if (!self.panTriggered && (fabs([gestureRecognizer translationInView:self.tableView].x) >= PAN_THRESHOLD)) {
+            self.panTriggered = TRUE;
+            [gestureRecognizer setTranslation:CGPointMake(0,0) inView:self.tableView];
+            self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
+        }
+        
+        if (self.panTriggered) {
+            double newX = self.movableArticleView.center.x + [gestureRecognizer translationInView:self.tableView].x;
+            self.movableArticleView.center = CGPointMake(newX, self.movableArticleView.center.y);
+            [gestureRecognizer setTranslation:CGPointMake(0,0) inView:self.tableView];
+        }
     }
 
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        
         /*
          if moved to the left or right 50+ percent
             animate fully off the screen the current articleView
@@ -1275,7 +1290,7 @@
             animate the neighboring articleView back to its original position
          */
         self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
-
+        self.panTriggered = FALSE;
     }
 
 }

@@ -51,11 +51,11 @@ extern NSString * const map_marker_default;
 extern NSString * const map_marker_selected;
 + (NSArray *)mapMarkersSelected;
 extern NSString * const map_marker_insets;
+extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker
+extern double const PAN_THRESHOLD; // horizontal distance (px) that a pan translation must return before triggering a visual response from the UI.
 
 extern NSString *const API_ADDRESS;
 extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items
 extern double const DEFAULT_ZOOM_LEVEL; // default zoom level at which to set the map
-
-extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker
 
 @end
