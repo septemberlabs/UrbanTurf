@@ -39,13 +39,7 @@
 
 // related to panning cells that represent multiple articles.
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
-@property (strong, nonatomic) NSMutableArray *tableViewPanGestureRecognizers; // of panGestureRecognizers.
-@property (nonatomic) BOOL panTriggered;
-@property (strong, nonatomic) NewsMapTableViewCell *pannedCell;
-@property (strong, nonatomic) ArticleOverlayView *pannedArticleSubview;
-// subviews to the left/right when panning a cell with multiple articles. just used during active pan and should be nil at all other times.
-@property (strong, nonatomic) ArticleOverlayView *leftArticleSubview;
-@property (strong, nonatomic) ArticleOverlayView *rightArticleSubview;
+@property (strong, nonatomic) NSMutableArray *tableViewPanGestureRecognizers; // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
 
 // various states and constraints of the UI related to the article overlay effect in full-map mode.
 @property (nonatomic) BOOL listView;
@@ -123,12 +117,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     self.gestureInitiatedMapMove = NO;
     
     self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
-    
     self.tableViewPanGestureRecognizers = [[NSMutableArray alloc] init];
-    self.panTriggered = FALSE;
-    self.pannedArticleSubview = nil;
-    self.leftArticleSubview = nil;
-    self.rightArticleSubview = nil;
     
     // this sets the back button text of the subsequent vc, not the visible vc. confusing.
     // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
@@ -411,6 +400,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         
         ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
+        articleOverlaySubview.delegate = self;
         [cell addSubview:articleOverlaySubview];
         [articleOverlaySubview setEdgesToSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
         cell.articleView = articleOverlaySubview;
@@ -425,22 +415,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
         GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
         if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
-            
             [articleOverlaySubview addPanGestureRecognizer];
-            
-            UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
-            [articleOverlaySubview addGestureRecognizer:panRecognizer];
-            panRecognizer.delegate = self;
-            // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
-            [self.tableViewPanGestureRecognizers addObject:panRecognizer];
-            /*
-            UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
-            [articleOverlaySubview addGestureRecognizer:swipeRecognizer];
-            swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
-            swipeRecognizer.delegate = self;
-             */
-        }
-        else {
         }
 
         return cell;
@@ -755,7 +730,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     // disable all the pan GRs on the table items that correspond to markers with multiple stories.
     for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
-        panGR.enabled = FALSE;
+        panGR.enabled = NO;
     }
 }
 
@@ -763,7 +738,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 {
     // re-enable all the pan GRs that were disabled at the beginning of the scroll.
     for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
-        panGR.enabled = TRUE;
+        panGR.enabled = YES;
     }
 
     [self startMapReorientation];
@@ -1048,7 +1023,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         // confirm the markers array isn't empty.
         if ([markers count]) {
             
-            BOOL locationMatchedExistingMarker = FALSE;
+            BOOL locationMatchedExistingMarker = NO;
             
             int j = 1;
             
@@ -1068,7 +1043,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                     if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
                         [articlesAtLocation addObject:article];
                         article.marker = marker;
-                        locationMatchedExistingMarker = TRUE;
+                        locationMatchedExistingMarker = YES;
                         break;
                     }
                 }
@@ -1085,7 +1060,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                         NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:marker.userData, article, nil];
                         marker.userData = articlesAtLocation;
                         article.marker = marker;
-                        locationMatchedExistingMarker = TRUE;
+                        locationMatchedExistingMarker = YES;
                         break;
                     }
                 }
@@ -1157,280 +1132,26 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     return [[UIImage imageNamed:imageName] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
 }
 
-#pragma mark - Gestures
-
-- (void)panArticleTeaser:(UIPanGestureRecognizer *)gestureRecognizer
-{
-    //NSLog(@"registered pan: %ld", (long)gestureRecognizer.state);
-    
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        self.pannedCell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
-        self.panTriggered = FALSE;
-        self.pannedArticleSubview = nil;
-        self.leftArticleSubview = nil;
-        self.rightArticleSubview = nil;
-        
-        
-        NSLog(@"self.pannedCell.subviews: %@", self.pannedCell.subviews);
-/*
-        for (UIView *view in self.pannedCell.subviews) {
-            NSLog(@"subview: %@", view);
-        }
-*/
-        
-    }
-    
-    if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-        
-        // wait to execute the actual panning until the user's finger has moved right/left panThreshold pixels. only then allow the pan (ie, flip the panThreshold toggle).
-        if (!self.panTriggered && (fabs([gestureRecognizer translationInView:self.tableView].x) >= PAN_THRESHOLD)) {
-            self.panTriggered = TRUE;
-            [gestureRecognizer setTranslation:CGPointMake(0,0) inView:self.tableView];
-            self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
-        }
-        
-        if (self.panTriggered) {
-            
-            // if pan is triggered, setup neighboring article views, on each side.
-            // move each along with the translation of the main view.
-            // when pan ends, calculate whichever has more than 50% of screen space, and slide that one is and update state.
-            
-            // if self.pannedArticleSubview hasn't been set, set it and create the left and right article subviews.
-            if (!self.pannedArticleSubview) {
-                
-                self.pannedArticleSubview = self.pannedCell.articleView;
-            
-                Article *articleToPanOut = self.pannedCell.articleView.article;
-                GMSMarker *marker = articleToPanOut.marker;
-                NSArray *articlesArray = (NSArray *)marker.userData;
-                NSUInteger indexOfArticleToPanOut = [articlesArray indexOfObject:articleToPanOut];
-                
-                // create two new article displays offscreen, one to the left and one to the right.
-                self.leftArticleSubview = [self generateArticleOverlayView:0
-                                                                 withFrame:self.pannedCell.frame
-                                                               inSuperview:self.pannedCell
-                                                    indexOfArticleToPanOut:indexOfArticleToPanOut
-                                                             articlesArray:articlesArray];
-                self.rightArticleSubview = [self generateArticleOverlayView:1
-                                                                  withFrame:self.pannedCell.frame
-                                                                inSuperview:self.pannedCell
-                                                     indexOfArticleToPanOut:indexOfArticleToPanOut
-                                                              articlesArray:articlesArray];
-            }
-
-            // move the target subview and its left and right neighbors
-            self.pannedArticleSubview.center = CGPointMake(self.pannedArticleSubview.center.x + [gestureRecognizer translationInView:self.tableView].x, self.pannedArticleSubview.center.y);
-            self.leftArticleSubview.center = CGPointMake(self.leftArticleSubview.center.x + [gestureRecognizer translationInView:self.tableView].x, self.leftArticleSubview.center.y);
-            self.rightArticleSubview.center = CGPointMake(self.rightArticleSubview.center.x + [gestureRecognizer translationInView:self.tableView].x, self.rightArticleSubview.center.y);
-            [gestureRecognizer setTranslation:CGPointMake(0,0) inView:self.tableView];
-        }
-    }
-
-    if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        /*
-         if moved to the left or right 50+ percent
-            animate fully off the screen the current articleView
-            animate fully on the screen the neighboring articleView
-            save state to indicate what the new displayed article is
-         else
-            animate the current articleView back to its original position
-            animate the neighboring articleView back to its original position
-         */
-        
-        ArticlePanDirection panDirection = -1;
-        // if the center point of the panned article is less than 0, it means it's off screen and the article to the right is more than half panned in, and should now be fully animated in.
-        if (self.pannedArticleSubview.center.x < 0) {
-            panDirection = Left;
-        }
-        // if the center point of the panned article is greater than the width of the table cell (its superview), it means it's off screen and the article to the left is more than half panned in, and should now be fully animated in.
-        else if (self.pannedArticleSubview.center.x > self.pannedCell.frame.size.width) {
-            panDirection = Right;
-        }
-        else {
-            panDirection = SnapBack;
-        }
-        
-        
-        if (panDirection == Left) {
-            
-            NSLog(@"slide to the left");
-            
-             // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
-            [self.pannedCell layoutIfNeeded];
-
-            // slide the panned-out article a cell width. it's negative to shift it left.
-            CGFloat panDistance = -self.pannedCell.frame.size.width;
-            [self.pannedArticleSubview setEdgesToSuperview:self.pannedCell leading:panDistance trailing:panDistance top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-            [self.rightArticleSubview setEdgesToSuperview:self.pannedCell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-
-            // save the right-side article as the now visible article in the cell.
-            self.pannedCell.articleView = self.rightArticleSubview;
-            
-        }
-        else if (panDirection == Right) {
-
-            NSLog(@"slide to the right");
-            
-            // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
-            [self.pannedCell layoutIfNeeded];
-            
-            // slide the panned-out article a cell width. it's positive to shift it right.
-            CGFloat panDistance = self.pannedCell.frame.size.width;
-            [self.pannedArticleSubview setEdgesToSuperview:self.pannedCell leading:panDistance trailing:panDistance top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-            [self.leftArticleSubview setEdgesToSuperview:self.pannedCell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-
-            // save the left-side article as the now visible article in the cell.
-            self.pannedCell.articleView = self.leftArticleSubview;
-
-        }
-        // if neither of the two conditions evaluated true, then the article hasn't been panned more than halfway off the screen to the right or left, and should be kept as visible article.
-        else {
-            // we're not changing to the left or right article, instead keeping the article that was already visible. so we don't modify any constraints but do still force a layoutIfNeeded. the final effect is simply a "snap back" to the original visible state.
-            [self.pannedCell layoutIfNeeded];
-        }
-        
-        // finally, to animate the swipe set the new constraints by calling layoutIfNeeded as the body of the animation.
-        [UIView animateWithDuration:0.2
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             [self.pannedCell layoutIfNeeded];
-                         }
-                         completion:^(BOOL finished) {
-                         }];
-
-
-        // upon completion of the animation, dispose of the two article views that are not visible. if a new article was panned in, delete the old pan gesture recognizer and add a new one on the panned-in article.
-        if (panDirection == Left) {
-            
-            NSLog(@"called 1???");
-            
-            [self.leftArticleSubview removeFromSuperview];
-            [self.pannedArticleSubview removeFromSuperview];
-
-            // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            [self.tableViewPanGestureRecognizers removeObjectsInArray:self.pannedArticleSubview.gestureRecognizers];
-            // create a new pan GR for the newly panned-in article.
-            UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
-            [self.rightArticleSubview addGestureRecognizer:panRecognizer];
-            panRecognizer.delegate = self;
-            // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
-            [self.tableViewPanGestureRecognizers addObject:panRecognizer];
-            
-        }
-        else if (panDirection == Right) {
-            
-            NSLog(@"called 2???");
-            
-            [self.rightArticleSubview removeFromSuperview];
-            [self.pannedArticleSubview removeFromSuperview];
-
-            // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            [self.tableViewPanGestureRecognizers removeObjectsInArray:self.pannedArticleSubview.gestureRecognizers];
-            // create a new pan GR for the newly panned-in article.
-            UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
-            [self.leftArticleSubview addGestureRecognizer:panRecognizer];
-            panRecognizer.delegate = self;
-            // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
-            [self.tableViewPanGestureRecognizers addObject:panRecognizer];
-            
-        }
-        else {
-            [self.leftArticleSubview removeFromSuperview];
-            [self.rightArticleSubview removeFromSuperview];
-        }
-
-        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
-        self.panTriggered = FALSE;
-        self.pannedCell = nil;
-        self.pannedArticleSubview = nil;
-        self.leftArticleSubview = nil;
-        self.rightArticleSubview = nil;
-    }
-
-}
-
-- (ArticleOverlayView *)generateArticleOverlayView:(int)position withFrame:(CGRect)frame inSuperview:(UIView *)superview indexOfArticleToPanOut:(NSUInteger)indexOfArticleToPanOut articlesArray:(NSArray *)articlesArray
-{
-    // LEFT: position == 0
-    // RIGHT: position == 1
-    
-    ArticleOverlayView *articleSubview = [[ArticleOverlayView alloc] initWithFrame:frame];
-    articleSubview.translatesAutoresizingMaskIntoConstraints = NO;
-    [superview addSubview:articleSubview];
-    
-    // if we're generating an overlay to the left, the leading and trailing constraints should be one cell-width to the left (off screen). if right, one cell-width to the right (also off screen).
-    CGFloat leadingTrailingConstraint = 0.0;
-    if (position == 0) { // LEFT
-        leadingTrailingConstraint = -superview.frame.size.width;
-    }
-    else { // RIGHT
-        leadingTrailingConstraint = superview.frame.size.width;
-    }
-    
-    [articleSubview setEdgesToSuperview:superview
-                                leading:leadingTrailingConstraint
-                               trailing:leadingTrailingConstraint
-                                    top:0
-                                 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-
-    // calculate the index of the new article, addressing special cases for if the article being panned out is at one end or the other of the array.
-    NSUInteger articleIndex;
-    if (position == 0) { // LEFT
-        // if left article is being generated but we're already at the first article in the array, set the index to the last index in the array.
-        if (indexOfArticleToPanOut == 0) {
-            articleIndex = ([articlesArray count] - 1);
-        }
-        // otherwise, just decrement the index and use that article.
-        else {
-            articleIndex = indexOfArticleToPanOut - 1;
-        }
-    }
-    else { // RIGHT
-        // if right article is being generated but we're already at the last article in the array, set the index to the first index in the array (0).
-        if (indexOfArticleToPanOut == ([articlesArray count] - 1)) {
-            articleIndex = 0;
-        }
-        // otherwise, just increment the index and use that article.
-        else {
-            articleIndex = indexOfArticleToPanOut + 1;
-        }
-    }
-    
-    [articleSubview configureTeaserForArticle:[articlesArray objectAtIndex:articleIndex]];
-    if (position == 0) articleSubview.backgroundColor = [UIColor greenColor];//self.pannedCell.articleView.backgroundColor;
-    else articleSubview.backgroundColor = [UIColor purpleColor];//self.pannedCell.articleView.backgroundColor;
-    
-    return articleSubview;
-
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    //NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called.");
-    return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
-    //return YES;
-}
-
 #pragma mark - ArticleOverlayViewDelegate
 
 - (void)setArticleOverlayView:(ArticleOverlayView *)articleOverlayView
 {
-    NSLog(@"setArticleOverlayView");
     if ([articleOverlayView.superview isKindOfClass:[NewsMapTableViewCell class]]) {
-        NewsMapTableViewCell *newsMapTableViewCell =(NewsMapTableViewCell *)articleOverlayView.superview;
+        NewsMapTableViewCell *newsMapTableViewCell = (NewsMapTableViewCell *)articleOverlayView.superview;
         newsMapTableViewCell.articleView = articleOverlayView;
     }
 }
 
+// we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
 - (void)articleOverlayView:(ArticleOverlayView *)articleOverlayView saveGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"saveGestureRecognizer");
+    [self.tableViewPanGestureRecognizers addObject:gestureRecognizer];
 }
 
+// delete the panned-out article's gesture recognizer from the array of table view GRs.
 - (void)articleOverlayView:(ArticleOverlayView *)articleOverlayView deleteGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"deleteGestureRecognizer");
+    [self.tableViewPanGestureRecognizers removeObject:gestureRecognizer];
 }
 
 @end

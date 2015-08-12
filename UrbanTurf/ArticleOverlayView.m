@@ -32,6 +32,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     SnapBack
 };
 
+typedef NS_ENUM(NSInteger, SuperviewFeature) {
+    TableCellSeparator
+};
+
 @end
 
 @implementation ArticleOverlayView
@@ -103,9 +107,46 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // add a light border around the images.
     self.imageView.layer.borderWidth = 1.0f;
     self.imageView.layer.borderColor = [Stylesheet color2].CGColor;
+    
+    // by default the view should recognize all GRs.
+    self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
+}
+
+// the height of the view is calculated by summing the height of the right-side components (labels & such) and left-side components (mostly just the image view) and returning whichever is taller.
+- (CGFloat)dynamicallyCalculatedHeight
+{
+    // all the labels and the spacing constraints between them constitute the right side content.
+    CGFloat heightOfRightSideContent =
+    self.betweenHeadlineAndSuperview.constant +
+    self.headlineLabel.frame.size.height +
+    self.betweenIntroAndHeadline.constant +
+    self.introLabel.frame.size.height +
+    self.betweenMetaInfoAndIntro.constant +
+    self.metaInfoLabel.frame.size.height;
+    
+    // the image view and its spacing constraint at the top constitute the left side content.
+    CGFloat heightOfLeftSideContent =
+    self.betweenImageViewAndSuperview.constant +
+    self.imageViewHeight.constant;
+    
+    NSLog(@"heightOfRightSideContent: %f", heightOfRightSideContent);
+    NSLog(@"heightOfLeftSideContent: %f", heightOfLeftSideContent);
+    
+    // return whichever is taller.
+    if (heightOfRightSideContent > heightOfLeftSideContent) {
+        return heightOfRightSideContent;
+    }
+    else {
+        return heightOfLeftSideContent;
+    }
 }
 
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant
+{
+    [self setEdgesToSuperview:superview leading:leadingConstant trailing:trailingConstant top:topConstant bottom:bottomConstant superviewFeature:0];
+}
+
+- (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant superviewFeature:(SuperviewFeature)superviewFeature
 {
     // remove existing constraints if they are there.
     if (self.constraintsWithSuperview) {
@@ -138,13 +179,18 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                                                     multiplier:1.0
                                                                       constant:topConstant];
     
+    // this allows the user to account for the one-pixel line at the bottom of table view cells.
+    CGFloat finalConstant = bottomConstant;
+    if (superviewFeature == TableCellSeparator) {
+        finalConstant = bottomConstant - 1.0;
+    }
     NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:self
                                                                         attribute:NSLayoutAttributeBottom
                                                                         relatedBy:NSLayoutRelationEqual
                                                                            toItem:superview
                                                                         attribute:NSLayoutAttributeBottom
                                                                        multiplier:1.0
-                                                                         constant:bottomConstant];
+                                                                         constant:finalConstant];
     /*
      For reference elsewhere:
      index 0: leading
@@ -206,6 +252,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
     [self addGestureRecognizer:panRecognizer];
     panRecognizer.delegate = self;
+
+    // save the pan GR in the delegate in case it needs to use it.
+    [self.delegate articleOverlayView:self saveGestureRecognizer:panRecognizer];
+
     return panRecognizer;
 }
 
@@ -214,26 +264,27 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     //NSLog(@"registered pan: %ld", (long)gestureRecognizer.state);
     
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        self.panTriggered = FALSE;
+        // zero out the state variables just in case.
+        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
+        self.panTriggered = NO;
         self.leftArticleSubview = nil;
         self.rightArticleSubview = nil;
-        NSLog(@"superview's subviews: %@", self.superview.subviews);
     }
     
     if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
         
         // wait to execute the actual panning until the user's finger has moved right/left panThreshold pixels. only then allow the pan (ie, flip the panThreshold toggle).
         if (!self.panTriggered && (fabs([gestureRecognizer translationInView:self.superview].x) >= PAN_THRESHOLD)) {
-            self.panTriggered = TRUE;
-            [gestureRecognizer setTranslation:CGPointMake(0,0) inView:self.superview];
             self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
+            self.panTriggered = YES;
+            [gestureRecognizer setTranslation:CGPointMake(0,0) inView:self.superview];
+            //[self.delegate articleOverlayView:self otherGestureRecognizersEnabled:NO]; // turn this off so that other gestures are not recognized until the pan finishes.
         }
         
+        // if pan is triggered, setup neighboring article views on each side.
+        // move each along with the translation of the main view.
+        // when pan ends, calculate whichever has more than 50% of screen space, slide that one in, and update state.
         if (self.panTriggered) {
-            
-            // if pan is triggered, setup neighboring article views, on each side.
-            // move each along with the translation of the main view.
-            // when pan ends, calculate whichever has more than 50% of screen space, and slide that one in, and update state.
             
             // if self.leftArticleSubview hasn't been set, we need to set it and the right article subview. (could have checked for rightArticleSubview instead.)
             if (!self.leftArticleSubview) {
@@ -244,19 +295,19 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                 NSUInteger indexOfArticleToPanOut = [articlesArray indexOfObject:articleToPanOut];
                 
                 // create two new article displays offscreen, one to the left and one to the right.
-                self.leftArticleSubview = [self generateArticleOverlayView:0
+                self.leftArticleSubview = [self generateArticleOverlayView:0 // 0 for left
                                                                  withFrame:self.superview.frame
                                                                inSuperview:self.superview
                                                     indexOfArticleToPanOut:indexOfArticleToPanOut
                                                              articlesArray:articlesArray];
-                self.rightArticleSubview = [self generateArticleOverlayView:1
+                self.rightArticleSubview = [self generateArticleOverlayView:1 // 1 for right
                                                                   withFrame:self.superview.frame
                                                                 inSuperview:self.superview
                                                      indexOfArticleToPanOut:indexOfArticleToPanOut
                                                               articlesArray:articlesArray];
             }
             
-            // move the target subview and its left and right neighbors
+            // move the target subview and its left and right neighbors.
             self.center = CGPointMake(self.center.x + [gestureRecognizer translationInView:self.superview].x, self.center.y);
             self.leftArticleSubview.center = CGPointMake(self.leftArticleSubview.center.x + [gestureRecognizer translationInView:self.superview].x, self.leftArticleSubview.center.y);
             self.rightArticleSubview.center = CGPointMake(self.rightArticleSubview.center.x + [gestureRecognizer translationInView:self.superview].x, self.rightArticleSubview.center.y);
@@ -265,15 +316,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     }
     
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        /*
-         if moved to the left or right 50+ percent
-         animate fully off the screen the current articleView
-         animate fully on the screen the neighboring articleView
-         save state to indicate what the new displayed article is
-         else
-         animate the current articleView back to its original position
-         animate the neighboring articleView back to its original position
-         */
         
         ArticlePanDirection panDirection = -1;
         // if the center point of the panned article is less than 0, it means it's off screen and the article to the right is more than half panned in, and should now be fully animated in.
@@ -284,22 +326,20 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         else if (self.center.x > self.superview.frame.size.width) {
             panDirection = Right;
         }
+        // if neither of the two conditions are true, snap back to the original article.
         else {
             panDirection = SnapBack;
         }
         
-        
         if (panDirection == Left) {
-            
-            NSLog(@"slide to the left");
             
             // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
             [self.superview layoutIfNeeded];
             
-            // slide the panned-out article a cell width. it's negative to shift it left.
+            // slide the panned-out article a cell width. (negative value shifts it left.)
             CGFloat panDistance = -self.superview.frame.size.width;
-            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
             
             // save the right-side article as the now visible article in the cell.
             //self.pannedCell.articleView = self.rightArticleSubview;
@@ -308,15 +348,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         }
         else if (panDirection == Right) {
             
-            NSLog(@"slide to the right");
-            
             // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
             [self.superview layoutIfNeeded];
             
-            // slide the panned-out article a cell width. it's positive to shift it right.
+            // slide the panned-out article a cell width. (positive value shifts it right.)
             CGFloat panDistance = self.superview.frame.size.width;
-            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
-            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
             
             // save the left-side article as the now visible article in the cell.
             //self.pannedCell.articleView = self.leftArticleSubview;
@@ -327,10 +365,14 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         else {
             // we're not changing to the left or right article, instead keeping the article that was already visible. so we don't modify any constraints but do still force a layoutIfNeeded. the final effect is simply a "snap back" to the original visible state.
             [self.superview layoutIfNeeded];
+            
+            [self setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:-self.superview.frame.size.width trailing:-self.superview.frame.size.width top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:self.superview.frame.size.width trailing:self.superview.frame.size.width top:0 bottom:0 superviewFeature:TableCellSeparator];
         }
         
         // finally, to animate the swipe set the new constraints by calling layoutIfNeeded as the body of the animation.
-        [UIView animateWithDuration:0.2
+        [UIView animateWithDuration:0.3
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
@@ -343,41 +385,28 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         // upon completion of the animation, dispose of the two article views that are not visible. if a new article was panned in, delete the old pan gesture recognizer and add a new one on the panned-in article.
         if (panDirection == Left) {
             
-            NSLog(@"called 1???");
-            
+            [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
+            [self.rightArticleSubview addPanGestureRecognizer]; // create a new pan GR for the newly panned-in article.
+
             [self.leftArticleSubview removeFromSuperview];
             [self removeFromSuperview];
-            
-            // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer];
-            // create a new pan GR for the newly panned-in article.
-            UIPanGestureRecognizer *newPanGestureRecognizer = [self.rightArticleSubview addPanGestureRecognizer];
-            // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
-            [self.delegate articleOverlayView:self saveGestureRecognizer:newPanGestureRecognizer];
-            
         }
         else if (panDirection == Right) {
             
-            NSLog(@"called 2???");
-            
+            [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
+            [self.leftArticleSubview addPanGestureRecognizer]; // create a new pan GR for the newly panned-in article.
+
             [self.rightArticleSubview removeFromSuperview];
             [self removeFromSuperview];
-            
-            // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer];
-            // create a new pan GR for the newly panned-in article.
-            UIPanGestureRecognizer *newPanGestureRecognizer = [self.leftArticleSubview addPanGestureRecognizer];
-            // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.
-            [self.delegate articleOverlayView:self saveGestureRecognizer:newPanGestureRecognizer];
-            
         }
         else {
             [self.leftArticleSubview removeFromSuperview];
             [self.rightArticleSubview removeFromSuperview];
         }
         
+        //[self.delegate articleOverlayView:self otherGestureRecognizersEnabled:YES]; // turn other gestures back on.
         self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
-        self.panTriggered = FALSE;
+        self.panTriggered = NO;
         self.leftArticleSubview = nil;
         self.rightArticleSubview = nil;
     }
@@ -391,6 +420,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     ArticleOverlayView *articleSubview = [[ArticleOverlayView alloc] initWithFrame:frame];
     articleSubview.translatesAutoresizingMaskIntoConstraints = NO;
+    articleSubview.delegate = self.delegate;
     [superview addSubview:articleSubview];
     
     // if we're generating an overlay to the left, the leading and trailing constraints should be one cell-width to the left (off screen). if right, one cell-width to the right (also off screen).
@@ -406,7 +436,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                 leading:leadingTrailingConstraint
                                trailing:leadingTrailingConstraint
                                     top:0
-                                 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+                                 bottom:0
+                       superviewFeature:TableCellSeparator];
     
     // calculate the index of the new article, addressing special cases for if the article being panned out is at one end or the other of the array.
     NSUInteger articleIndex;
@@ -436,10 +467,23 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     else articleSubview.backgroundColor = [UIColor purpleColor];//self.pannedCell.articleView.backgroundColor;
     
     return articleSubview;
-    
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    //NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called: %@", self.shouldRecognizeSimultaneouslyWithGestureRecognizer ? @"YES" : @"NO");
+    return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
+}
 
+/*
+- (UISwipeGestureRecognizer *)addSwipeGestureRecognizer
+{
+     UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
+     [articleOverlaySubview addGestureRecognizer:swipeRecognizer];
+     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
+     swipeRecognizer.delegate = self;
+}
+ */
 
 /*
 - (void)swipeArticleTeaser:(UISwipeGestureRecognizer *)gestureRecognizer
@@ -448,7 +492,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) { // FYI UIGestureRecognizerStateRecognized == UIGestureRecognizerStateEnded == 3
         
-        BOOL executeSwipe = FALSE;
+        BOOL executeSwipe = NO;
         
         // get the cell where the user swiped.
         NewsMapTableViewCell *cell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
@@ -463,7 +507,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             // swiped right so check we're not at the first article.
             if (indexOfArticleToSwipeOut > 0) {
                 // proceed
-                executeSwipe = TRUE;
+                executeSwipe = YES;
                 // if the user swiped right, the leading/trailing constraints should be the cell's width to the left (meaning, negative).
                 leadingTrailingConstraint = -cell.frame.size.width;
                 // and the index should be one less (we're decrementing through the array by going right).
@@ -474,7 +518,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             // swiped left so check we're not at the last article.
             if (indexOfArticleToSwipeOut < ([marker.userData count] - 1)) {
                 // proceed
-                executeSwipe = TRUE;
+                executeSwipe = YES;
                 // if the user swiped left, the leading/trailing constraints should be the cell's width to the right (meaning, positive)
                 leadingTrailingConstraint = cell.frame.size.width;
                 // and the index should be one less (we're decrementing through the array by going right).
@@ -488,7 +532,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             ArticleOverlayView *articleOverlaySubviewOfArticleToSwipeIn = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
             articleOverlaySubviewOfArticleToSwipeIn.translatesAutoresizingMaskIntoConstraints = NO;
             [cell addSubview:articleOverlaySubviewOfArticleToSwipeIn];
-            [articleOverlaySubviewOfArticleToSwipeIn setEdgesToSuperview:cell leading:leadingTrailingConstraint trailing:leadingTrailingConstraint top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+            [articleOverlaySubviewOfArticleToSwipeIn setEdgesToSuperview:cell leading:leadingTrailingConstraint trailing:leadingTrailingConstraint top:0 bottom:0 superviewFeature:TableCellSeparator];
             cell.articleView = articleOverlaySubviewOfArticleToSwipeIn;
             
             [self configureArticleTeaserForSubview:articleOverlaySubviewOfArticleToSwipeIn withArticle:[marker.userData objectAtIndex:indexOfArticleToSwipeIn]];
@@ -532,34 +576,5 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     }
 }
  */
-
-// the height of the view is calculated by summing the height of the right-side components (labels & such) and left-side components (mostly just the image view) and returning whichever is taller.
-- (CGFloat)dynamicallyCalculatedHeight
-{
-    // all the labels and the spacing constraints between them constitute the right side content.
-    CGFloat heightOfRightSideContent =
-    self.betweenHeadlineAndSuperview.constant +
-    self.headlineLabel.frame.size.height +
-    self.betweenIntroAndHeadline.constant +
-    self.introLabel.frame.size.height +
-    self.betweenMetaInfoAndIntro.constant +
-    self.metaInfoLabel.frame.size.height;
-    
-    // the image view and its spacing constraint at the top constitute the left side content.
-    CGFloat heightOfLeftSideContent =
-    self.betweenImageViewAndSuperview.constant +
-    self.imageViewHeight.constant;
-    
-    NSLog(@"heightOfRightSideContent: %f", heightOfRightSideContent);
-    NSLog(@"heightOfLeftSideContent: %f", heightOfLeftSideContent);
-    
-    // return whichever is taller.
-    if (heightOfRightSideContent > heightOfLeftSideContent) {
-        return heightOfRightSideContent;
-    }
-    else {
-        return heightOfLeftSideContent;
-    }
-}
 
 @end
