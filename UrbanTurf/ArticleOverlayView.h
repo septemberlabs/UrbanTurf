@@ -9,12 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "Article.h"
 
-@interface ArticleOverlayView : UIView
+@protocol ArticleOverlayViewDelegate; // forward declaration
 
-- (CGFloat)dynamicallyCalculatedHeight;
-
+@interface ArticleOverlayView : UIView <UIGestureRecognizerDelegate>
+@property (nonatomic, weak) id<ArticleOverlayViewDelegate> delegate;
 @property (strong, nonatomic) Article *article; // store a reference to the article being displayed to be able to identify which article it is.
-
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *headlineLabel;
 @property (weak, nonatomic) IBOutlet UILabel *introLabel;
@@ -24,6 +23,18 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenHeadlineAndSuperview;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenIntroAndHeadline;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenMetaInfoAndIntro;
-@property (strong, nonatomic) NSArray *constraintsWithSuperview;
+
+- (CGFloat)dynamicallyCalculatedHeight;
+- (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant;
+- (void)configureTeaserForArticle:(Article *)article;
+- (UIPanGestureRecognizer *)addPanGestureRecognizer;
 
 @end
+
+// delegate protocol
+@protocol ArticleOverlayViewDelegate <NSObject>
+@required
+- (void)setArticleOverlayView:(ArticleOverlayView *)articleOverlayView;
+- (void)articleOverlayView:(ArticleOverlayView *)articleOverlayView saveGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;
+- (void)articleOverlayView:(ArticleOverlayView *)articleOverlayView deleteGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer;
+@end // end of delegate protocol

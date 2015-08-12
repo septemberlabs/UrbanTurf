@@ -11,8 +11,9 @@
 #import "Fetcher.h"
 #import "GooglePlacesClient.h"
 #import "Article.h"
+#import "ArticleOverlayView.h"
 
-@interface NewsMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate, FetcherView, GooglePlacesView, GMSMapViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>
+@interface NewsMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate, FetcherView, GooglePlacesView, GMSMapViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, ArticleOverlayViewDelegate>
 
 @property (nonatomic) CLLocationDegrees latitude;
 @property (nonatomic) CLLocationDegrees longitude;
