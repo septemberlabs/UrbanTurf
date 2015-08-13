@@ -400,7 +400,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         
         ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
-        articleOverlaySubview.delegate = self;
         [cell addSubview:articleOverlaySubview];
         [articleOverlaySubview setEdgesToSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
         cell.articleView = articleOverlaySubview;
@@ -415,6 +414,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
         GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
         if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+            articleOverlaySubview.delegate = self;
             [articleOverlaySubview addPanGestureRecognizer];
         }
 
@@ -616,15 +616,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         // if no article is already overlaid, display the tapped one.
         if (!self.articleOverlaid) {
            
-            // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
-            ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
-            articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
-            [self.articleOverlay addSubview:articleOverlaySubview];
-            [articleOverlaySubview setEdgesToSuperview:self.articleOverlay leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
-
-            [articleOverlaySubview configureTeaserForArticle:[self getArticleFromMarker:marker]]; // set the values for the article overlay view's various components.
-            [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
-            [articleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
+            // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
+            if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
+            }
+            else {
+                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO];
+            }
             
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
             [self.view layoutIfNeeded];
@@ -651,18 +649,21 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             // if the tapped article is NOT the one already overlaid, we display the tapped article. (else, do nothing.)
             if (![marker isEqual:self.tappedMarker]) {
             
-                ArticleOverlayView *newArticleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:self.articleOverlay.bounds];
-                [self.articleOverlay addSubview:newArticleOverlaySubview];
-                [newArticleOverlaySubview configureTeaserForArticle:[self getArticleFromMarker:marker]]; // set the values for the article overlay view's various components.
-                [newArticleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
-                [newArticleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
-
+                // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
+                if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
+                }
+                else {
+                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO];
+                }
+ 
                 [UIView transitionWithView:self.articleOverlay
                                   duration:0.5
                                    options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight
                                 animations:^{
                                     [[self.articleOverlay.subviews objectAtIndex:0] removeFromSuperview];
-                                    [self.articleOverlay addSubview:newArticleOverlaySubview];
+                                    // used to have the line below but commented it out to put it above, where newArticleOverlaySubview is instantiated. still seems to work. but if the animation breaks for some reason, consider uncommenting this line here and removing it from above.
+                                    //[self.articleOverlay addSubview:newArticleOverlaySubview];
                                 }
                                 completion:nil];
                 
@@ -678,6 +679,26 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     }
 
     return YES;
+}
+
+- (ArticleOverlayView *)prepareArticleOverlayViewWithFrame:(CGRect)frame article:(Article *)article superview:(UIView *)superview addPanGestureRecognizer:(BOOL)addPanGestureRecognizer
+{
+    // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
+    ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame];
+    articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
+    [superview addSubview:articleOverlaySubview];
+    [articleOverlaySubview setEdgesToSuperview:superview leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
+    
+    [articleOverlaySubview configureTeaserForArticle:article]; // set the values for the article overlay view's various components.
+    [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
+    [articleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
+
+    if (addPanGestureRecognizer) {
+        articleOverlaySubview.delegate = self;
+        [articleOverlaySubview addPanGestureRecognizer];
+    }
+    
+    return articleOverlaySubview;
 }
 
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture

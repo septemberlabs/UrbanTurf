@@ -295,12 +295,12 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
                 NSUInteger indexOfArticleToPanOut = [articlesArray indexOfObject:articleToPanOut];
                 
                 // create two new article displays offscreen, one to the left and one to the right.
-                self.leftArticleSubview = [self generateArticleOverlayView:0 // 0 for left
+                self.leftArticleSubview = [self generateNeighboringArticleOverlayView:0 // 0 for left
                                                                  withFrame:self.superview.frame
                                                                inSuperview:self.superview
                                                     indexOfArticleToPanOut:indexOfArticleToPanOut
                                                              articlesArray:articlesArray];
-                self.rightArticleSubview = [self generateArticleOverlayView:1 // 1 for right
+                self.rightArticleSubview = [self generateNeighboringArticleOverlayView:1 // 1 for right
                                                                   withFrame:self.superview.frame
                                                                 inSuperview:self.superview
                                                      indexOfArticleToPanOut:indexOfArticleToPanOut
@@ -413,7 +413,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     
 }
 
-- (ArticleOverlayView *)generateArticleOverlayView:(int)position withFrame:(CGRect)frame inSuperview:(UIView *)superview indexOfArticleToPanOut:(NSUInteger)indexOfArticleToPanOut articlesArray:(NSArray *)articlesArray
+- (ArticleOverlayView *)generateNeighboringArticleOverlayView:(int)position withFrame:(CGRect)frame inSuperview:(UIView *)superview indexOfArticleToPanOut:(NSUInteger)indexOfArticleToPanOut articlesArray:(NSArray *)articlesArray
 {
     // LEFT: position == 0
     // RIGHT: position == 1
@@ -463,8 +463,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     }
     
     [articleSubview configureTeaserForArticle:[articlesArray objectAtIndex:articleIndex]];
-    if (position == 0) articleSubview.backgroundColor = [UIColor greenColor];//self.pannedCell.articleView.backgroundColor;
-    else articleSubview.backgroundColor = [UIColor purpleColor];//self.pannedCell.articleView.backgroundColor;
+    articleSubview.backgroundColor = self.customViewFromXib.backgroundColor;
     
     return articleSubview;
 }
