@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenIntroAndHeadline;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenMetaInfoAndIntro;
 
+- (id)initWithFrame:(CGRect)frame withTopBorder:(BOOL)topBorder;
 - (CGFloat)dynamicallyCalculatedHeight;
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant;
 - (void)configureTeaserForArticle:(Article *)article;

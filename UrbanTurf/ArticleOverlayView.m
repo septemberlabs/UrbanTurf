@@ -13,11 +13,15 @@
 #import "Constants.h"
 #import "Stylesheet.h"
 #import "UIImageView+AFNetworking.h"
+#import "UIView+AddBorders.h"
 
 @interface ArticleOverlayView ()
 
 @property (strong, nonatomic) UIView *customViewFromXib;
 @property (strong, nonatomic) NSArray *constraintsWithSuperview;
+
+// whether the view has a one-pixel border along the top.
+@property (nonatomic) BOOL topBorder;
 
 // related to panning when there are multiple articles at a single location.
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
@@ -46,22 +50,20 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     if (!self) {
         return nil;
     }
+    
+    return [self initWithFrame:frame withTopBorder:NO];
+}
 
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSArray *nibViewsArray = [mainBundle loadNibNamed:NSStringFromClass([self class]) owner:self options:nil];
-    UIView *subview = nibViewsArray[0];
-    subview.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:subview];
+- (id)initWithFrame:(CGRect)frame withTopBorder:(BOOL)topBorder
+{
+    self = [super initWithFrame:frame];
+    if (!self) {
+        return nil;
+    }
+
+    self.topBorder = topBorder;
     
-    // Thank you http://stackoverflow.com/a/16158361/4681708, item 5. Before this, the constraints that are set programmatically when this class is instantiated were not working properly.
-    NSDictionary *views = NSDictionaryOfVariableBindings(subview);
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|" options:0 metrics:nil views:views]];
-    
-    [self configureUI];
-    
-    // save a pointer to the custom view loaded from the xib.
-    self.customViewFromXib = subview;
+    [self initBody];
     
     return self;
 }
@@ -73,6 +75,13 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
         return nil;
     }
     
+    [self initBody];
+    
+    return self;
+}
+
+- (void)initBody
+{
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSArray *nibViewsArray = [mainBundle loadNibNamed:NSStringFromClass([self class]) owner:self options:nil];
     UIView *subview = nibViewsArray[0];
@@ -83,13 +92,11 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     NSDictionary *views = NSDictionaryOfVariableBindings(subview);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|" options:0 metrics:nil views:views]];
-
+    
     [self configureUI];
-
+    
     // save a pointer to the custom view loaded from the xib.
     self.customViewFromXib = subview;
-    
-    return self;
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -111,6 +118,11 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     
     // by default the view should recognize all GRs.
     self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
+    
+    if (self.topBorder) {
+        [self addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f];
+    }
+    
 }
 
 // the height of the view is calculated by summing the height of the right-side components (labels & such) and left-side components (mostly just the image view) and returning whichever is taller.
@@ -276,7 +288,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
 - (void)panArticleTeaser:(UIPanGestureRecognizer *)gestureRecognizer
 {
     //NSLog(@"registered pan: %ld", (long)gestureRecognizer.state);
-    NSLog(@"velocityInView: %@", NSStringFromCGPoint([gestureRecognizer velocityInView:self.superview]));
+    //NSLog(@"velocityInView: %@", NSStringFromCGPoint([gestureRecognizer velocityInView:self.superview]));
     
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         // zero out the state variables just in case.
@@ -437,7 +449,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     // LEFT: position == 0
     // RIGHT: position == 1
     
-    ArticleOverlayView *articleSubview = [[ArticleOverlayView alloc] initWithFrame:frame];
+    ArticleOverlayView *articleSubview = [[ArticleOverlayView alloc] initWithFrame:frame withTopBorder:self.topBorder];
     articleSubview.translatesAutoresizingMaskIntoConstraints = NO;
     articleSubview.delegate = self.delegate;
     [superview addSubview:articleSubview];

@@ -54,6 +54,7 @@ extern NSString * const map_marker_insets;
 extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker
 extern CGFloat const PAN_THRESHOLD; // horizontal distance (px) that a pan translation must return before triggering a visual response from the UI.
 extern CGFloat const PANNED_DISTANCE_THRESHOLD; // horizontal distance as percentage of view width that user must pan for neighboring article to move in.
+extern int const ARTICLE_OVERLAY_VIEW_HEIGHT; // height (px) of articles in table view and in full-map mode.
 
 extern NSString *const API_ADDRESS;
 extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items

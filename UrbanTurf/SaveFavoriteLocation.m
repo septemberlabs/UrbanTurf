@@ -45,11 +45,6 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
     
     [self.mapView moveCamera:[GMSCameraUpdate setTarget:self.currentLocation zoom:16.0f]];
     self.mapView.delegate = self;
-    
-    // instatiate the crosshairs image, but wait to position on the screen until viewWillLayoutSubviews
-    // use the below for debugging. DELETE SOON.
-    //self.crosshairs.layer.borderWidth = 1.0f;
-    //self.crosshairs.layer.borderColor = [UIColor blueColor].CGColor;
 
 }
 

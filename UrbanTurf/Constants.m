@@ -51,6 +51,7 @@ NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with 
 CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
 CGFloat const PAN_THRESHOLD = 10;
 CGFloat const PANNED_DISTANCE_THRESHOLD = 0.20;
+int const ARTICLE_OVERLAY_VIEW_HEIGHT = 135;
 
 NSString * const API_ADDRESS = @"http://app.urbanturf.com/api/articles?";
 double const LATLON_RADIUS = 0.5;

@@ -30,7 +30,6 @@
 @property (strong, nonatomic) NSTimer *timer;
 @property CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
-@property (strong, nonatomic) UIImageView *crosshairs;
 @property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeightConstraint;
 @property (nonatomic) BOOL gestureInitiatedMapMove;
@@ -108,9 +107,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     self.mapView.settings.myLocationButton = NO;
     self.mapView.indoorEnabled = NO; // disabled this to suppress the random error "Encountered indoor level with missing enclosing_building field" we were getting.
     
-    // instatiate the crosshairs image, but wait to position on the screen until viewWillLayoutSubviews
-    self.crosshairs = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cursor-crosshair"]];
-    
     self.latitude = office.latitude;
     self.longitude = office.longitude;
     
@@ -129,14 +125,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    
-    // not sure exactly how this works, but got the technique from SO:
-    // http://stackoverflow.com/questions/29109541/uiview-width-height-not-adjusting-to-constraints
-    [self.mapView addSubview:self.crosshairs];
-    [self.crosshairs setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.mapView addConstraint:[NSLayoutConstraint constraintWithItem:self.mapView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.crosshairs attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-    [self.mapView addConstraint:[NSLayoutConstraint constraintWithItem:self.mapView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.crosshairs attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    self.articleOverlayHeightConstraint.constant = ARTICLE_OVERLAY_VIEW_HEIGHT;
 }
+
 
 #pragma mark - Accessors
 
@@ -359,7 +350,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         // otherwise, give it the standard height for all the article table cells.
         else {
             //return TOP_CAPTION_HEIGHT + IMAGE_HEIGHT + BOTTOM_CAPTION_HEIGHT + VERTICAL_MARGIN;
-            return 135;
+            return ARTICLE_OVERLAY_VIEW_HEIGHT;
         }
     }
     
@@ -546,7 +537,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         [self.mapView clear]; // clear off existing markers
         //[self.mapView moveCamera:[GMSCameraUpdate setTarget:selectedLocation zoom:DEFAULT_ZOOM_LEVEL]];
-        if (self.crosshairs.hidden) [self showCrosshairs];
     });
 
 }
@@ -607,7 +597,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     // we are in list mode, meaning the table view of articles is visible beneath the map.
     if (self.listView) {
-        if (!self.crosshairs.hidden) [self hideCrosshairs]; // hide the crosshairs if they're not already hidden.
         //NSLog(@"index: %lu", (unsigned long)[self.markers indexOfObject:marker]);
         [self setFocusOnMarker:marker];
     }
@@ -686,7 +675,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (ArticleOverlayView *)prepareArticleOverlayViewWithFrame:(CGRect)frame article:(Article *)article superview:(UIView *)superview addPanGestureRecognizer:(BOOL)addPanGestureRecognizer
 {
     // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
-    ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame];
+    ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame withTopBorder:YES];
     articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
     [superview addSubview:articleOverlaySubview];
     [articleOverlaySubview setEdgesToSuperview:superview leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
@@ -706,9 +695,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture
 {
     if (gesture) {
-        // re-display the crosshairs if the map is moving due to a user gesture.
-        if (self.crosshairs.hidden) [self showCrosshairs];
-        
         // record the fact that a gesture started the move so we know that in idleAtCameraPosition.
         self.gestureInitiatedMapMove = YES;
     }
@@ -717,40 +703,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     }
 }
 
-- (void)hideCrosshairs
-{
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         self.crosshairs.alpha = 0.0;
-                     }
-                     completion:^(BOOL finished) {
-                         self.crosshairs.hidden = YES;
-                     }];
-}
-
-- (void)showCrosshairs
-{
-    self.crosshairs.hidden = NO;
-    self.crosshairs.alpha = 1.0;
-    
-    /* COULDN'T GET THIS FADE-IN EFFECT TO WORK --
-    self.crosshairs.alpha = 0.0; // make it totally transparent before unhiding it just in case for some reason it isn't already.
-    self.crosshairs.hidden = NO; // unhide it.
-    // increase the alpha from totally transparent to totally opaque.
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         self.crosshairs.alpha = 1.0;
-                     }];
-     */
-}
-
 #pragma mark - Article scrolling behavior
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
-    if (!self.crosshairs.hidden) [self hideCrosshairs];
-    
     // disable all the pan GRs on the table items that correspond to markers with multiple stories.
     for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
         panGR.enabled = NO;
