@@ -25,6 +25,8 @@
 // subviews to the left/right when panning with multiple articles. just used during active pan and should be nil at all other times.
 @property (strong, nonatomic) ArticleOverlayView *leftArticleSubview;
 @property (strong, nonatomic) ArticleOverlayView *rightArticleSubview;
+// the subview being swiped-in for swipe gestures.
+@property (strong, nonatomic) ArticleOverlayView *enteringArticleSubview;
 
 typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     Left,
@@ -100,6 +102,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
 - (void)configureUI
 {
     // reset the background colors to white in case some other color used in IB for debugging.
+    self.placementInArrayLabel.backgroundColor = [UIColor clearColor];
     self.headlineLabel.backgroundColor = [UIColor clearColor];
     self.metaInfoLabel.backgroundColor = [UIColor clearColor];
     self.introLabel.backgroundColor = [UIColor clearColor];
@@ -214,6 +217,19 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     self.headlineLabel.text = article.title; // headline
     self.introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)]; // body
     [self prepareMetaInfoStringForArticle:article]; // meta info
+    
+    GMSMarker *marker = article.marker;
+    // there are multiple articles at this location.
+    if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+        NSArray *articlesArray = (NSArray *)marker.userData;
+        NSUInteger indexOfArticle = [articlesArray indexOfObject:article];
+        self.placementInArrayLabel.text = [NSString stringWithFormat:@"Article %d of %d", (int)(indexOfArticle+1), (int)[articlesArray count]];
+    }
+    // if marker.userData is not an array, this is the only article.
+    else {
+        self.placementInArrayLabel.text = @"";
+    }
+
     [self layoutIfNeeded];
 }
 
@@ -245,7 +261,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     self.metaInfoLabel.attributedText = metaInfoAttributedString;
 }
 
-#pragma mark - Gestures
+#pragma mark - Pan Gesture
 
 - (UIPanGestureRecognizer *)addPanGestureRecognizer
 {
@@ -262,6 +278,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
 - (void)panArticleTeaser:(UIPanGestureRecognizer *)gestureRecognizer
 {
     //NSLog(@"registered pan: %ld", (long)gestureRecognizer.state);
+    NSLog(@"velocityInView: %@", NSStringFromCGPoint([gestureRecognizer velocityInView:self.superview]));
     
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         // zero out the state variables just in case.
@@ -289,21 +306,21 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
             // if self.leftArticleSubview hasn't been set, we need to set it and the right article subview. (could have checked for rightArticleSubview instead.)
             if (!self.leftArticleSubview) {
                 
-                Article *articleToPanOut = self.article;
-                GMSMarker *marker = articleToPanOut.marker;
+                Article *articleExiting = self.article;
+                GMSMarker *marker = articleExiting.marker;
                 NSArray *articlesArray = (NSArray *)marker.userData;
-                NSUInteger indexOfArticleToPanOut = [articlesArray indexOfObject:articleToPanOut];
+                NSUInteger indexOfArticleExiting = [articlesArray indexOfObject:articleExiting];
                 
                 // create two new article displays offscreen, one to the left and one to the right.
                 self.leftArticleSubview = [self generateNeighboringArticleOverlayView:0 // 0 for left
                                                                  withFrame:self.superview.frame
                                                                inSuperview:self.superview
-                                                    indexOfArticleToPanOut:indexOfArticleToPanOut
+                                                    indexOfArticleExiting:indexOfArticleExiting
                                                              articlesArray:articlesArray];
                 self.rightArticleSubview = [self generateNeighboringArticleOverlayView:1 // 1 for right
                                                                   withFrame:self.superview.frame
                                                                 inSuperview:self.superview
-                                                     indexOfArticleToPanOut:indexOfArticleToPanOut
+                                                     indexOfArticleExiting:indexOfArticleExiting
                                                               articlesArray:articlesArray];
             }
             
@@ -319,11 +336,11 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
         
         ArticlePanDirection panDirection = -1;
         // if the center point of the panned article is less than 0, it means it's off screen and the article to the right is more than half panned in, and should now be fully animated in.
-        if (self.center.x < 0) {
+        if (self.frame.origin.x < (-1 * self.frame.size.width * PANNED_DISTANCE_THRESHOLD)) {
             panDirection = Left;
         }
         // if the center point of the panned article is greater than the width of the table cell (its superview), it means it's off screen and the article to the left is more than half panned in, and should now be fully animated in.
-        else if (self.center.x > self.superview.frame.size.width) {
+        else if (self.frame.origin.x > (self.frame.size.width * PANNED_DISTANCE_THRESHOLD)) {
             panDirection = Right;
         }
         // if neither of the two conditions are true, snap back to the original article.
@@ -386,7 +403,9 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
         if (panDirection == Left) {
             
             [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            [self.rightArticleSubview addPanGestureRecognizer]; // create a new pan GR for the newly panned-in article.
+            // create new pan & swipe GRs for the newly panned-in article.
+            [self.rightArticleSubview addPanGestureRecognizer];
+            [self.rightArticleSubview addSwipeGestureRecognizer];
 
             [self.leftArticleSubview removeFromSuperview];
             [self removeFromSuperview];
@@ -394,7 +413,9 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
         else if (panDirection == Right) {
             
             [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            [self.leftArticleSubview addPanGestureRecognizer]; // create a new pan GR for the newly panned-in article.
+            // create new pan & swipe GRs for the newly panned-in article.
+            [self.leftArticleSubview addPanGestureRecognizer];
+            [self.leftArticleSubview addSwipeGestureRecognizer];
 
             [self.rightArticleSubview removeFromSuperview];
             [self removeFromSuperview];
@@ -413,7 +434,80 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     
 }
 
-- (ArticleOverlayView *)generateNeighboringArticleOverlayView:(int)position withFrame:(CGRect)frame inSuperview:(UIView *)superview indexOfArticleToPanOut:(NSUInteger)indexOfArticleToPanOut articlesArray:(NSArray *)articlesArray
+#pragma mark - Swipe Gesture
+
+- (UISwipeGestureRecognizer *)addSwipeGestureRecognizer
+{
+    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
+    //[self addGestureRecognizer:swipeRecognizer];
+    //swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    swipeRecognizer.delegate = self;
+    return swipeRecognizer;
+}
+
+- (void)swipeArticleTeaser:(UISwipeGestureRecognizer *)gestureRecognizer
+{
+    NSLog(@"registered swipe: %ld", (long)gestureRecognizer.state);
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) { // FYI UIGestureRecognizerStateRecognized == UIGestureRecognizerStateEnded == 3
+        
+        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
+        
+        Article *articleExiting = self.article;
+        GMSMarker *marker = articleExiting.marker;
+        NSArray *articlesArray = (NSArray *)marker.userData;
+        NSUInteger indexOfArticleExiting = [articlesArray indexOfObject:articleExiting];
+        
+        int position = -1;
+        
+        // slide the panned-out article a cell width. (positive value shifts it right.)
+        CGFloat swipeDistance;
+        if (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+            position = 0; // swiping right so need left subview.
+            swipeDistance = self.superview.frame.size.width; // positive value for rightward movement.
+        }
+        else {
+            position = 1; // swiping left so need right subview.
+            swipeDistance = -self.superview.frame.size.width; // negative value for leftward movement.
+        }
+        // create new article display offscreen.
+        self.enteringArticleSubview = [self generateNeighboringArticleOverlayView:position // 0 for left subview, 1 for right.
+                                                                        withFrame:self.superview.frame
+                                                                      inSuperview:self.superview
+                                                            indexOfArticleExiting:indexOfArticleExiting
+                                                                    articlesArray:articlesArray];
+        
+        // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
+        [self.superview layoutIfNeeded];
+        
+        // set the new constraints that will cause the animation.
+        [self setEdgesToSuperview:self.superview leading:swipeDistance trailing:swipeDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
+        [self.enteringArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
+        
+        // set the delegate's article to the new one.
+        [self.delegate setArticleOverlayView:self.enteringArticleSubview];
+        
+        // finally, to animate the swipe set the new constraints by calling layoutIfNeeded as the body of the animation.
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [self.superview layoutIfNeeded];
+                         }
+                         completion:^(BOOL finished) {
+                             [self removeFromSuperview]; // remove the swiped-out subview (which is self).
+                         }];
+        
+        [self.enteringArticleSubview addSwipeGestureRecognizer]; // create a new swipe GR for the newly swiped-in article.
+     
+        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = NO;
+    }
+}
+
+#pragma mark - Gesture Support Methods
+
+- (ArticleOverlayView *)generateNeighboringArticleOverlayView:(int)position withFrame:(CGRect)frame inSuperview:(UIView *)superview indexOfArticleExiting:(NSUInteger)indexOfArticleExiting articlesArray:(NSArray *)articlesArray
 {
     // LEFT: position == 0
     // RIGHT: position == 1
@@ -443,22 +537,22 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     NSUInteger articleIndex;
     if (position == 0) { // LEFT
         // if left article is being generated but we're already at the first article in the array, set the index to the last index in the array.
-        if (indexOfArticleToPanOut == 0) {
+        if (indexOfArticleExiting == 0) {
             articleIndex = ([articlesArray count] - 1);
         }
         // otherwise, just decrement the index and use that article.
         else {
-            articleIndex = indexOfArticleToPanOut - 1;
+            articleIndex = indexOfArticleExiting - 1;
         }
     }
     else { // RIGHT
         // if right article is being generated but we're already at the last article in the array, set the index to the first index in the array (0).
-        if (indexOfArticleToPanOut == ([articlesArray count] - 1)) {
+        if (indexOfArticleExiting == ([articlesArray count] - 1)) {
             articleIndex = 0;
         }
         // otherwise, just increment the index and use that article.
         else {
-            articleIndex = indexOfArticleToPanOut + 1;
+            articleIndex = indexOfArticleExiting + 1;
         }
     }
     
@@ -473,107 +567,5 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     //NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called: %@", self.shouldRecognizeSimultaneouslyWithGestureRecognizer ? @"YES" : @"NO");
     return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
 }
-
-/*
-- (UISwipeGestureRecognizer *)addSwipeGestureRecognizer
-{
-     UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
-     [articleOverlaySubview addGestureRecognizer:swipeRecognizer];
-     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
-     swipeRecognizer.delegate = self;
-}
- */
-
-/*
-- (void)swipeArticleTeaser:(UISwipeGestureRecognizer *)gestureRecognizer
-{
-    NSLog(@"registered swipe: %ld", (long)gestureRecognizer.state);
-    
-    if (gestureRecognizer.state == UIGestureRecognizerStateRecognized) { // FYI UIGestureRecognizerStateRecognized == UIGestureRecognizerStateEnded == 3
-        
-        BOOL executeSwipe = NO;
-        
-        // get the cell where the user swiped.
-        NewsMapTableViewCell *cell = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:[self.tableView indexPathForRowAtPoint:[gestureRecognizer locationInView:self.tableView]]];
-        
-        // look at the array of articles at the marker represented by the cell to see if one exists at the previous/next index from the article currently displayed. that is, confirm we're not at the first/last article in the array.
-        Article *articleToSwipeOut = cell.articleView.article;
-        GMSMarker *marker = articleToSwipeOut.marker;
-        NSUInteger indexOfArticleToSwipeOut = [marker.userData indexOfObject:articleToSwipeOut];
-        CGFloat leadingTrailingConstraint = 0.0; // only used if swipe is executed.
-        NSUInteger indexOfArticleToSwipeIn = -1; // only used if swipe is executed.
-        if (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight) {
-            // swiped right so check we're not at the first article.
-            if (indexOfArticleToSwipeOut > 0) {
-                // proceed
-                executeSwipe = YES;
-                // if the user swiped right, the leading/trailing constraints should be the cell's width to the left (meaning, negative).
-                leadingTrailingConstraint = -cell.frame.size.width;
-                // and the index should be one less (we're decrementing through the array by going right).
-                indexOfArticleToSwipeIn = indexOfArticleToSwipeOut - 1;
-            }
-        }
-        else {
-            // swiped left so check we're not at the last article.
-            if (indexOfArticleToSwipeOut < ([marker.userData count] - 1)) {
-                // proceed
-                executeSwipe = YES;
-                // if the user swiped left, the leading/trailing constraints should be the cell's width to the right (meaning, positive)
-                leadingTrailingConstraint = cell.frame.size.width;
-                // and the index should be one less (we're decrementing through the array by going right).
-                indexOfArticleToSwipeIn = indexOfArticleToSwipeOut + 1;
-            }
-        }
-        
-        if (executeSwipe) {
-            
-            // create the new article display offscreen, immediately to the right or left depending on swipe direction.
-            ArticleOverlayView *articleOverlaySubviewOfArticleToSwipeIn = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
-            articleOverlaySubviewOfArticleToSwipeIn.translatesAutoresizingMaskIntoConstraints = NO;
-            [cell addSubview:articleOverlaySubviewOfArticleToSwipeIn];
-            [articleOverlaySubviewOfArticleToSwipeIn setEdgesToSuperview:cell leading:leadingTrailingConstraint trailing:leadingTrailingConstraint top:0 bottom:0 superviewFeature:TableCellSeparator];
-            cell.articleView = articleOverlaySubviewOfArticleToSwipeIn;
-            
-            [self configureArticleTeaserForSubview:articleOverlaySubviewOfArticleToSwipeIn withArticle:[marker.userData objectAtIndex:indexOfArticleToSwipeIn]];
-            articleOverlaySubviewOfArticleToSwipeIn.backgroundColor = cell.articleView.backgroundColor;
-            
-            // add the gesture recognizer to the new subview.
-            UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeArticleTeaser:)];
-            [cell.articleView addGestureRecognizer:swipeRecognizer];
-            swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight|UISwipeGestureRecognizerDirectionLeft;
-            swipeRecognizer.delegate = self;
-            
-            // we know the indices for leading/trailing from setEdgesOfSubview.
-            NSLayoutConstraint *leadingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:0];
-            NSLayoutConstraint *trailingConstraintSwipedOutView = [cell.articleView.constraintsWithSuperview objectAtIndex:1];
-            NSLayoutConstraint *leadingConstraintSwipedInView = [articleOverlaySubviewOfArticleToSwipeIn.constraintsWithSuperview objectAtIndex:0];
-            NSLayoutConstraint *trailingConstraintSwipedInView = [articleOverlaySubviewOfArticleToSwipeIn.constraintsWithSuperview objectAtIndex:1];
-            
-            [cell layoutIfNeeded]; // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
-            
-            // by subtracting the leadingTrailingConstraint from each one, we are effectively adding X value to the leading/trailing boundaries in the case of a right swipe (by negating the negative leadingTrailing), and subtracting X value in the case of left swipe.
-            leadingConstraintSwipedOutView.constant = leadingConstraintSwipedOutView.constant - leadingTrailingConstraint;
-            trailingConstraintSwipedOutView.constant = trailingConstraintSwipedOutView.constant - leadingTrailingConstraint;
-            leadingConstraintSwipedInView.constant = leadingConstraintSwipedInView.constant - leadingTrailingConstraint;
-            trailingConstraintSwipedInView.constant = trailingConstraintSwipedInView.constant - leadingTrailingConstraint;
-            
-            // finally, to animate the swipe set the new constraints by calling layoutIfNeeded as the body of the animation.
-            [UIView animateWithDuration:0.2
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut
-                             animations:^{
-                                 [cell layoutIfNeeded];
-                             }
-                             completion:^(BOOL finished) {
-                                 //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue803"] forState:UIControlStateNormal];
-                                 //self.borderBetweenMapAndTable.opacity = 1.0; // display the border instantly once the animation has completed.
-                             }];
-            
-            cell.articleView = articleOverlaySubviewOfArticleToSwipeIn;
-            
-        }
-    }
-}
- */
 
 @end

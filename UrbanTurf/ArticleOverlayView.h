@@ -15,6 +15,7 @@
 @property (nonatomic, weak) id<ArticleOverlayViewDelegate> delegate;
 @property (strong, nonatomic) Article *article; // store a reference to the article being displayed to be able to identify which article it is.
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UILabel *placementInArrayLabel;
 @property (weak, nonatomic) IBOutlet UILabel *headlineLabel;
 @property (weak, nonatomic) IBOutlet UILabel *introLabel;
 @property (weak, nonatomic) IBOutlet UILabel *metaInfoLabel;
@@ -28,6 +29,7 @@
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant;
 - (void)configureTeaserForArticle:(Article *)article;
 - (UIPanGestureRecognizer *)addPanGestureRecognizer;
+- (UISwipeGestureRecognizer *)addSwipeGestureRecognizer;
 
 @end
 
