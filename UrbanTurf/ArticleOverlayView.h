@@ -29,7 +29,6 @@
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant;
 - (void)configureTeaserForArticle:(Article *)article;
 - (UIPanGestureRecognizer *)addPanGestureRecognizer;
-- (UISwipeGestureRecognizer *)addSwipeGestureRecognizer;
 
 @end
 

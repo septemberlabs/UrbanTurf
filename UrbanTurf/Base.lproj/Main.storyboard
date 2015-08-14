@@ -384,30 +384,6 @@
                                     <constraint firstAttribute="height" constant="150" id="pgg-4k-MOo"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e51-0l-SMi" userLabel="Zoom Out">
-                                <rect key="frame" x="8" y="114" width="35" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="35" id="43I-rD-ogY"/>
-                                    <constraint firstAttribute="height" constant="50" id="IqK-4t-4QO"/>
-                                </constraints>
-                                <state key="normal" image="SmallMinusButton">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="zoomOut:" destination="STl-BS-KjN" eventType="touchUpInside" id="87h-xA-eh4"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BEe-6N-fhL" userLabel="Zoom In">
-                                <rect key="frame" x="557" y="114" width="35" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="35" id="3o5-yb-bEx"/>
-                                    <constraint firstAttribute="height" constant="50" id="pCl-Gs-M5b"/>
-                                </constraints>
-                                <state key="normal" image="SmallPlusButton"/>
-                                <connections>
-                                    <action selector="zoomIn:" destination="STl-BS-KjN" eventType="touchUpInside" id="CSy-Rv-eD9"/>
-                                </connections>
-                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="132" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Z6b-sw-l5K">
                                 <rect key="frame" x="0.0" y="214" width="600" height="337"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -492,10 +468,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="e51-0l-SMi" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" constant="8" id="1ER-KJ-TWb"/>
                             <constraint firstAttribute="trailing" secondItem="RTz-VU-U5z" secondAttribute="trailing" id="1VF-9I-CB4"/>
-                            <constraint firstAttribute="trailing" secondItem="BEe-6N-fhL" secondAttribute="trailing" constant="8" id="2BK-dG-yIR"/>
-                            <constraint firstItem="BEe-6N-fhL" firstAttribute="centerY" secondItem="RTz-VU-U5z" secondAttribute="centerY" id="2Zr-Ow-6Ph"/>
                             <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="Z6b-sw-l5K" secondAttribute="bottom" id="DWX-GN-N9N"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="Ior-gv-7aL"/>
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="IuV-t7-y18"/>
@@ -505,7 +478,6 @@
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eMf-O7-xdd"/>
                             <constraint firstItem="RTz-VU-U5z" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eiS-cf-54B"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="top" secondItem="65P-iN-QSW" secondAttribute="bottom" id="fRI-lx-8Pt"/>
-                            <constraint firstItem="RTz-VU-U5z" firstAttribute="centerY" secondItem="e51-0l-SMi" secondAttribute="centerY" id="lQT-oM-u6I"/>
                             <constraint firstItem="RTz-VU-U5z" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="bottom" id="po2-1c-gas"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="qUo-yk-ODc"/>
                             <constraint firstAttribute="trailing" secondItem="Sal-Vu-s9R" secondAttribute="trailing" id="veR-E0-Tzi"/>
@@ -937,8 +909,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SmallMinusButton" width="20" height="20"/>
-        <image name="SmallPlusButton" width="20" height="20"/>
         <image name="cursor-crosshair" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>

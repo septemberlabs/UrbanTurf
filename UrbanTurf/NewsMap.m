@@ -415,7 +415,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
         if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
             [articleOverlaySubview addPanGestureRecognizer];
-            [articleOverlaySubview addSwipeGestureRecognizer];
             articleOverlaySubview.delegate = self;
         }
 
@@ -621,10 +620,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
            
             // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
             if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
-                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES addSwipeGestureRecognizer:YES];
+                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
             }
             else {
-                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO addSwipeGestureRecognizer:NO];
+                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO];
             }
             
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
@@ -654,10 +653,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             
                 // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
                 if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
-                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES addSwipeGestureRecognizer:YES];
+                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
                 }
                 else {
-                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO addSwipeGestureRecognizer:NO];
+                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO];
                 }
  
                 [UIView transitionWithView:self.articleOverlay
@@ -684,7 +683,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     return YES;
 }
 
-- (ArticleOverlayView *)prepareArticleOverlayViewWithFrame:(CGRect)frame article:(Article *)article superview:(UIView *)superview addPanGestureRecognizer:(BOOL)addPanGestureRecognizer addSwipeGestureRecognizer:(BOOL)addSwipeGestureRecognizer
+- (ArticleOverlayView *)prepareArticleOverlayViewWithFrame:(CGRect)frame article:(Article *)article superview:(UIView *)superview addPanGestureRecognizer:(BOOL)addPanGestureRecognizer
 {
     // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
     ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame];
@@ -700,11 +699,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         [articleOverlaySubview addPanGestureRecognizer];
         articleOverlaySubview.delegate = self;
     }
-    if (addSwipeGestureRecognizer) {
-        [articleOverlaySubview addSwipeGestureRecognizer];
-        articleOverlaySubview.delegate = self;
-    }
-    
+
     return articleOverlaySubview;
 }
 
@@ -997,16 +992,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             articleVC.article = articleToDisplay;
         }
     }
-}
-
-#pragma mark - Zoom buttons
-
-- (IBAction)zoomIn:(id)sender {
-    [self.mapView animateWithCameraUpdate:[GMSCameraUpdate zoomIn]];
-}
-
-- (IBAction)zoomOut:(id)sender {
-    [self.mapView animateWithCameraUpdate:[GMSCameraUpdate zoomOut]];
 }
 
 #pragma mark - Misc
