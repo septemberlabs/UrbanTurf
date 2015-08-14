@@ -481,6 +481,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 {
     
     // if the table view sending the message is the articles table view
+    /*
     if (tableView == self.tableView) {
         //[tableView deselectRowAtIndexPath:indexPath animated:NO];
         if (indexPath.row == 0) {
@@ -490,6 +491,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             [self performSegueWithIdentifier:@"DisplayArticleSegue" sender:self];
         }
     }
+     */
     
     // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -989,10 +991,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             Article *articleToDisplay = [self getArticleFromMarker:self.markers[indexPath.row]];
             articleVC.article = articleToDisplay;
         }
-    }
-    
-    if ([segue.identifier isEqualToString:@"MultipleArticlesAtMarker"]) {
-        
     }
 }
 

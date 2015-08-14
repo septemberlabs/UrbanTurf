@@ -13,6 +13,7 @@
 #import "Constants.h"
 #import "Stylesheet.h"
 #import "NewsMap.h"
+#import "ArticleWebViewVC.h"
 
 @interface ArticleViewController ()
 @property (weak, nonatomic) IBOutlet UIScrollView *articleScrollView;
@@ -38,6 +39,8 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     // set self to the delegate so we can capture and act on the action of the user tapping Back.
     self.navigationController.delegate = self;
+    
+    self.title = @"Article Preview";
 
     // image.
     [self.articleView.imageView setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
@@ -72,6 +75,18 @@
 
     // padding view.
     self.articleView.bottomPaddingView.backgroundColor = [UIColor clearColor];
+    
+    // get notified when the user taps the button to load the article's original source on the web. i couldn't figure out another way to have this VC react to the press of a button that is embedded in a nib and therefore the VC can't directly receive events for.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(loadArticleOnWeb:)
+                                                 name:@"LoadArticleOnWebButtonTapped"
+                                               object:self.articleView];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"LoadArticleOnWebButtonTapped" object:self.articleView];
 }
 
 - (void)viewWillLayoutSubviews
@@ -171,6 +186,21 @@
     for (UIView *subview in subviews) {
         NSLog(@"%@", subview);
         [self listSubviewsOfView:subview]; // recursion.
+    }
+}
+
+- (void)loadArticleOnWeb:(NSNotification *)userInfo
+{
+    [self performSegueWithIdentifier:@"DisplayArticleOriginalSource" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"DisplayArticleOriginalSource"]) {
+        if ([segue.destinationViewController isKindOfClass:[ArticleWebViewVC class]]) {
+            ArticleWebViewVC *articleWebViewVC = (ArticleWebViewVC *)segue.destinationViewController;
+            articleWebViewVC.urlToLoad = self.article.url;
+        }
     }
 }
 

@@ -11,6 +11,7 @@
 		1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */; };
 		1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */; };
 		1A0E1DA11B3394A2002F3DF9 /* UIView+AddBorders.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */; };
+		1A0F7A741B7D6500001DBD89 /* ArticleWebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0F7A731B7D6500001DBD89 /* ArticleWebViewVC.m */; };
 		1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */; };
 		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
 		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
@@ -93,6 +94,8 @@
 		1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleOverlayView.m; sourceTree = "<group>"; };
 		1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AddBorders.h"; sourceTree = "<group>"; };
 		1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AddBorders.m"; sourceTree = "<group>"; };
+		1A0F7A721B7D6500001DBD89 /* ArticleWebViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleWebViewVC.h; sourceTree = SOURCE_ROOT; };
+		1A0F7A731B7D6500001DBD89 /* ArticleWebViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleWebViewVC.m; sourceTree = SOURCE_ROOT; };
 		1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTabBarController.h; sourceTree = "<group>"; };
 		1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTabBarController.m; sourceTree = "<group>"; };
 		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -235,6 +238,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A0F7A751B7D6F66001DBD89 /* Article */ = {
+			isa = PBXGroup;
+			children = (
+				1A2E6A561A49F5BD0033AC87 /* Article.h */,
+				1A2E6A571A49F5BD0033AC87 /* Article.m */,
+				1AF7ADB51B251D17009164F6 /* ArticleView.h */,
+				1AF7ADB61B251D17009164F6 /* ArticleView.m */,
+				1AF7ADB31B251BB4009164F6 /* ArticleView.xib */,
+				1A2E6A671A4E26540033AC87 /* ArticleViewController.h */,
+				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
+				1A0F7A721B7D6500001DBD89 /* ArticleWebViewVC.h */,
+				1A0F7A731B7D6500001DBD89 /* ArticleWebViewVC.m */,
+				1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */,
+				1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */,
+				1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */,
+			);
+			name = Article;
+			sourceTree = "<group>";
+		};
 		1A2E6A5C1A49F61D0033AC87 /* Fetchers */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,14 +291,7 @@
 		1AB1A55D1A48E3D900369211 /* UrbanTurf */ = {
 			isa = PBXGroup;
 			children = (
-				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
-				1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */,
-				1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */,
-				1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */,
-				1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView.xib */,
-				1AF7ADB51B251D17009164F6 /* ArticleView.h */,
-				1AF7ADB61B251D17009164F6 /* ArticleView.m */,
-				1AF7ADB31B251BB4009164F6 /* ArticleView.xib */,
+				1A0F7A751B7D6F66001DBD89 /* Article */,
 				1AB7BF061ACDD219003BCCC0 /* Options */,
 				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
 				1AC3FBB01ACEDF4F00933C64 /* Favorite Locations */,
@@ -290,8 +305,6 @@
 				1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */,
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
-				1A2E6A561A49F5BD0033AC87 /* Article.h */,
-				1A2E6A571A49F5BD0033AC87 /* Article.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
 				1AF9B1361ACCADF8004F3A5B /* Radius.h */,
 				1AF9B1371ACCADF8004F3A5B /* Radius.m */,
@@ -301,10 +314,10 @@
 				1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */,
 				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
 				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
-				1A2E6A671A4E26540033AC87 /* ArticleViewController.h */,
-				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
+				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
+				1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
 				1AB1A5701A48E3D900369211 /* LaunchScreen.xib */,
 				1AD3175E1B06DADF005774D2 /* UrbanTurf-prefix.pch */,
@@ -587,6 +600,7 @@
 				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
 				1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */,
 				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
+				1A0F7A741B7D6500001DBD89 /* ArticleWebViewVC.m in Sources */,
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
 				1AECA1601AF059E500EAE054 /* AFNetworkReachabilityManager.m in Sources */,

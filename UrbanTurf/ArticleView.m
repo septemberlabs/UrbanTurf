@@ -52,6 +52,11 @@
     return self;
 }
 
+// since this view doesn't know about its containing VC, use notifications (which the VC registered for) to disseminate the news that the button was clicked.
+- (IBAction)loadArticleButtonPressed:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadArticleOnWebButtonTapped" object:self];
+}
+
 - (CGFloat)dynamicallyCalculatedHeight
 {
     return

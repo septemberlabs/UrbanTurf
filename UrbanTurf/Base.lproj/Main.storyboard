@@ -269,19 +269,19 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X.X mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfb-T7-krd" userLabel="Min Label">
-                                                    <rect key="frame" x="16" y="14" width="47" height="20"/>
+                                                    <rect key="frame" x="16" y="14" width="46.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X.X mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39p-Yf-EIw" userLabel="Max Label">
-                                                    <rect key="frame" x="542" y="14" width="47" height="20"/>
+                                                    <rect key="frame" x="542" y="14" width="46.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="uBn-rr-KOV">
-                                                    <rect key="frame" x="69" y="9" width="467" height="31"/>
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="uBn-rr-KOV">
+                                                    <rect key="frame" x="68.5" y="9" width="468" height="31"/>
                                                 </slider>
                                             </subviews>
                                             <constraints>
@@ -431,6 +431,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="articleView" destination="10j-Y6-3Uc" id="FK9-c6-bTs"/>
+                                            <segue destination="MZg-7W-uEy" kind="show" identifier="DisplayArticleSegue" id="yAE-h2-b6G"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -521,8 +522,6 @@
                         <outlet property="searchFiltersButton" destination="iRU-d9-LkK" id="Q72-R1-iyl"/>
                         <outlet property="tableView" destination="Z6b-sw-l5K" id="blO-gm-OV3"/>
                         <outlet property="toggleViewButton" destination="Tcz-a2-ut1" id="yGK-pP-weL"/>
-                        <segue destination="7WK-jI-avD" kind="show" identifier="MultipleArticlesAtMarker" id="ahq-Ix-A0W"/>
-                        <segue destination="MZg-7W-uEy" kind="show" identifier="DisplayArticleSegue" id="P5C-Oa-YYH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Atw-Q7-w20" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -614,24 +613,6 @@
             </objects>
             <point key="canvasLocation" x="147" y="3230"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="iPb-1V-HbL">
-            <objects>
-                <viewController id="7WK-jI-avD" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="eWG-YM-Yot"/>
-                        <viewControllerLayoutGuide type="bottom" id="gQu-dH-8fV"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Z3N-HJ-JLf">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Pr9-oF-JGA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1707" y="-155"/>
-        </scene>
         <!--Article View Controller-->
         <scene sceneID="FfH-hu-e6l">
             <objects>
@@ -678,11 +659,45 @@
                         <outlet property="articleScrollView" destination="suk-Hk-MIg" id="M5J-pZ-B79"/>
                         <outlet property="articleView" destination="vXx-PJ-ORA" id="178-B4-4sg"/>
                         <outlet property="articleViewHeight" destination="Edf-gS-vNS" id="oKA-ZC-8dR"/>
+                        <segue destination="oaj-k1-Nb0" kind="show" identifier="DisplayArticleOriginalSource" id="naU-qf-Luq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y3u-4v-cik" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2442" y="458"/>
+            <point key="canvasLocation" x="1590" y="458"/>
+        </scene>
+        <!--Article Web ViewVC-->
+        <scene sceneID="b8z-eA-lDU">
+            <objects>
+                <viewController id="oaj-k1-Nb0" customClass="ArticleWebViewVC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JhB-5C-bvs"/>
+                        <viewControllerLayoutGuide type="bottom" id="yEP-i5-gOU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="MWc-kS-UXn">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yb0-XH-FNL">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="Yb0-XH-FNL" secondAttribute="bottom" id="0sR-3O-LR5"/>
+                            <constraint firstItem="Yb0-XH-FNL" firstAttribute="top" secondItem="MWc-kS-UXn" secondAttribute="topMargin" id="7D3-cy-FGU"/>
+                            <constraint firstItem="Yb0-XH-FNL" firstAttribute="leading" secondItem="MWc-kS-UXn" secondAttribute="leading" id="7X9-u2-40o"/>
+                            <constraint firstAttribute="trailing" secondItem="Yb0-XH-FNL" secondAttribute="trailing" id="Vle-ld-9AF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="Yb0-XH-FNL" id="zJI-iW-aLv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mML-Na-XW3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2305" y="458"/>
         </scene>
         <!--Favorite Locations-->
         <scene sceneID="dPT-HX-wJh">
