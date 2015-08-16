@@ -269,19 +269,19 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X.X mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfb-T7-krd" userLabel="Min Label">
-                                                    <rect key="frame" x="16" y="14" width="46.5" height="19.5"/>
+                                                    <rect key="frame" x="16" y="14" width="47" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="X.X mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39p-Yf-EIw" userLabel="Max Label">
-                                                    <rect key="frame" x="542" y="14" width="46.5" height="19.5"/>
+                                                    <rect key="frame" x="542" y="14" width="47" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="uBn-rr-KOV">
-                                                    <rect key="frame" x="68.5" y="9" width="468" height="31"/>
+                                                    <rect key="frame" x="69" y="9" width="468" height="31"/>
                                                 </slider>
                                             </subviews>
                                             <constraints>
@@ -423,6 +423,9 @@
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="pressSearchFiltersButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="mY6-J0-Ipl"/>
+                                        </connections>
                                     </button>
                                     <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Go to location..." translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
                                         <rect key="frame" x="48" y="0.0" width="512" height="44"/>

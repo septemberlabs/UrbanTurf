@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "Constants.h"
 #import <GoogleMaps/GoogleMaps.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @interface AppDelegate ()
 
@@ -40,6 +42,8 @@
     [GMSServices provideAPIKey:googleAPIKeyForiOSApplications];
     
     //NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    
+    [Fabric with:@[CrashlyticsKit]];
     
     return YES;
 }

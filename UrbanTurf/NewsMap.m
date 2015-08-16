@@ -16,6 +16,7 @@
 #import "NewsMapTableViewCell.h"
 #import "ArticleViewController.h"
 #import "UIView+AddBorders.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface NewsMap ()
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton;
@@ -893,6 +894,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (IBAction)pressSearchFiltersButton:(id)sender
 {
     NSLog(@"search filters");
+    //[[Crashlytics sharedInstance] crash];
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar

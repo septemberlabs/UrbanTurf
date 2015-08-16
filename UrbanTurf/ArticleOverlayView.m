@@ -233,7 +233,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
         NSArray *articlesArray = (NSArray *)marker.userData;
         NSUInteger indexOfArticle = [articlesArray indexOfObject:article];
-        self.placementInArrayLabel.text = [NSString stringWithFormat:@"Article %d of %d", (int)(indexOfArticle+1), (int)[articlesArray count]];
+        self.placementInArrayLabel.text = [NSString stringWithFormat:@"\u2190 Article %d of %d. Swipe for others. \u2192", (int)(indexOfArticle+1), (int)[articlesArray count]];
     }
     // if marker.userData is not an array, this is the only article.
     else {
@@ -275,6 +275,8 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
 
 - (UIPanGestureRecognizer *)addPanGestureRecognizer
 {
+    NSLog(@"addPanGestureRecognizer called.");
+    
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
     [self addGestureRecognizer:panRecognizer];
     panRecognizer.delegate = self;
@@ -359,40 +361,26 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
         }
         
         if (panDirection == Left) {
-            
             // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
             [self.superview layoutIfNeeded];
-            
             // slide the panned-out article a cell width. (negative value shifts it left.)
             CGFloat panDistance = -self.superview.frame.size.width;
             [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
             [self.rightArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
-            
-            // save the right-side article as the now visible article in the cell.
-            //self.pannedCell.articleView = self.rightArticleSubview;
-            [self.delegate setArticleOverlayView:self.rightArticleSubview];
-            
         }
         else if (panDirection == Right) {
-            
             // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
             [self.superview layoutIfNeeded];
-            
             // slide the panned-out article a cell width. (positive value shifts it right.)
             CGFloat panDistance = self.superview.frame.size.width;
             [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
             [self.leftArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
-            
-            // save the left-side article as the now visible article in the cell.
-            //self.pannedCell.articleView = self.leftArticleSubview;
-            [self.delegate setArticleOverlayView:self.leftArticleSubview];
             
         }
         // if neither of the two conditions evaluated true, then the article hasn't been panned more than halfway off the screen to the right or left, and should be kept as visible article.
         else {
             // we're not changing to the left or right article, instead keeping the article that was already visible. so we don't modify any constraints but do still force a layoutIfNeeded. the final effect is simply a "snap back" to the original visible state.
             [self.superview layoutIfNeeded];
-            
             [self setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
             [self.leftArticleSubview setEdgesToSuperview:self.superview leading:-self.superview.frame.size.width trailing:-self.superview.frame.size.width top:0 bottom:0 superviewFeature:TableCellSeparator];
             [self.rightArticleSubview setEdgesToSuperview:self.superview leading:self.superview.frame.size.width trailing:self.superview.frame.size.width top:0 bottom:0 superviewFeature:TableCellSeparator];
@@ -406,40 +394,67 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
                              [self.superview layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
+                             if (finished) {
+                                 //NSLog(@"completion called!");
+
+                                 // upon completion of the animation, dispose of the two article views that are not visible. if a new article was panned in, delete the old pan gesture recognizer and add a new one on the panned-in article.
+                                 if (panDirection == Left) {
+                                     
+                                     [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
+                                     // create new pan GRs for the entering article.
+                                     [self.rightArticleSubview addPanGestureRecognizer];
+                                     
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
+                                         [self.leftArticleSubview removeFromSuperview];
+                                         [self removeFromSuperview];
+                                         NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
+                                         [self resetPanState];
+
+                                         // save the right-side article as the now visible article in the cell.
+                                         [self.delegate setArticleOverlayView:self.rightArticleSubview];
+                                     });
+                                 }
+                                 else if (panDirection == Right) {
+                                     
+                                     [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
+                                     // create new pan GRs for the entering article.
+                                     [self.leftArticleSubview addPanGestureRecognizer];
+                                     
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
+                                         [self.rightArticleSubview removeFromSuperview];
+                                         [self removeFromSuperview];
+                                         NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
+                                         [self resetPanState];
+                                         
+                                         // save the left-side article as the now visible article in the cell.
+                                         [self.delegate setArticleOverlayView:self.leftArticleSubview];
+                                     });
+                                 }
+                                 else {
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         NSLog(@"no pan subviews: %@", self.superview.subviews);
+                                         [self.leftArticleSubview removeFromSuperview];
+                                         [self.rightArticleSubview removeFromSuperview];
+                                         NSLog(@"no pan subviews: %@", self.superview.subviews);
+                                         [self resetPanState];
+                                     });
+                                 }
+                             }
                          }];
-        
-        
-        // upon completion of the animation, dispose of the two article views that are not visible. if a new article was panned in, delete the old pan gesture recognizer and add a new one on the panned-in article.
-        if (panDirection == Left) {
-            
-            [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            // create new pan GRs for the entering article.
-            [self.rightArticleSubview addPanGestureRecognizer];
-
-            [self.leftArticleSubview removeFromSuperview];
-            [self removeFromSuperview];
-        }
-        else if (panDirection == Right) {
-            
-            [self.delegate articleOverlayView:self deleteGestureRecognizer:gestureRecognizer]; // delete the panned-out article's gesture recognizer from the array of table view GRs.
-            // create new pan GRs for the entering article.
-            [self.leftArticleSubview addPanGestureRecognizer];
-
-            [self.rightArticleSubview removeFromSuperview];
-            [self removeFromSuperview];
-        }
-        else {
-            [self.leftArticleSubview removeFromSuperview];
-            [self.rightArticleSubview removeFromSuperview];
-        }
-        
-        //[self.delegate articleOverlayView:self otherGestureRecognizersEnabled:YES]; // turn other gestures back on.
-        self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
-        self.panTriggered = NO;
-        self.leftArticleSubview = nil;
-        self.rightArticleSubview = nil;
-    }
+         
+    } // end if (gestureRecognizer.state == UIGestureRecognizerStateEnded)
     
+}
+
+- (void)resetPanState
+{
+    //[self.delegate articleOverlayView:self otherGestureRecognizersEnabled:YES]; // turn other gestures back on.
+    self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
+    self.panTriggered = NO;
+    self.leftArticleSubview = nil;
+    self.rightArticleSubview = nil;
 }
 
 #pragma mark - Gesture Support Methods
