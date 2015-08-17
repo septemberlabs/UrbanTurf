@@ -57,7 +57,8 @@ extern CGFloat const PANNED_DISTANCE_THRESHOLD; // horizontal distance as percen
 extern int const ARTICLE_OVERLAY_VIEW_HEIGHT; // height (px) of articles in table view and in full-map mode.
 
 extern NSString *const API_ADDRESS;
-extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items
-extern double const DEFAULT_ZOOM_LEVEL; // default zoom level at which to set the map
+extern int const NUM_OF_RESULTS_LIMIT; // ceiling on number of search results to return from the API.
+extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items.
+extern double const DEFAULT_ZOOM_LEVEL; // default zoom level at which to set the map.
 
 @end

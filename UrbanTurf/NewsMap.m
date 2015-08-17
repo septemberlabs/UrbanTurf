@@ -25,8 +25,6 @@
 @property (strong, nonatomic) NSArray *searchResults;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (strong, nonatomic) NSArray *articles; // of Articles
-// DELETE AFTER 8/3 if TVC switch to markers is working
-//@property (strong, nonatomic) Article *articleWithFocus; // article with current focus, if any
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSTimer *timer;
 @property CGFloat originalMapViewBottomEdgeY;
@@ -126,6 +124,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
+    // we add this here so that we don't have to change it in Interface Builder too when/if we tweak the value. IB has a value for it which is close to ARTICLE_OVERLAY_VIEW_HEIGHT but, because of this line of code, disregarded and ultimately totally irrelevant.
     self.articleOverlayHeightConstraint.constant = ARTICLE_OVERLAY_VIEW_HEIGHT;
 }
 
@@ -213,23 +212,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     // make all UI updates on on the main queue, namely reloading the tableview and updating the map to add markers for the results of the new fetch.
     dispatch_async(dispatch_get_main_queue(), ^{
-
-        // update the tableview
-        [self.tableView reloadData];
-        
-        // add all the markers to the map
         [self.mapView clear]; // clear off existing markers
-        self.markers = [self layDownMarkers];
-        /* DELETE AFTER 8/1 IF NUMBERED MARKERS ARE WORKING
-        for (Article *article in self.articles) {
-            GMSMarker *marker = [GMSMarker markerWithPosition:article.coordinate];
-            marker.icon = [[UIImage imageNamed:map_marker_default] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
-            marker.appearAnimation = kGMSMarkerAnimationPop;
-            marker.map = self.mapView;
-            marker.userData = article;
-            article.marker = marker;
-        }
-         */
+        self.markers = [self layDownMarkers]; // add all the markers to the map
+        [self.tableView reloadData]; // update the tableview
     });
 }
 
@@ -894,7 +879,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (IBAction)pressSearchFiltersButton:(id)sender
 {
     NSLog(@"search filters");
-    //[[Crashlytics sharedInstance] crash];
+    [[Crashlytics sharedInstance] crash];
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
@@ -977,6 +962,15 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
      - there is a one-to-one relationship of between markers and the rows in the table view. for cells that represent markers with multiple stories at its location, the user taps to see the full list in a transition to a new table view.
      - this function sets all this up, including building the self.markers array, each marker's userData, and laying the markers down on the map.
     */
+    
+    
+    /*** WORKS FOR MOVING MAP, BUT WHAT ABOUT CHANGING A SEARCH FILTER??
+     - Every time the map is moved, download new articles from the API.
+     - Add articles to self.articles that don't yet exist in self.articles (means we need to save article.id).
+     - Add those same newly-added articles to self.markers.
+     - Loop through self.markers. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them and their corresponding articles in self.articles. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
+     */
+    
     
     NSLog(@"number of articles: %d", (int)[self.articles count]);
     
