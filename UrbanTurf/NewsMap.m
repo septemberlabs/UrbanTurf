@@ -92,17 +92,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     [self.searchFiltersButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
     [self.searchFiltersButton setTitle:[NSString stringWithUTF8String:"\ue804"] forState:UIControlStateNormal];
     
-    // search filters
-    // display orders - we want 
-    self.displayOrders = [NSArray arrayWithObjects:
-                          [NSNumber numberWithBool:YES],
-                          [NSNumber numberWithBool:NO],
-                          nil];
-    self.tags = [NSArray arrayWithObjects:
-                 [NSNumber numberWithBool:YES],
-                 [NSNumber numberWithBool:YES],
-                 [NSNumber numberWithBool:YES],
-                 nil];
+    // search filters. see Constants.m for the values each array element represents.
+    self.displayOrders = [Constants displayOrders];
+    self.tags = [Constants tags];
     
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
@@ -978,7 +970,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         }
     }
     if ([segue.identifier isEqualToString:@"SearchFiltersSegue"]) {
-        NSLog(@"SearchFiltersSegue presented.");
+        NSLog(@"SearchFiltersSegue presenting.");
+        if ([segue.destinationViewController isKindOfClass:[SearchFilters class]]) {
+            SearchFilters *searchFilters = (SearchFilters *)segue.destinationViewController;
+            searchFilters.displayOrders = [self.displayOrders mutableCopy];
+            searchFilters.tags = [self.tags mutableCopy];
+            searchFilters.delegate = self;
+        }
     }
 }
 
@@ -1286,7 +1284,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)updateSearchFilters:(NSArray *)displayOrders tags:(NSArray *)tags
 {
-    
+    self.displayOrders = displayOrders;
+    self.tags = tags;
 }
 
 @end

@@ -24,7 +24,7 @@
 		1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */; };
 		1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7DB1DC1ABDFB81003DB53F /* Constants.m */; };
 		1A96E19A1B7E59C5002DAFF1 /* ArticleWebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A96E1991B7E59C5002DAFF1 /* ArticleWebViewVC.m */; };
-		1A9E486A1B829E7B00CC7A8A /* SearchFiltersTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9E48691B829E7B00CC7A8A /* SearchFiltersTVC.m */; };
+		1A9E486D1B83002100CC7A8A /* SearchFilters.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9E486C1B83002100CC7A8A /* SearchFilters.m */; };
 		1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */; };
 		1AB1A5611A48E3D900369211 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5601A48E3D900369211 /* main.m */; };
 		1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5631A48E3D900369211 /* AppDelegate.m */; };
@@ -121,8 +121,8 @@
 		1A7DB1DC1ABDFB81003DB53F /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		1A96E1981B7E59C5002DAFF1 /* ArticleWebViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleWebViewVC.h; sourceTree = "<group>"; };
 		1A96E1991B7E59C5002DAFF1 /* ArticleWebViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleWebViewVC.m; sourceTree = "<group>"; };
-		1A9E48681B829E7B00CC7A8A /* SearchFiltersTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFiltersTVC.h; sourceTree = "<group>"; };
-		1A9E48691B829E7B00CC7A8A /* SearchFiltersTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFiltersTVC.m; sourceTree = "<group>"; };
+		1A9E486B1B83002100CC7A8A /* SearchFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFilters.h; sourceTree = "<group>"; };
+		1A9E486C1B83002100CC7A8A /* SearchFilters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFilters.m; sourceTree = "<group>"; };
 		1AA0E3941AB0C5AE00E61F21 /* SaveFavoriteLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveFavoriteLocation.h; sourceTree = "<group>"; };
 		1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveFavoriteLocation.m; sourceTree = "<group>"; };
 		1AB1A55B1A48E3D900369211 /* UrbanTurf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UrbanTurf.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -320,8 +320,8 @@
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
-				1A9E48681B829E7B00CC7A8A /* SearchFiltersTVC.h */,
-				1A9E48691B829E7B00CC7A8A /* SearchFiltersTVC.m */,
+				1A9E486B1B83002100CC7A8A /* SearchFilters.h */,
+				1A9E486C1B83002100CC7A8A /* SearchFilters.m */,
 				1AF9B1361ACCADF8004F3A5B /* Radius.h */,
 				1AF9B1371ACCADF8004F3A5B /* Radius.m */,
 				1AF4D2E11AC37D18003168AD /* NewsMap.h */,
@@ -632,12 +632,12 @@
 				1AECA15E1AF059E500EAE054 /* AFHTTPRequestOperationManager.m in Sources */,
 				1AECA15D1AF059E500EAE054 /* AFHTTPRequestOperation.m in Sources */,
 				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
-				1A9E486A1B829E7B00CC7A8A /* SearchFiltersTVC.m in Sources */,
 				1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */,
 				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
 				1A96E19A1B7E59C5002DAFF1 /* ArticleWebViewVC.m in Sources */,
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
+				1A9E486D1B83002100CC7A8A /* SearchFilters.m in Sources */,
 				1AECA1601AF059E500EAE054 /* AFNetworkReachabilityManager.m in Sources */,
 				1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */,
 				1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */,

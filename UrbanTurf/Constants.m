@@ -66,8 +66,14 @@ double const DEFAULT_ZOOM_LEVEL = 14.0;
     static NSArray *displayOrders;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        displayOrders = @[@"Closest First",
-                          @"Newest First"];
+        displayOrders = @[
+                          @{@"Menu Item" : @"Closest First",
+                            @"Value" : [NSNumber numberWithBool:YES],
+                            @"API Parameter" : @""},
+                          @{@"Menu Item" : @"Newest First",
+                            @"Value" : [NSNumber numberWithBool:NO],
+                            @"API Parameter" : @""}
+                          ];
     });
     return displayOrders;
 }
@@ -77,9 +83,17 @@ double const DEFAULT_ZOOM_LEVEL = 14.0;
     static NSArray *tags;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        tags = @[@"Real Estate & Buildings",
-                          @"Food & Restaurants",
-                          @"Stores & Retail"];
+        tags = @[
+                 @{@"Menu Item" : @"Real Estate & Buildings",
+                   @"Value" : [NSNumber numberWithBool:YES],
+                   @"API Parameter" : @""},
+                 @{@"Menu Item" : @"Food & Restaurants",
+                   @"Value" : [NSNumber numberWithBool:YES],
+                   @"API Parameter" : @""},
+                 @{@"Menu Item" : @"Stores & Retail",
+                   @"Value" : [NSNumber numberWithBool:YES],
+                   @"API Parameter" : @""}
+                 ];
     });
     return tags;
 }

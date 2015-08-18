@@ -366,31 +366,57 @@
             </objects>
             <point key="canvasLocation" x="-1019" y="1027"/>
         </scene>
-        <!--Search FiltersTVC-->
-        <scene sceneID="YcO-rt-iPK">
+        <!--Search Filters-->
+        <scene sceneID="yPL-Yq-JMf">
             <objects>
-                <tableViewController id="mqp-7m-sGk" customClass="SearchFiltersTVC" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="vSF-ZM-IZV">
+                <viewController id="jq8-Rm-jiI" customClass="SearchFilters" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="CS6-Vh-hbz"/>
+                        <viewControllerLayoutGuide type="bottom" id="hj0-Sn-B23"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rb1-oC-7uh">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchFiltersCell" id="bvl-du-C0q">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bvl-du-C0q" id="YKd-vE-OvK">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="mqp-7m-sGk" id="iYI-G9-QNo"/>
-                            <outlet property="delegate" destination="mqp-7m-sGk" id="i14-dD-gzI"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0Bc-6X-qjZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BxB-qa-JZb">
+                                <rect key="frame" x="257" y="550" width="86" height="30"/>
+                                <state key="normal" title="Update Map">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="returnToNewsMap:" destination="jq8-Rm-jiI" eventType="touchUpInside" id="mE7-cH-3iC"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="M43-CY-732">
+                                <rect key="frame" x="0.0" y="28" width="600" height="514"/>
+                                <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SearchFiltersCell" id="unc-OL-oeo">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="unc-OL-oeo" id="d7k-cM-nwV">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hj0-Sn-B23" firstAttribute="top" secondItem="BxB-qa-JZb" secondAttribute="bottom" constant="20" id="2LC-jH-Gjd"/>
+                            <constraint firstItem="BxB-qa-JZb" firstAttribute="top" secondItem="M43-CY-732" secondAttribute="bottom" constant="8" id="ICk-o0-p1g"/>
+                            <constraint firstItem="M43-CY-732" firstAttribute="top" secondItem="CS6-Vh-hbz" secondAttribute="bottom" constant="8" id="SLo-9A-p4b"/>
+                            <constraint firstAttribute="trailing" secondItem="M43-CY-732" secondAttribute="trailing" id="mVq-ys-QuU"/>
+                            <constraint firstItem="M43-CY-732" firstAttribute="leading" secondItem="rb1-oC-7uh" secondAttribute="leading" id="pF9-cA-nsF"/>
+                            <constraint firstAttribute="centerX" secondItem="BxB-qa-JZb" secondAttribute="centerX" id="t2v-Cc-Wsr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="M43-CY-732" id="e3J-JC-fYN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KDY-bE-WFW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1284" y="-272"/>
+            <point key="canvasLocation" x="1637" y="-282"/>
         </scene>
         <!--News Map-->
         <scene sceneID="bZm-1A-NLT">
@@ -451,7 +477,7 @@
                                         </state>
                                         <connections>
                                             <action selector="pressSearchFiltersButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="mY6-J0-Ipl"/>
-                                            <segue destination="mqp-7m-sGk" kind="presentation" identifier="SearchFiltersSegue" modalPresentationStyle="currentContext" id="PJb-0Z-aPi"/>
+                                            <segue destination="jq8-Rm-jiI" kind="presentation" identifier="SearchFiltersSegue" id="A5U-Wf-BD1"/>
                                         </connections>
                                     </button>
                                     <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Go to location..." translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
