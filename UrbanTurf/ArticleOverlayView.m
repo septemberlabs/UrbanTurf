@@ -230,7 +230,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     
     GMSMarker *marker = article.marker;
     // there are multiple articles at this location.
-    if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+    if ([marker.userData count] > 1) {
         NSArray *articlesArray = (NSArray *)marker.userData;
         NSUInteger indexOfArticle = [articlesArray indexOfObject:article];
         self.placementInArrayLabel.text = [NSString stringWithFormat:@"\u2190 Article %d of %d. Swipe for others. \u2192", (int)(indexOfArticle+1), (int)[articlesArray count]];

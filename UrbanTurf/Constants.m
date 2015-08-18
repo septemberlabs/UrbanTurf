@@ -54,7 +54,7 @@ CGFloat const PANNED_DISTANCE_THRESHOLD = 0.20;
 int const ARTICLE_OVERLAY_VIEW_HEIGHT = 135;
 
 NSString * const API_ADDRESS = @"http://app.urbanturf.com/api/articles?";
-int const NUM_OF_RESULTS_LIMIT = 100;
+int const NUM_OF_RESULTS_LIMIT = 10;
 double const LATLON_RADIUS = 0.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 
@@ -70,6 +70,18 @@ double const DEFAULT_ZOOM_LEVEL = 14.0;
                           @"Newest First"];
     });
     return displayOrders;
+}
+
++ (NSArray *)tags
+{
+    static NSArray *tags;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tags = @[@"Real Estate & Buildings",
+                          @"Food & Restaurants",
+                          @"Stores & Retail"];
+    });
+    return tags;
 }
 
 + (NSArray *)mapMarkersDefault

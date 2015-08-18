@@ -24,16 +24,20 @@
 @property (strong, nonatomic) Fetcher *fetcher; // fetches data
 @property (strong, nonatomic) NSArray *searchResults;
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
-@property (strong, nonatomic) NSArray *articles; // of Articles
+@property (strong, nonatomic) NSMutableArray *articles; // of Articles
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSTimer *timer;
-@property CGFloat originalMapViewBottomEdgeY;
+@property (nonatomic) CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
 @property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeightConstraint;
 @property (nonatomic) BOOL gestureInitiatedMapMove;
-@property (strong, nonatomic) NSArray *markers; // of GMSMarkers
+@property (strong, nonatomic) NSMutableArray *markers; // of GMSMarkers
 @property (strong, nonatomic) GMSMarker *markerWithFocus; // marker with current focus, if any. list-view mode.
+
+// search filters
+@property (strong, nonatomic) NSArray *displayOrders;
+@property (strong, nonatomic) NSArray *tags;
 
 // related to panning cells that represent multiple articles.
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
@@ -87,6 +91,18 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
     [self.searchFiltersButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
     [self.searchFiltersButton setTitle:[NSString stringWithUTF8String:"\ue804"] forState:UIControlStateNormal];
+    
+    // search filters
+    // display orders - we want 
+    self.displayOrders = [NSArray arrayWithObjects:
+                          [NSNumber numberWithBool:YES],
+                          [NSNumber numberWithBool:NO],
+                          nil];
+    self.tags = [NSArray arrayWithObjects:
+                 [NSNumber numberWithBool:YES],
+                 [NSNumber numberWithBool:YES],
+                 [NSNumber numberWithBool:YES],
+                 nil];
     
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
@@ -148,6 +164,22 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     return _searchResults;
 }
 
+- (NSArray *)articles
+{
+    if (!_articles) {
+        _articles = [[NSMutableArray alloc] init];
+    }
+    return _articles;
+}
+
+- (NSArray *)markers
+{
+    if (!_markers) {
+        _markers = [[NSMutableArray alloc] init];
+    }
+    return _markers;
+}
+
 - (void)setSearchResults:(NSArray *)searchResults
 {
     _searchResults = searchResults;
@@ -205,15 +237,24 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         processedArticle.introduction = article[@"intro"];
         processedArticle.publication = article[@"website_name"];
         processedArticle.date = article[@"article_date"];
+        processedArticle.article_id = article[@"id"];
         [processedFromJSON addObject:processedArticle];
     }
     //NSLog(@"processedForTVC: %@", processedForTVC);
-    self.articles = [processedFromJSON copy];
+    //self.articles = [processedFromJSON copy];
+    //[self updateDataWithArray:[processedFromJSON copy]];
     
     // make all UI updates on on the main queue, namely reloading the tableview and updating the map to add markers for the results of the new fetch.
+    /*
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.mapView clear]; // clear off existing markers
         self.markers = [self layDownMarkers]; // add all the markers to the map
+        [self.tableView reloadData]; // update the tableview
+    });
+     */
+    [self updateDataWithArray:[processedFromJSON copy]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateMarkersOnMap];
         [self.tableView reloadData]; // update the tableview
     });
 }
@@ -390,7 +431,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         
         // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
         GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
-        if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+        // if the marker's userData is larger than 1, it means there are multiple articles for the location that need to be panned through.
+        if ([marker.userData count] > 1) {
             [articleOverlaySubview addPanGestureRecognizer];
             articleOverlaySubview.delegate = self;
         }
@@ -594,7 +636,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         if (!self.articleOverlaid) {
            
             // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-            if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+            if ([marker.userData count] > 1) {
                 [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
             }
             else {
@@ -627,7 +669,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             if (![marker isEqual:self.tappedMarker]) {
             
                 // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-                if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+                if ([marker.userData count] > 1) {
                     [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
                 }
                 else {
@@ -879,7 +921,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (IBAction)pressSearchFiltersButton:(id)sender
 {
     NSLog(@"search filters");
-    [[Crashlytics sharedInstance] crash];
+    //[[Crashlytics sharedInstance] crash];
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
@@ -935,6 +977,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             articleVC.article = articleToDisplay;
         }
     }
+    if ([segue.identifier isEqualToString:@"SearchFiltersSegue"]) {
+        NSLog(@"SearchFiltersSegue presented.");
+    }
 }
 
 #pragma mark - Misc
@@ -946,6 +991,142 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     articleVC.article = [self getArticleFromMarker:self.tappedMarker];
     [self.navigationController pushViewController:articleVC animated:YES];
 }
+
+- (void)updateDataWithArray:(NSArray *)newDataArray // newDataArray is an array of Articles.
+{
+    NSArray *addedArticles = [self populateArticlesArray:newDataArray]; // fill self.articles.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self populateMarkersArray:addedArticles]; // fill self.markers.
+    });
+}
+
+- (NSArray *)populateArticlesArray:(NSArray *)newDataArray // newDataArray is an array of Articles.
+{
+    // first extract all the article_ids into their own array.
+    NSMutableArray *existingArticle_IDs = [[NSMutableArray alloc] init];
+    for (Article *article in self.articles) {
+        [existingArticle_IDs addObject:article.article_id];
+    }
+    
+    // we then search this array to quickly determine which articles in newDataArray already exist in self.articles. if an article doesn't exist in self.articles, stick it in articleToAdd, which is finally appended to self.articles.
+    NSMutableArray *articlesToAdd = [[NSMutableArray alloc] init];
+    for (Article *article in newDataArray) {
+        // if it doesn't exist, add it.
+        if (![existingArticle_IDs containsObject:article.article_id]) {
+            [articlesToAdd addObject:article];
+        }
+    }
+    [self.articles addObjectsFromArray:articlesToAdd];
+    return articlesToAdd;
+}
+
+- (void)populateMarkersArray:(NSArray *)articlesToMap // articlesToMap is an array of Articles.
+{
+    /*
+     - we have self.articles, which is the result of the fetch and is an arry of articles.
+     - we loop through this array to create a corresponding array of markers.
+     - markers will store pointers to the articles whose location they visually represent on the map.
+     - important: some articles have locations that are very close or identical. we cluster such articles under a single marker.
+     - in such cases, the marker's userData will point to an array of the articles at that location. the number of elements in the array is the number of articles at that location.
+     - in all other cases, the marker's userData will point directly to the single article it represents.
+     - therefore, there is a one-to-many relationship between markers and articles, not one-to-one.
+     - there is a one-to-one relationship of between markers and the rows in the table view. for cells that represent markers with multiple stories at its location, the user taps to see the full list in a transition to a new table view.
+     - this function sets all this up, including building the self.markers array, each marker's userData, and laying the markers down on the map.
+     */
+    
+    
+    /*** WORKS FOR MOVING MAP, BUT WHAT ABOUT CHANGING A SEARCH FILTER??
+     - Every time the map is moved, download new articles from the API.
+     - Add articles to self.articles that don't yet exist in self.articles (means we need to save article.id).
+     - Add those same newly-added articles to self.markers.
+     - Loop through self.markers. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them and their corresponding articles in self.articles. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
+     */
+    
+    
+    NSLog(@"number of articles: %d", (int)[articlesToMap count]);
+    
+    int i = 1;
+    for (Article *article in articlesToMap) {
+        
+        NSLog(@"article: %d", i);
+        
+        CLLocation *articleLocation = [[CLLocation alloc] initWithLatitude:article.coordinate.latitude longitude:article.coordinate.longitude];
+        
+        BOOL locationMatchedExistingMarker = NO;
+        
+        int j = 1;
+        
+        for (GMSMarker *marker in self.markers) {
+            
+            NSLog(@"marker: %d", j);
+            
+            CLLocationCoordinate2D markerCoordinate;
+            
+            NSMutableArray *articlesAtLocation = (NSMutableArray *)marker.userData;
+            // just use the first article in the array for its coordinate. doesn't matter which we choose; the point is that they're all the same location.
+            markerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
+            CLLocation *markerLocation = [[CLLocation alloc] initWithLatitude:markerCoordinate.latitude longitude:markerCoordinate.longitude];
+            // test whether the location associated with this marker is the same as the current article. if it is, append this article to the array of articles for this marker.
+            if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
+                [articlesAtLocation addObject:article];
+                article.marker = marker;
+                locationMatchedExistingMarker = YES;
+                break;
+            }
+            j++;
+            
+        }
+        
+        // if the article's location was not found to exist at one of the markers, add a new marker for it.
+        if (!locationMatchedExistingMarker) {
+            GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
+            NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:article, nil];
+            newMarker.userData = articlesAtLocation;
+            article.marker = newMarker;
+            [self.markers addObject:newMarker];
+        }
+        i++;
+    }
+}
+
+// Loop through self.markers. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them and their corresponding articles in self.articles. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
+- (void)updateMarkersOnMap
+{
+    // first remove markers that are offscreen
+    [self removeOffscreenMarkers];
+
+    for (GMSMarker *marker in self.markers) {
+        marker.icon = [self getIconForMarker:marker selected:NO];
+        if (!marker.map) {
+            marker.map = self.mapView;
+        }
+        marker.appearAnimation = kGMSMarkerAnimationPop;
+    }
+}
+
+- (void)removeOffscreenMarkers
+{
+    NSMutableArray *markersToRemove = [[NSMutableArray alloc] init];
+
+    for (GMSMarker *marker in self.markers) {
+        
+        CLLocationCoordinate2D markerCoordinate;
+        
+        NSMutableArray *articlesAtLocation = (NSMutableArray *)marker.userData;
+        markerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
+
+        // if the marker's coordinate is NOT visible, remove it.
+        if (![self.mapView.projection containsCoordinate:markerCoordinate]) {
+            for (Article *article in marker.userData) {
+                [self.articles removeObject:article];
+            }
+            marker.map = nil;
+            [markersToRemove addObject:marker];
+        }
+    }
+    [self.markers removeObjectsInArray:markersToRemove];
+}
+
 
 - (NSArray *)layDownMarkers
 {
@@ -962,15 +1143,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
      - there is a one-to-one relationship of between markers and the rows in the table view. for cells that represent markers with multiple stories at its location, the user taps to see the full list in a transition to a new table view.
      - this function sets all this up, including building the self.markers array, each marker's userData, and laying the markers down on the map.
     */
-    
-    
-    /*** WORKS FOR MOVING MAP, BUT WHAT ABOUT CHANGING A SEARCH FILTER??
-     - Every time the map is moved, download new articles from the API.
-     - Add articles to self.articles that don't yet exist in self.articles (means we need to save article.id).
-     - Add those same newly-added articles to self.markers.
-     - Loop through self.markers. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them and their corresponding articles in self.articles. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
-     */
-    
     
     NSLog(@"number of articles: %d", (int)[self.articles count]);
     
@@ -1060,20 +1232,15 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (Article *)getArticleFromMarker:(GMSMarker *)marker
 {
-    if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
-        return (Article *)[(NSMutableArray *)marker.userData firstObject];
-    }
-    else {
-        return (Article *)marker.userData;
-    }
+    return (Article *)[(NSMutableArray *)marker.userData firstObject];
 }
 
 - (UIImage *)getIconForMarker:(GMSMarker *)marker selected:(BOOL)selected
 {
     NSString *imageName;
 
-    // if the marker's userData is an array, it means there are multiple articles for the location.
-    if ([marker.userData isKindOfClass:[NSMutableArray class]]) {
+    // if the marker's userData is larger than 1, it means there are multiple articles for the location.
+    if ([marker.userData count] > 1) {
         if (selected) {
             imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[((NSArray *)marker.userData) count]];
         }
@@ -1113,6 +1280,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (void)articleOverlayView:(ArticleOverlayView *)articleOverlayView deleteGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
     [self.tableViewPanGestureRecognizers removeObject:gestureRecognizer];
+}
+
+#pragma mark - SearchFiltersTVCDelegate
+
+- (void)updateSearchFilters:(NSArray *)displayOrders tags:(NSArray *)tags
+{
+    
 }
 
 @end

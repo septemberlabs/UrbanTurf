@@ -15,6 +15,7 @@
 @property (nonatomic, copy) NSString *title; // this is the article headline. called title to comply with MKAnnotation protocol.
 @property (nonatomic, copy) NSString *subtitle; // this isn't used. only here to comply with MKAnnotation protocol.
 @property (nonatomic, strong) UIImage *actualImage;
+@property (nonatomic, strong) NSString *article_id;
 @property (nonatomic, strong) NSString *url;
 @property (nonatomic, strong) NSString *imageURL;
 @property (nonatomic, strong) NSString *headline;

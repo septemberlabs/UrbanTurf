@@ -25,6 +25,7 @@ extern NSString * const RADIUS_TABLE_FOOTER;
 
 extern NSString * const userDefaultsDisplayOrderKey;
 + (NSArray *)displayOrders;
++ (NSArray *)tags;
 extern NSString * const DISPLAY_ORDER_TABLE_HEADER;
 extern NSString * const DISPLAY_ORDER_TABLE_FOOTER;
 

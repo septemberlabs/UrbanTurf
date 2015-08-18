@@ -320,7 +320,7 @@
             <objects>
                 <tableViewController id="w9K-SS-20x" userLabel="Options - Display Order" customClass="DisplayOrder" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="V9g-Bg-WHq">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
@@ -365,6 +365,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K4f-Dv-I5d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1019" y="1027"/>
+        </scene>
+        <!--Search FiltersTVC-->
+        <scene sceneID="YcO-rt-iPK">
+            <objects>
+                <tableViewController id="mqp-7m-sGk" customClass="SearchFiltersTVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="vSF-ZM-IZV">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchFiltersCell" id="bvl-du-C0q">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bvl-du-C0q" id="YKd-vE-OvK">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="mqp-7m-sGk" id="iYI-G9-QNo"/>
+                            <outlet property="delegate" destination="mqp-7m-sGk" id="i14-dD-gzI"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Bc-6X-qjZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1284" y="-272"/>
         </scene>
         <!--News Map-->
         <scene sceneID="bZm-1A-NLT">
@@ -425,6 +451,7 @@
                                         </state>
                                         <connections>
                                             <action selector="pressSearchFiltersButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="mY6-J0-Ipl"/>
+                                            <segue destination="mqp-7m-sGk" kind="presentation" identifier="SearchFiltersSegue" modalPresentationStyle="currentContext" id="PJb-0Z-aPi"/>
                                         </connections>
                                     </button>
                                     <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Go to location..." translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
@@ -915,6 +942,6 @@
         <image name="cursor-crosshair" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="N5N-7W-6pU"/>
+        <segue reference="9uE-VE-TBY"/>
     </inferredMetricsTieBreakers>
 </document>
