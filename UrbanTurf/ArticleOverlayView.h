@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Article.h"
+#import "Constants.h"
 
 @protocol ArticleOverlayViewDelegate; // forward declaration
 
@@ -28,6 +29,7 @@
 - (id)initWithFrame:(CGRect)frame withTopBorder:(BOOL)topBorder;
 - (CGFloat)dynamicallyCalculatedHeight;
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant;
+- (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant superviewFeature:(SuperviewFeature)superviewFeature;
 - (void)configureTeaserForArticle:(Article *)article;
 - (UIPanGestureRecognizer *)addPanGestureRecognizer;
 

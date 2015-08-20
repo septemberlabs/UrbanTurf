@@ -37,7 +37,9 @@
 
 // search filters
 @property (strong, nonatomic) NSArray *displayOrders;
-@property (strong, nonatomic) NSArray *tags;
+@property (strong, nonatomic) NSArray *articleAges;
+@property (strong, nonatomic) NSArray *articleTags;
+@property (nonatomic) BOOL searchFilterTriggeredFetch;
 
 // related to panning cells that represent multiple articles.
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
@@ -94,7 +96,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     // search filters. see Constants.m for the values each array element represents.
     self.displayOrders = [Constants displayOrders];
-    self.tags = [Constants tags];
+    self.articleAges = [Constants articleAges];
+    self.articleTags = [Constants articleTags];
+    self.searchFilterTriggeredFetch = NO;
     
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
@@ -172,6 +176,19 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     return _markers;
 }
 
+/* DELETE AFTER 8/20 IF DATE FORMATTING AND SORTING IS WORKING
+- (NSDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        _dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+        _dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        _dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    }
+    return _dateFormatter;
+}
+ */
+
 - (void)setSearchResults:(NSArray *)searchResults
 {
     _searchResults = searchResults;
@@ -213,7 +230,23 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)fetchData
 {
-    [self.fetcher fetchDataWithLatitude:self.latitude longitude:self.longitude];
+    NSString *order;
+    for (NSDictionary *displayOrder in self.displayOrders) {
+        if (((NSNumber *)[displayOrder objectForKey:@"Value"]).boolValue) {
+            order = (NSString *)[displayOrder objectForKey:@"API Parameter"];
+            break;
+        }
+    }
+    
+    int days = -1;
+    for (NSDictionary *articleAge in self.articleAges) {
+        if (((NSNumber *)[articleAge objectForKey:@"Value"]).boolValue) {
+            days = ((NSString *)[articleAge objectForKey:@"API Parameter"]).intValue;
+            break;
+        }
+    }
+    
+    [self.fetcher fetchDataWithLatitude:self.latitude longitude:self.longitude radius:LATLON_RADIUS units:RADIUS_UNITS limit:NUM_OF_RESULTS_LIMIT age:days order:order];
 }
 
 - (void)receiveData:(NSArray *)fetchedResults
@@ -221,6 +254,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     //NSLog(@"fetchedResults called.");
     NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
     //NSLog(@"results: %@", fetchedResults);
+    NSDateFormatter *dateFormatter = [Constants dateFormatter];
     for (NSDictionary *article in fetchedResults) {
         CLLocationCoordinate2D location = CLLocationCoordinate2DMake([article[@"latitude"] doubleValue], [article[@"longitude"] doubleValue]);
         Article *processedArticle = [[Article alloc] initWithTitle:article[@"headline"] Location:location];
@@ -228,7 +262,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         processedArticle.imageURL = article[@"image_url"];
         processedArticle.introduction = article[@"intro"];
         processedArticle.publication = article[@"website_name"];
-        processedArticle.date = article[@"article_date"];
+        processedArticle.date = [dateFormatter dateFromString:article[@"article_date"]];
         processedArticle.article_id = article[@"id"];
         [processedFromJSON addObject:processedArticle];
     }
@@ -244,7 +278,20 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         [self.tableView reloadData]; // update the tableview
     });
      */
+    
+    // if the user updating the search filters is what triggered the fetch, we purge the data and clear the map (rather than appending the results of the new fetch to the existing data and adding them to the map).
+    if (self.searchFilterTriggeredFetch) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mapView clear];
+        });
+        self.articles = [NSMutableArray array];
+        self.markers = [NSMutableArray array];
+        self.searchFilterTriggeredFetch = NO;
+    }
+    
+    // first update the data.
     [self updateDataWithArray:[processedFromJSON copy]];
+    // the update the UI (i.e., map and table view).
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateMarkersOnMap];
         [self.tableView reloadData]; // update the tableview
@@ -411,7 +458,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
         [cell addSubview:articleOverlaySubview];
-        [articleOverlaySubview setEdgesToSuperview:cell leading:0 trailing:0 top:0 bottom:-1.0]; // make this 1 pixel shy of the bottom so the cell dividers show.
+        [articleOverlaySubview setEdgesToSuperview:cell leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
         cell.articleView = articleOverlaySubview;
 
         //Article *article = (Article *)self.articles[indexPath.row];
@@ -698,7 +745,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame withTopBorder:YES];
     articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
     [superview addSubview:articleOverlaySubview];
-    [articleOverlaySubview setEdgesToSuperview:superview leading:0 trailing:0 top:0 bottom:0]; // pin the top, trailing, bottom, and leading edges.
+    [articleOverlaySubview setEdgesToSuperview:superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:None];
     
     [articleOverlaySubview configureTeaserForArticle:article]; // set the values for the article overlay view's various components.
     [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
@@ -970,11 +1017,11 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         }
     }
     if ([segue.identifier isEqualToString:@"SearchFiltersSegue"]) {
-        NSLog(@"SearchFiltersSegue presenting.");
         if ([segue.destinationViewController isKindOfClass:[SearchFilters class]]) {
             SearchFilters *searchFilters = (SearchFilters *)segue.destinationViewController;
             searchFilters.displayOrders = [self.displayOrders mutableCopy];
-            searchFilters.tags = [self.tags mutableCopy];
+            searchFilters.articleAges = [self.articleAges mutableCopy];
+            searchFilters.articleTags = [self.articleTags mutableCopy];
             searchFilters.delegate = self;
         }
     }
@@ -1046,7 +1093,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     int i = 1;
     for (Article *article in articlesToMap) {
         
-        NSLog(@"article: %d", i);
+        //NSLog(@"article: %d", i);
         
         CLLocation *articleLocation = [[CLLocation alloc] initWithLatitude:article.coordinate.latitude longitude:article.coordinate.longitude];
         
@@ -1056,7 +1103,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         
         for (GMSMarker *marker in self.markers) {
             
-            NSLog(@"marker: %d", j);
+            //NSLog(@"marker: %d", j);
             
             CLLocationCoordinate2D markerCoordinate;
             
@@ -1066,7 +1113,23 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             CLLocation *markerLocation = [[CLLocation alloc] initWithLatitude:markerCoordinate.latitude longitude:markerCoordinate.longitude];
             // test whether the location associated with this marker is the same as the current article. if it is, append this article to the array of articles for this marker.
             if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
-                [articlesAtLocation addObject:article];
+                
+                // loop through the array. if the new article happened later than an existing article, insert the new article at that spot in front of the existing article. that way we'll have a reverse-chronologically ordered array at the end.
+                BOOL articleStillNeedsToBeAdded = YES;
+                for (int i = 0; i < [articlesAtLocation count]; i++) {
+                    Article *articleAlreadyInArray = (Article *)articlesAtLocation[i];
+                    // true if article.date is later in time than articleAlreadyInArray.date.
+                    if ([article.date compare:articleAlreadyInArray.date] == NSOrderedDescending) {
+                        [articlesAtLocation insertObject:article atIndex:i];
+                        articleStillNeedsToBeAdded = NO;
+                        break;
+                    }
+                }
+                // article was earlier than all the existing articles, meaning it hasn't been added and should be tacked on the end.
+                if (articleStillNeedsToBeAdded) {
+                    [articlesAtLocation addObject:article];
+                }
+                
                 article.marker = marker;
                 locationMatchedExistingMarker = YES;
                 break;
@@ -1236,14 +1299,30 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (UIImage *)getIconForMarker:(GMSMarker *)marker selected:(BOOL)selected
 {
     NSString *imageName;
+    // we have to fiddle with this a little because the first position is invalid so we don't count it in the count.
+    int numberOfMarkerIcons = ((int)[[Constants mapMarkersSelected] count]) - 1;
 
     // if the marker's userData is larger than 1, it means there are multiple articles for the location.
     if ([marker.userData count] > 1) {
         if (selected) {
-            imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[((NSArray *)marker.userData) count]];
+            // if the number count is 2-9, choose the corresponding marker.
+            if ([marker.userData count] < numberOfMarkerIcons) {
+                imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[((NSArray *)marker.userData) count]];
+            }
+            // otherwise, choose 9+ (which sits at the end of the array).
+            else {
+                imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:numberOfMarkerIcons];
+            }
         }
         else {
-            imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[((NSArray *)marker.userData) count]];
+            // if the number count is 2-9, choose the corresponding marker.
+            if ([marker.userData count] < numberOfMarkerIcons) {
+                imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[((NSArray *)marker.userData) count]];
+            }
+            // otherwise, choose 9+ (which sits at the end of the array).
+            else {
+                imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:numberOfMarkerIcons];
+            }
         }
     }
     else {
@@ -1282,10 +1361,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 #pragma mark - SearchFiltersTVCDelegate
 
-- (void)updateSearchFilters:(NSArray *)displayOrders tags:(NSArray *)tags
+- (void)updateSearchFilters:(NSArray *)displayOrders articleAges:(NSArray *)articleAges articleTags:(NSArray *)articleTags
 {
     self.displayOrders = displayOrders;
-    self.tags = tags;
+    self.articleAges = articleAges;
+    self.articleTags = articleTags;
+    self.searchFilterTriggeredFetch = YES;
+    [self fetchData];
 }
 
 @end

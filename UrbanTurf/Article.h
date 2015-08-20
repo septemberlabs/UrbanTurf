@@ -20,7 +20,7 @@
 @property (nonatomic, strong) NSString *imageURL;
 @property (nonatomic, strong) NSString *headline;
 @property (nonatomic, strong) NSString *publication;
-@property (nonatomic, strong) NSString *date;
+@property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *introduction;
 @property (nonatomic, weak) GMSMarker *marker; // make this weak to avoid a retain cycle since the marker will point back to this.
 

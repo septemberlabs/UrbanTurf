@@ -26,7 +26,13 @@ NSString * const RADIUS_TABLE_FOOTER = @"This is the footer";
 
 NSString * const userDefaultsDisplayOrderKey = @"displayOrder";
 NSString * const DISPLAY_ORDER_TABLE_HEADER = @"Order to display stories";
-NSString * const DISPLAY_ORDER_TABLE_FOOTER = @"The sequence in which stories are displayed is either according to distance from your chosen location, or in reverse chronological order (that is, most recent first).";
+NSString * const DISPLAY_ORDER_TABLE_FOOTER = @"Stories are listed either according to distance from the center of the map or in reverse chronological order.";
+
+NSString * const ARTICLE_AGE_TABLE_HEADER = @"Display stories from";
+NSString * const ARTICLE_AGE_TABLE_FOOTER = @"";
+
+NSString * const ARTICLE_TAGS_TABLE_HEADER = @"Types of stories to display";
+NSString * const ARTICLE_TAGS_TABLE_FOOTER = @"";
 
 NSString * const userDefaultsHomeScreenLocationKey = @"homeScreenLocation";
 
@@ -54,9 +60,11 @@ CGFloat const PANNED_DISTANCE_THRESHOLD = 0.20;
 int const ARTICLE_OVERLAY_VIEW_HEIGHT = 135;
 
 NSString * const API_ADDRESS = @"http://app.urbanturf.com/api/articles?";
-int const NUM_OF_RESULTS_LIMIT = 10;
-double const LATLON_RADIUS = 0.5;
+int const NUM_OF_RESULTS_LIMIT = 100;
+double const LATLON_RADIUS = 2.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;
+NSString * const RADIUS_UNITS = @"metric"; // metric|english
+
 
 @implementation Constants
 
@@ -69,33 +77,59 @@ double const DEFAULT_ZOOM_LEVEL = 14.0;
         displayOrders = @[
                           @{@"Menu Item" : @"Closest First",
                             @"Value" : [NSNumber numberWithBool:YES],
-                            @"API Parameter" : @""},
+                            @"API Parameter" : @"nearest"},
                           @{@"Menu Item" : @"Newest First",
                             @"Value" : [NSNumber numberWithBool:NO],
-                            @"API Parameter" : @""}
+                            @"API Parameter" : @"newest"}
                           ];
     });
     return displayOrders;
 }
 
-+ (NSArray *)tags
++ (NSArray *)articleAges
 {
-    static NSArray *tags;
+    static NSArray *articleAges;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        tags = @[
-                 @{@"Menu Item" : @"Real Estate & Buildings",
+        articleAges = @[
+                 @{@"Menu Item" : @"Last 30 Days",
+                   @"Value" : [NSNumber numberWithBool:NO],
+                   @"API Parameter" : @"30"},
+                 @{@"Menu Item" : @"Last Year",
                    @"Value" : [NSNumber numberWithBool:YES],
-                   @"API Parameter" : @""},
-                 @{@"Menu Item" : @"Food & Restaurants",
-                   @"Value" : [NSNumber numberWithBool:YES],
-                   @"API Parameter" : @""},
-                 @{@"Menu Item" : @"Stores & Retail",
-                   @"Value" : [NSNumber numberWithBool:YES],
-                   @"API Parameter" : @""}
+                   @"API Parameter" : @"365"},
+                 @{@"Menu Item" : @"Last 2 Years",
+                   @"Value" : [NSNumber numberWithBool:NO],
+                   @"API Parameter" : @"730"},
+                 @{@"Menu Item" : @"Last 4 Years",
+                   @"Value" : [NSNumber numberWithBool:NO],
+                   @"API Parameter" : @"1460"},
+                 @{@"Menu Item" : @"All Time",
+                   @"Value" : [NSNumber numberWithBool:NO],
+                   @"API Parameter" : @"-1"}
                  ];
     });
-    return tags;
+    return articleAges;
+}
+
++ (NSArray *)articleTags
+{
+    static NSArray *articleTags;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        articleTags = @[
+                 @{@"Menu Item" : @"Real Estate & Buildings",
+                   @"Value" : [NSNumber numberWithBool:YES],
+                   @"API Parameter" : @"real estate"},
+                 @{@"Menu Item" : @"Food & Restaurants",
+                   @"Value" : [NSNumber numberWithBool:YES],
+                   @"API Parameter" : @"food"},
+                 @{@"Menu Item" : @"Stores & Retail",
+                   @"Value" : [NSNumber numberWithBool:YES],
+                   @"API Parameter" : @"retail"}
+                 ];
+    });
+    return articleTags;
 }
 
 + (NSArray *)mapMarkersDefault
@@ -138,6 +172,20 @@ double const DEFAULT_ZOOM_LEVEL = 14.0;
                                ];
     });
     return mapMarkersSelected;
+}
+
++ (NSDateFormatter *)dateFormatter
+{
+    static NSDateFormatter *dateFormatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"enUSPOSIXLocale"];
+        dateFormatter.dateFormat = @"MM-dd-yyyy";
+        //dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        //dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    });
+    return dateFormatter;
 }
 
 @end

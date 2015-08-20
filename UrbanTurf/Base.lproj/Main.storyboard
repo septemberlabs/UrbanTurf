@@ -378,17 +378,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BxB-qa-JZb">
-                                <rect key="frame" x="257" y="550" width="86" height="30"/>
-                                <state key="normal" title="Update Map">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="returnToNewsMap:" destination="jq8-Rm-jiI" eventType="touchUpInside" id="mE7-cH-3iC"/>
-                                </connections>
-                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="M43-CY-732">
-                                <rect key="frame" x="0.0" y="28" width="600" height="514"/>
+                                <rect key="frame" x="0.0" y="76" width="600" height="524"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SearchFiltersCell" id="unc-OL-oeo">
@@ -399,19 +390,35 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BxB-qa-JZb">
+                                <rect key="frame" x="0.0" y="28" width="600" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="iUk-6i-43C"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                <state key="normal" title="Update Map">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="returnToNewsMap:" destination="jq8-Rm-jiI" eventType="touchUpInside" id="mE7-cH-3iC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="hj0-Sn-B23" firstAttribute="top" secondItem="BxB-qa-JZb" secondAttribute="bottom" constant="20" id="2LC-jH-Gjd"/>
-                            <constraint firstItem="BxB-qa-JZb" firstAttribute="top" secondItem="M43-CY-732" secondAttribute="bottom" constant="8" id="ICk-o0-p1g"/>
-                            <constraint firstItem="M43-CY-732" firstAttribute="top" secondItem="CS6-Vh-hbz" secondAttribute="bottom" constant="8" id="SLo-9A-p4b"/>
-                            <constraint firstAttribute="trailing" secondItem="M43-CY-732" secondAttribute="trailing" id="mVq-ys-QuU"/>
-                            <constraint firstItem="M43-CY-732" firstAttribute="leading" secondItem="rb1-oC-7uh" secondAttribute="leading" id="pF9-cA-nsF"/>
-                            <constraint firstAttribute="centerX" secondItem="BxB-qa-JZb" secondAttribute="centerX" id="t2v-Cc-Wsr"/>
+                            <constraint firstItem="BxB-qa-JZb" firstAttribute="top" secondItem="CS6-Vh-hbz" secondAttribute="bottom" constant="8" id="Bsa-Ja-roB"/>
+                            <constraint firstItem="hj0-Sn-B23" firstAttribute="top" secondItem="M43-CY-732" secondAttribute="bottom" id="CRH-JZ-4tG"/>
+                            <constraint firstItem="M43-CY-732" firstAttribute="top" secondItem="BxB-qa-JZb" secondAttribute="bottom" constant="8" id="HMa-vH-MWg"/>
+                            <constraint firstAttribute="trailing" secondItem="BxB-qa-JZb" secondAttribute="trailing" id="NfA-FW-tkN"/>
+                            <constraint firstItem="M43-CY-732" firstAttribute="leading" secondItem="rb1-oC-7uh" secondAttribute="leading" id="ceS-nO-PSB"/>
+                            <constraint firstItem="BxB-qa-JZb" firstAttribute="leading" secondItem="rb1-oC-7uh" secondAttribute="leading" id="hJM-Pa-i0O"/>
+                            <constraint firstAttribute="trailing" secondItem="M43-CY-732" secondAttribute="trailing" id="uZd-x6-mYz"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="M43-CY-732" id="e3J-JC-fYN"/>
+                        <outlet property="updateMapButton" destination="BxB-qa-JZb" id="xhu-Rp-FRP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KDY-bE-WFW" userLabel="First Responder" sceneMemberID="firstResponder"/>

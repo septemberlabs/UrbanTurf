@@ -7,9 +7,12 @@
 //
 
 #import "SearchFilters.h"
+#import "Stylesheet.h"
+#import "Constants.h"
 
 @interface SearchFilters ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *updateMapButton;
 @end
 
 @implementation SearchFilters
@@ -20,6 +23,8 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView reloadData];
+    
+    self.updateMapButton.backgroundColor = [Stylesheet color1];
 }
 
 - (void)setDisplayOrders:(NSMutableArray *)displayOrders
@@ -30,11 +35,19 @@
     }
 }
 
-- (void)setTags:(NSMutableArray *)tags
+- (void)setArticleAges:(NSMutableArray *)articleAges
 {
-    _tags = [[NSMutableArray alloc] initWithCapacity:[tags count]];
-    for (NSDictionary *tag in tags) {
-        [_tags addObject:[tag mutableCopy]];
+    _articleAges = [[NSMutableArray alloc] initWithCapacity:[articleAges count]];
+    for (NSDictionary *articleAge in articleAges) {
+        [_articleAges addObject:[articleAge mutableCopy]];
+    }
+}
+
+- (void)setArticleTags:(NSMutableArray *)articleTags
+{
+    _articleTags = [[NSMutableArray alloc] initWithCapacity:[articleTags count]];
+    for (NSDictionary *tag in articleTags) {
+        [_articleTags addObject:[tag mutableCopy]];
     }
 }
 
@@ -45,12 +58,17 @@
         [displayOrdersToReturn addObject:[NSDictionary dictionaryWithDictionary:displayOrder]];
     }
     
-    NSMutableArray *tagsToReturn = [[NSMutableArray alloc] initWithCapacity:[self.tags count]];
-    for (NSMutableDictionary *tag in self.tags) {
-        [tagsToReturn addObject:[NSDictionary dictionaryWithDictionary:tag]];
+    NSMutableArray *articleAgesToReturn = [[NSMutableArray alloc] initWithCapacity:[self.articleAges count]];
+    for (NSMutableDictionary *articleAge in self.articleAges) {
+        [articleAgesToReturn addObject:[NSDictionary dictionaryWithDictionary:articleAge]];
     }
     
-    [self.delegate updateSearchFilters:[NSArray arrayWithArray:displayOrdersToReturn] tags:[NSArray arrayWithArray:tagsToReturn]];
+    NSMutableArray *articleTagsToReturn = [[NSMutableArray alloc] initWithCapacity:[self.articleTags count]];
+    for (NSMutableDictionary *tag in self.articleTags) {
+        [articleTagsToReturn addObject:[NSDictionary dictionaryWithDictionary:tag]];
+    }
+    
+    [self.delegate updateSearchFilters:[NSArray arrayWithArray:displayOrdersToReturn] articleAges:[NSArray arrayWithArray:articleAgesToReturn] articleTags:[NSArray arrayWithArray:articleTagsToReturn]];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -59,7 +77,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -69,7 +87,10 @@
             return [self.displayOrders count];
             break;
         case 1:
-            return [self.tags count];
+            return [self.articleAges count];
+            break;
+        case 2:
+            return [self.articleTags count];
             break;
         default:
             return 0;
@@ -85,14 +106,24 @@
     
     if (indexPath.section == 0) {
         filterLabel = (NSString *)[self.displayOrders[indexPath.row] objectForKey:@"Menu Item"];
-        NSNumber *currentValue = (NSNumber *)[self.displayOrders[indexPath.row] objectForKey:@"Value"];
-        checked = currentValue.boolValue;
+        checked = ((NSNumber *)[self.displayOrders[indexPath.row] objectForKey:@"Value"]).boolValue;
+
+        /* DELETE AFTER 8/25. Was used for unimplemented UISegmentedControl stuff.
+        NSMutableArray *displayOrderMenuItems;
+        for (NSDictionary *displayOrder in self.displayOrders) {
+            [displayOrderMenuItems addObject:[displayOrder objectForKey:@"Menu Item"]];
+        }
+         */
     }
     
     if (indexPath.section == 1) {
-        filterLabel = (NSString *)[self.tags[indexPath.row] objectForKey:@"Menu Item"];
-        NSNumber *currentValue = (NSNumber *)[self.tags[indexPath.row] objectForKey:@"Value"];
-        checked = currentValue.boolValue;
+        filterLabel = (NSString *)[self.articleAges[indexPath.row] objectForKey:@"Menu Item"];
+        checked = ((NSNumber *)[self.articleAges[indexPath.row] objectForKey:@"Value"]).boolValue;
+    }
+    
+    if (indexPath.section == 2) {
+        filterLabel = (NSString *)[self.articleTags[indexPath.row] objectForKey:@"Menu Item"];
+        checked = ((NSNumber *)[self.articleTags[indexPath.row] objectForKey:@"Value"]).boolValue;
     }
     
     cell.textLabel.text = filterLabel;
@@ -102,8 +133,42 @@
     else {
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    
+
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section) {
+        case 0:
+            return DISPLAY_ORDER_TABLE_HEADER;
+            break;
+        case 1:
+            return ARTICLE_AGE_TABLE_HEADER;
+            break;
+        case 2:
+            return ARTICLE_TAGS_TABLE_HEADER;
+            break;
+        default:
+            return @"ERROR";
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    switch (section) {
+        case 0:
+            return @"";
+            break;
+        case 1:
+            return ARTICLE_AGE_TABLE_FOOTER;
+            break;
+        case 2:
+            return ARTICLE_TAGS_TABLE_FOOTER;
+            break;
+        default:
+            return @"ERROR";
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -126,15 +191,31 @@
         }
     }
     
-    // in the second section for tags, all choices can be either checked or unchecked, so we just toggle its value when a cell is tapped.
+    // for the article age filter, only one can be checked at a time.
     if (indexPath.section == 1) {
-        NSNumber *currentValue = (NSNumber *)[self.tags[indexPath.row] objectForKey:@"Value"];
+        int i = 0;
+        for (NSMutableDictionary *articleAge in self.articleAges) {
+            if (i != indexPath.row) {
+                [articleAge setObject:[NSNumber numberWithBool:NO] forKey:@"Value"];
+                [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:1]].accessoryType = UITableViewCellAccessoryNone;
+            }
+            else {
+                [articleAge setObject:[NSNumber numberWithBool:YES] forKey:@"Value"];
+                [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:1]].accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            i++;
+        }
+    }
+    
+    // for the article tags filter, all choices can be either checked or unchecked, so we just toggle its value when a cell is tapped.
+    if (indexPath.section == 2) {
+        NSNumber *currentValue = (NSNumber *)[self.articleTags[indexPath.row] objectForKey:@"Value"];
         if (currentValue.boolValue == YES) {
-            [self.tags[indexPath.row] setObject:[NSNumber numberWithBool:NO] forKey:@"Value"];
+            [self.articleTags[indexPath.row] setObject:[NSNumber numberWithBool:NO] forKey:@"Value"];
             [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
         }
         else {
-            [self.tags[indexPath.row] setObject:[NSNumber numberWithBool:YES] forKey:@"Value"];
+            [self.articleTags[indexPath.row] setObject:[NSNumber numberWithBool:YES] forKey:@"Value"];
             [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
         }
     }

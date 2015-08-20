@@ -10,7 +10,6 @@
 //
 
 #import "ArticleOverlayView.h"
-#import "Constants.h"
 #import "Stylesheet.h"
 #import "UIImageView+AFNetworking.h"
 #import "UIView+AddBorders.h"
@@ -22,6 +21,8 @@
 
 // whether the view has a one-pixel border along the top.
 @property (nonatomic) BOOL topBorder;
+// anything related to the superview that needs to be accommodated. see Constants.h for the possibilities.
+@property (nonatomic) SuperviewFeature superviewFeature;
 
 // related to panning when there are multiple articles at a single location.
 @property (nonatomic) BOOL shouldRecognizeSimultaneouslyWithGestureRecognizer;
@@ -34,10 +35,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     Left,
     Right,
     SnapBack
-};
-
-typedef NS_ENUM(NSInteger, SuperviewFeature) {
-    TableCellSeparator
 };
 
 @end
@@ -156,7 +153,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
 
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant
 {
-    [self setEdgesToSuperview:superview leading:leadingConstant trailing:trailingConstant top:topConstant bottom:bottomConstant superviewFeature:-1];
+    [self setEdgesToSuperview:superview leading:leadingConstant trailing:trailingConstant top:topConstant bottom:bottomConstant superviewFeature:None];
 }
 
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant superviewFeature:(SuperviewFeature)superviewFeature
@@ -167,6 +164,9 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
             [superview removeConstraint:constraint];
         }
     }
+    
+    // save this so that if neighboring ArticleOverlayViews are constructed they can refer to this value.
+    self.superviewFeature = superviewFeature;
     
     NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self
                                                                          attribute:NSLayoutAttributeLeading
@@ -258,7 +258,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
     
     // concatenate the publication name and date, separating them with •
     NSMutableString *metaInfoString = [article.publication mutableCopy];
-    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", article.date]];
+    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", [[Constants dateFormatter] stringFromDate:article.date]]];
     
     // make it attributed with publicationAttributes for the whole string
     NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
@@ -365,25 +365,25 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
             [self.superview layoutIfNeeded];
             // slide the panned-out article a cell width. (negative value shifts it left.)
             CGFloat panDistance = -self.superview.frame.size.width;
-            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
-            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:self.superviewFeature];
+            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:self.superviewFeature];
         }
         else if (panDirection == Right) {
             // force this here to catch up the layout in case it needs catching up since we'll be changing it below.
             [self.superview layoutIfNeeded];
             // slide the panned-out article a cell width. (positive value shifts it right.)
             CGFloat panDistance = self.superview.frame.size.width;
-            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:TableCellSeparator];
-            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self setEdgesToSuperview:self.superview leading:panDistance trailing:panDistance top:0 bottom:0 superviewFeature:self.superviewFeature];
+            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:self.superviewFeature];
             
         }
         // if neither of the two conditions evaluated true, then the article hasn't been panned more than halfway off the screen to the right or left, and should be kept as visible article.
         else {
             // we're not changing to the left or right article, instead keeping the article that was already visible. so we don't modify any constraints but do still force a layoutIfNeeded. the final effect is simply a "snap back" to the original visible state.
             [self.superview layoutIfNeeded];
-            [self setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
-            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:-self.superview.frame.size.width trailing:-self.superview.frame.size.width top:0 bottom:0 superviewFeature:TableCellSeparator];
-            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:self.superview.frame.size.width trailing:self.superview.frame.size.width top:0 bottom:0 superviewFeature:TableCellSeparator];
+            [self setEdgesToSuperview:self.superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:self.superviewFeature];
+            [self.leftArticleSubview setEdgesToSuperview:self.superview leading:-self.superview.frame.size.width trailing:-self.superview.frame.size.width top:0 bottom:0 superviewFeature:self.superviewFeature];
+            [self.rightArticleSubview setEdgesToSuperview:self.superview leading:self.superview.frame.size.width trailing:self.superview.frame.size.width top:0 bottom:0 superviewFeature:self.superviewFeature];
         }
         
         // finally, to animate the movement set the new constraints by calling layoutIfNeeded as the body of the animation.
@@ -483,7 +483,7 @@ typedef NS_ENUM(NSInteger, SuperviewFeature) {
                                trailing:leadingTrailingConstraint
                                     top:0
                                  bottom:0
-                       superviewFeature:TableCellSeparator];
+                       superviewFeature:self.superviewFeature];
     
     // calculate the index of the new article, addressing special cases for if the article being panned out is at one end or the other of the array.
     NSUInteger articleIndex;

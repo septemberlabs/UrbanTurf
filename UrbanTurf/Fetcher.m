@@ -10,7 +10,7 @@
 
 @implementation Fetcher
 
-- (void)fetchDataWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude {}
+- (void)fetchDataWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units limit:(int)limit age:(int)age order:(NSString *)order {}
 
 - (NSURLSession *)urlSession
 {

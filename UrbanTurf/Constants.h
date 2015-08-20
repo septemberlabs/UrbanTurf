@@ -25,9 +25,16 @@ extern NSString * const RADIUS_TABLE_FOOTER;
 
 extern NSString * const userDefaultsDisplayOrderKey;
 + (NSArray *)displayOrders;
-+ (NSArray *)tags;
++ (NSArray *)articleAges;
++ (NSArray *)articleTags;
 extern NSString * const DISPLAY_ORDER_TABLE_HEADER;
 extern NSString * const DISPLAY_ORDER_TABLE_FOOTER;
+
+extern NSString * const ARTICLE_AGE_TABLE_HEADER;
+extern NSString * const ARTICLE_AGE_TABLE_FOOTER;
+
+extern NSString * const ARTICLE_TAGS_TABLE_HEADER;
+extern NSString * const ARTICLE_TAGS_TABLE_FOOTER;
 
 extern NSString * const userDefaultsHomeScreenLocationKey;
 extern NSString * const homeScreenLocation;
@@ -57,9 +64,17 @@ extern CGFloat const PAN_THRESHOLD; // horizontal distance (px) that a pan trans
 extern CGFloat const PANNED_DISTANCE_THRESHOLD; // horizontal distance as percentage of view width that user must pan for neighboring article to move in.
 extern int const ARTICLE_OVERLAY_VIEW_HEIGHT; // height (px) of articles in table view and in full-map mode.
 
-extern NSString *const API_ADDRESS;
+extern NSString * const API_ADDRESS;
 extern int const NUM_OF_RESULTS_LIMIT; // ceiling on number of search results to return from the API.
 extern double const LATLON_RADIUS; // default radius from the given lat/lon for which to return items.
 extern double const DEFAULT_ZOOM_LEVEL; // default zoom level at which to set the map.
+extern NSString * const RADIUS_UNITS; // english or metric for the API.
+
++ (NSDateFormatter *)dateFormatter;
+
+typedef NS_ENUM(NSInteger, SuperviewFeature) {
+    None,
+    TableCellSeparator
+};
 
 @end

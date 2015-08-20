@@ -13,11 +13,12 @@
 @interface SearchFilters : UIViewController <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, weak) id<SearchFiltersDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray *displayOrders;
-@property (strong, nonatomic) NSMutableArray *tags;
+@property (strong, nonatomic) NSMutableArray *articleAges;
+@property (strong, nonatomic) NSMutableArray *articleTags;
 @end
 
 // delegate protocol
 @protocol SearchFiltersDelegate <NSObject>
 @required
-- (void)updateSearchFilters:(NSArray *)displayOrders tags:(NSArray *)tags;
+- (void)updateSearchFilters:(NSArray *)displayOrders articleAges:(NSArray *)articleAges articleTags:(NSArray *)articleTags;
 @end // end of delegate protocol

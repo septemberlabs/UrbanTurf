@@ -132,7 +132,7 @@
     
     // concatenate the publication name and date, separating them with •
     NSMutableString *metaInfoString = [self.article.publication mutableCopy];
-    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", self.article.date]];
+    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", [[Constants dateFormatter] stringFromDate:self.article.date]]];
     
     // make it attributed with publicationAttributes for the whole string.
     NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];

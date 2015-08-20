@@ -6,18 +6,23 @@
 //  Copyright (c) 2014 Will Smith. All rights reserved.
 //
 
+/*
+ near = lat,lon; required
+ radius = to two decimal places; required; in units specified by unit
+ units = “metric”|“english”; optional; “english” is default
+ limit = integer; optional; 10 is default
+ age = number of days old, integer; -1 is all time
+ order = newest/nearest
+ */
+
+
 #import "UrbanTurfFetcher.h"
 #import "Article.h"
 #import "Constants.h"
 
 @implementation UrbanTurfFetcher
 
-- (void)fetchDataWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude
-{
-    [self fetchDataWithLatitude:latitude longitude:longitude radius:LATLON_RADIUS]; // use default radius if none specified
-}
-
-- (void)fetchDataWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius
+- (void)fetchDataWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units limit:(int)limit age:(int)age order:(NSString *)order
 {
     if ((latitude == 0) || (longitude == 0)) {
         CLLocationCoordinate2D testLocation = office;
@@ -25,7 +30,7 @@
         longitude = testLocation.longitude;
     }
     
-    NSString *urlToLoad = [NSString stringWithFormat:@"%@near=%f,%f&radius=%f&limit=%d&units=metric", API_ADDRESS, latitude, longitude, radius, NUM_OF_RESULTS_LIMIT];
+    NSString *urlToLoad = [NSString stringWithFormat:@"%@near=%f,%f&radius=%f&units=metric&limit=%d&age=%d&order=%@", API_ADDRESS, latitude, longitude, radius, limit, age, order];
     NSLog(@"URL we're loading: %@", urlToLoad);
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlToLoad]];
     NSURLSessionDownloadTask *task = [self.urlSession downloadTaskWithRequest:request completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {
