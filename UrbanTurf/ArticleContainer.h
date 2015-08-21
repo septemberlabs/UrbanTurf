@@ -8,11 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import "Article.h"
 
 @interface ArticleContainer : NSObject
 
-@property (strong, nonatomic) NSArray *articles;
+@property (strong, nonatomic) NSMutableArray *articles;
 @property (strong, nonatomic) GMSMarker *marker;
-@property (nonatomic) int indexOfCurrentlyVisibleArticle;
+@property (nonatomic) int indexOfDisplayedTeaser;
+
+- (Article *)articleOfDisplayedTeaser;
 
 @end

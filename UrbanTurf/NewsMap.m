@@ -32,8 +32,8 @@
 @property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeightConstraint;
 @property (nonatomic) BOOL gestureInitiatedMapMove;
-@property (strong, nonatomic) NSMutableArray *markers; // of GMSMarkers
-@property (strong, nonatomic) GMSMarker *markerWithFocus; // marker with current focus, if any. list-view mode.
+@property (strong, nonatomic) NSMutableArray *articleContainers; // of GMSMarkers
+@property (strong, nonatomic) ArticleContainer *articleContainerWithFocus; // article container with current focus, if any. list-view mode.
 
 // search filters
 @property (strong, nonatomic) NSArray *displayOrders;
@@ -171,10 +171,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (NSArray *)markers
 {
-    if (!_markers) {
-        _markers = [[NSMutableArray alloc] init];
+    if (!_articleContainers) {
+        _articleContainers = [[NSMutableArray alloc] init];
     }
-    return _markers;
+    return _articleContainers;
 }
 
 /* DELETE AFTER 8/20 IF DATE FORMATTING AND SORTING IS WORKING
@@ -323,9 +323,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // the markers on the map correlate one-to-one with the cells in the table view.
+    // the article containers all contain a single map marker, which correlate one-to-one with the cells in the table view.
     if (tableView == self.tableView) {
-        return [self.markers count] + 1; // the extra one is for the last cell, a spacer cell.
+        return [self.articleContainers count] + 1; // the extra one is for the last cell, a spacer cell.
     }
     
     if (tableView == self.searchDisplayController.searchResultsTableView) {
@@ -411,7 +411,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // if the table view sending the message is the articles table view.
     if (tableView == self.tableView) {
         // if the row is the last one, it's the bottom buffer cell so give it an arbitrarily tall height.
-        if (indexPath.row == [self.markers count]) {
+        if (indexPath.row == [self.articleContainers count]) {
             return 300;
         }
         // otherwise, give it the standard height for all the article table cells.
@@ -435,7 +435,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     if (tableView == self.tableView) {
         
         // this is a unique cell, the last one, and doesn't need much configuration.
-        if (indexPath.row == [self.markers count]) {
+        if (indexPath.row == [self.articleContainers count]) {
             static NSString *LastCellIdentifier = @"Last Cell - Spacer";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LastCellIdentifier];
             if (cell == nil) {
@@ -462,24 +462,22 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         [cell addSubview:articleOverlaySubview];
         [articleOverlaySubview setEdgesToSuperview:cell leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
         cell.articleView = articleOverlaySubview;
+        
+        ArticleContainer *articleContainer = (ArticleContainer *)self.articleContainers[indexPath.row];
 
-        //Article *article = (Article *)self.articles[indexPath.row];
-        Article *article = (Article *)[self getArticleFromMarker:self.markers[indexPath.row]];
+        Article *article = (Article *)[articleContainer articleOfDisplayedTeaser];
         [articleOverlaySubview configureTeaserForArticle:article];
 
         // this ensures that the background color is reset, lest it be colored due to reuse of a scroll-selected cell.
         articleOverlaySubview.backgroundColor = [UIColor whiteColor];
         
         // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-        GMSMarker *marker = (GMSMarker *)self.markers[indexPath.row];
-        // if the marker's userData is larger than 1, it means there are multiple articles for the location that need to be panned through.
-        if ([marker.userData count] > 1) {
+        if ([articleContainer.articles count] > 1) {
             [articleOverlaySubview addPanGestureRecognizer];
             articleOverlaySubview.delegate = self;
         }
         
         NSLog(@"subviews of row %d: %@", (int)indexPath.row, cell.subviews);
-        
 
         return cell;
     }
@@ -542,20 +540,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    // if the table view sending the message is the articles table view
-    /*
-    if (tableView == self.tableView) {
-        //[tableView deselectRowAtIndexPath:indexPath animated:NO];
-        if (indexPath.row == 0) {
-            [self performSegueWithIdentifier:@"MultipleArticlesAtMarker" sender:self];
-        }
-        else {
-            [self performSegueWithIdentifier:@"DisplayArticleSegue" sender:self];
-        }
-    }
-     */
-    
     // if the table view sending the message is the search controller TVC
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         
@@ -680,11 +664,12 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         if (!self.articleOverlaid) {
            
             // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-            if ([marker.userData count] > 1) {
-                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
+            ArticleContainer *articleContainer = (ArticleContainer *)marker.userData;
+            if ([articleContainer.articles count] > 1) {
+                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[articleContainer articleOfDisplayedTeaser] superview:self.articleOverlay addPanGestureRecognizer:YES];
             }
             else {
-                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO];
+                [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[articleContainer articleOfDisplayedTeaser] superview:self.articleOverlay addPanGestureRecognizer:NO];
             }
             
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
@@ -713,11 +698,12 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             if (![marker isEqual:self.tappedMarker]) {
             
                 // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-                if ([marker.userData count] > 1) {
-                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:YES];
+                ArticleContainer *articleContainer = (ArticleContainer *)marker.userData;
+                if ([articleContainer.articles count] > 1) {
+                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[articleContainer articleOfDisplayedTeaser] superview:self.articleOverlay addPanGestureRecognizer:YES];
                 }
                 else {
-                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[self getArticleFromMarker:marker] superview:self.articleOverlay addPanGestureRecognizer:NO];
+                    [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[articleContainer articleOfDisplayedTeaser] superview:self.articleOverlay addPanGestureRecognizer:NO];
                 }
  
                 [UIView transitionWithView:self.articleOverlay
@@ -815,38 +801,38 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     CGFloat topEdgeOfTable = tableViewOriginInWindowCoordinateSystem.y;
     
     // if verticalMidpoint is greater than topEdgeOfTable it means that more than half the cell is exposed, and we should scroll to display it.
-    GMSMarker *markerToReceiveFocus;
+    ArticleContainer *articleContainerToReceiveFocus;
     if (verticalMidpoint >= topEdgeOfTable) {
-        if (topmostIndexPath.row < [self.markers count]) {
-            markerToReceiveFocus = (GMSMarker *)[self.markers objectAtIndex:topmostIndexPath.row];
+        if (topmostIndexPath.row < [self.articleContainers count]) {
+            articleContainerToReceiveFocus = (ArticleContainer *)[self.articleContainers objectAtIndex:topmostIndexPath.row];
         }
         else {
-            markerToReceiveFocus = (GMSMarker *)[self.markers lastObject];
+            articleContainerToReceiveFocus = (ArticleContainer *)[self.articleContainers lastObject];
         }
     }
     // otherwise the top edge of the table is lower than the midpoint of the top cell, meaning only the bottom half or less are exposed, and we should scroll to display the cell beneath it.
     else {
-        if ((topmostIndexPath.row + 1) < [self.markers count]) {
-            markerToReceiveFocus = (GMSMarker *)[self.markers objectAtIndex:(topmostIndexPath.row + 1)];
+        if ((topmostIndexPath.row + 1) < [self.articleContainers count]) {
+            articleContainerToReceiveFocus = (ArticleContainer *)[self.articleContainers objectAtIndex:(topmostIndexPath.row + 1)];
         }
         else {
-            markerToReceiveFocus = (GMSMarker *)[self.markers lastObject];
+            articleContainerToReceiveFocus = (ArticleContainer *)[self.articleContainers lastObject];
         }
     }
     
-    NSDictionary *userInfo = @{ @"markerToReceiveFocus" : markerToReceiveFocus };
+    NSDictionary *userInfo = @{ @"articleContainerToReceiveFocus" : articleContainerToReceiveFocus };
     if (self.timer) {
         [self.timer invalidate];
         self.timer = nil;
     }
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                   target:self
-                                                selector:@selector(setFocusOnMarkerWithTimer:)
+                                                selector:@selector(setFocusOnArticleContainerWithTimer:)
                                                 userInfo:userInfo
                                                  repeats:NO];
 }
 
-- (void)setFocusOnMarker:(GMSMarker *)markerToReceiveFocus
+- (void)setFocusOnArticleContainer:(ArticleContainer *)articleContainerToReceiveFocus
 {
     // Three things need to happen to visually focus on a new marker/cell:
     // 1. De-highlight the currently-focused one, if it exists.
@@ -854,22 +840,22 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // 3. Scroll the table and highlight the newly-focused cell. The actual highlighting occurs in delegate method scrollViewDidEndScrollingAnimation because to highlight a cell by changing its background, it needs to be visible first. That is, it needs to have scrolled into view and can't be off-screen.
     
     // 1
-    if (self.markerWithFocus) {
-        NSIndexPath *indexPathWithCurrentFocus = [NSIndexPath indexPathForRow:[self.markers indexOfObject:self.markerWithFocus] inSection:0];
+    if (self.articleContainerWithFocus) {
+        NSIndexPath *indexPathWithCurrentFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
         NewsMapTableViewCell *cellWithCurrentFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathWithCurrentFocus];
         cellWithCurrentFocus.articleView.backgroundColor = [UIColor whiteColor];
     }
-    self.markerWithFocus = markerToReceiveFocus; // save the newly focused article.
+    self.articleContainerWithFocus = articleContainerToReceiveFocus; // save the newly focused article.
     
     // 2
-    [self moveCameraToMarker:markerToReceiveFocus highlightMarker:YES];
+    [self moveCameraToMarker:articleContainerToReceiveFocus.marker highlightMarker:YES];
 
     // 3
     // when the scrolling finishes, delegate method scrollViewDidEndScrollingAnimation will do the actual highlighting.
-    NSIndexPath *indexPathToReceiveFocus = [NSIndexPath indexPathForRow:[self.markers indexOfObject:markerToReceiveFocus] inSection:0];
+    NSIndexPath *indexPathToReceiveFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:articleContainerToReceiveFocus] inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPathToReceiveFocus atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
-    // we need to do the following for the case when scrollToRowAtIndexPath causes no scroll because either a) markerToReceiveFocus is the topmost cell and the user got there by pull-dragging to the top or b) the exceedingly rare case where the user has stopped scrolling on the exact pixel between two cells so no further scroll is necessary. In either of those cases, the backgroundColor animation (i.e., highlighting) would not have occurred because scrollViewDidEndScrollingAnimation would never be called.
+    // we need to do the following for the case when scrollToRowAtIndexPath causes no scroll because either a) articleContainerToReceiveFocus is the topmost cell and the user got there by pull-dragging to the top or b) the exceedingly rare case where the user has stopped scrolling on the exact pixel between two cells so no further scroll is necessary. In either of those cases, the backgroundColor animation (i.e., highlighting) would not have occurred because scrollViewDidEndScrollingAnimation would never be called.
     NewsMapTableViewCell *cellToReceiveFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathToReceiveFocus];
     CGPoint cellOriginInWindowCoordinateSystem = [cellToReceiveFocus convertPoint:cellToReceiveFocus.bounds.origin toView:nil];
     CGPoint tableViewOriginInWindowCoordinateSystem = [self.tableView convertPoint:self.tableView.bounds.origin toView:nil];
@@ -881,16 +867,16 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
 }
 
-- (void)setFocusOnMarkerWithTimer:(NSTimer *)timer
+- (void)setFocusOnArticleContainerWithTimer:(NSTimer *)timer
 {
-    [self setFocusOnMarker:(GMSMarker *)timer.userInfo[@"markerToReceiveFocus"]];
+    [self setFocusOnArticleContainer:(ArticleContainer *)timer.userInfo[@"articleContainerToReceiveFocus"]];
 }
 
 - (void)moveCameraToMarker:(GMSMarker *)markerToReceiveFocus highlightMarker:(BOOL)highlightMarker
 {
     // reset all the markers to the default color.
-    for (GMSMarker *marker in self.markers) {
-        marker.icon = [self getIconForMarker:marker selected:NO];
+    for (ArticleContainer *articleContainer in self.articleContainers) {
+        articleContainer.marker.icon = [self getIconForMarker:articleContainer.marker selected:NO];
     }
     // move the map to the newly focused article's location and set the corresponding marker to selected.
     [self.mapView animateToLocation:markerToReceiveFocus.position];
@@ -924,12 +910,12 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                              //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
 
                              // upon completion, if there was a selected marker, de-select it in the table view and on the map.
-                             if (self.markerWithFocus) {
-                                 NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.markers indexOfObject:self.markerWithFocus] inSection:0];
+                             if (self.articleContainerWithFocus) {
+                                 NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
                                  NewsMapTableViewCell *cellWithFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellWithFocus];
                                  cellWithFocus.articleView.backgroundColor = [UIColor whiteColor];
-                                 self.markerWithFocus.icon = [self getIconForMarker:self.markerWithFocus selected:NO];
-                                 self.markerWithFocus = nil; // update the state.
+                                 self.articleContainerWithFocus.icon = [self getIconForMarker:self.articleContainerWithFocus.marker selected:NO];
+                                 self.articleContainerWithFocus = nil; // update the state.
                              }
                          }];
         
@@ -967,18 +953,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     //[[Crashlytics sharedInstance] crash];
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
-{
-    // eventually add code to animate-expand the searchbar full width, over the neighboring buttons. (then contract again when search is executed.)
-}
-
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     // at the end of scrolling, the topmost visible row will be the one we want to give focus.
     //NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
-    NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.markers indexOfObject:self.markerWithFocus] inSection:0];
+    NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
     NewsMapTableViewCell *cellToFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
     // fade in the highlighting color.
     [UIView animateWithDuration:0.5 animations:^{
@@ -1016,7 +997,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             ArticleViewController *articleVC = (ArticleViewController *)segue.destinationViewController;
             NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
             //Article *articleToDisplay = (Article *)self.articles[indexPath.row];
-            Article *articleToDisplay = [self getArticleFromMarker:self.markers[indexPath.row]];
+            Article *articleToDisplay = [self.articleContainers[indexPath.row] articleOfDisplayedTeaser];
             articleVC.article = articleToDisplay;
         }
     }
@@ -1105,18 +1086,18 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         
         int j = 1;
         
-        for (GMSMarker *marker in self.markers) {
+        for (ArticleContainer *articleContainer in self.articleContainers) {
             
             //NSLog(@"marker: %d", j);
             
-            CLLocationCoordinate2D markerCoordinate;
+            CLLocationCoordinate2D articleContainerCoordinate;
             
-            NSMutableArray *articlesAtLocation = (NSMutableArray *)marker.userData;
+            NSMutableArray *articlesAtLocation = (NSMutableArray *)articleContainer.articles;
             // just use the first article in the array for its coordinate. doesn't matter which we choose; the point is that they're all the same location.
-            markerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
-            CLLocation *markerLocation = [[CLLocation alloc] initWithLatitude:markerCoordinate.latitude longitude:markerCoordinate.longitude];
+            articleContainerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
+            CLLocation *articleContainerLocation = [[CLLocation alloc] initWithLatitude:articleContainerCoordinate.latitude longitude:articleContainerCoordinate.longitude];
             // test whether the location associated with this marker is the same as the current article. if it is, append this article to the array of articles for this marker.
-            if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
+            if ([articleLocation distanceFromLocation:articleContainerLocation] < MARKER_OVERLAP_DISTANCE) {
                 
                 // loop through the array. if the new article happened later than an existing article, insert the new article at that spot in front of the existing article. that way we'll have a reverse-chronologically ordered array at the end.
                 BOOL articleStillNeedsToBeAdded = YES;
@@ -1134,7 +1115,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                     [articlesAtLocation addObject:article];
                 }
                 
-                article.marker = marker;
+                article.container = articleContainer;
                 locationMatchedExistingMarker = YES;
                 break;
             }
@@ -1142,13 +1123,14 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             
         }
         
-        // if the article's location was not found to exist at one of the markers, add a new marker for it.
+        // if the article's location was not found to exist at one of the article containers, add a new article container for it.
         if (!locationMatchedExistingMarker) {
-            GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
+            ArticleContainer *newArticleContainer = [[ArticleContainer alloc] init];
+            newArticleContainer.marker = [GMSMarker markerWithPosition:article.coordinate];
             NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:article, nil];
-            newMarker.userData = articlesAtLocation;
-            article.marker = newMarker;
-            [self.markers addObject:newMarker];
+            newArticleContainer.articles = articlesAtLocation;
+            article.container = newArticleContainer;
+            [self.articleContainers addObject:newArticleContainer];
         }
         i++;
     }
@@ -1160,7 +1142,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // first remove markers that are offscreen
     [self removeOffscreenMarkers];
 
-    for (GMSMarker *marker in self.markers) {
+    for (ArticleContainer *articleContainer in self.articleContainers) {
+        GMSMarker *marker = articleContainer.marker;
         marker.icon = [self getIconForMarker:marker selected:NO];
         if (!marker.map) {
             marker.map = self.mapView;
@@ -1171,128 +1154,19 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)removeOffscreenMarkers
 {
-    NSMutableArray *markersToRemove = [[NSMutableArray alloc] init];
+    NSMutableArray *articleContainersToRemove = [[NSMutableArray alloc] init];
 
-    for (GMSMarker *marker in self.markers) {
-        
-        CLLocationCoordinate2D markerCoordinate;
-        
-        NSMutableArray *articlesAtLocation = (NSMutableArray *)marker.userData;
-        markerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
-
+    for (ArticleContainer *articleContainer in self.articleContainers) {
         // if the marker's coordinate is NOT visible, remove it.
-        if (![self.mapView.projection containsCoordinate:markerCoordinate]) {
-            for (Article *article in marker.userData) {
+        if (![self.mapView.projection containsCoordinate:articleContainer.marker.position]) {
+            for (Article *article in articleContainer.articles) {
                 [self.articles removeObject:article];
             }
-            marker.map = nil;
-            [markersToRemove addObject:marker];
+            articleContainer.marker.map = nil;
+            [articleContainersToRemove addObject:articleContainer];
         }
     }
-    [self.markers removeObjectsInArray:markersToRemove];
-}
-
-
-- (NSArray *)layDownMarkers
-{
-    NSMutableArray *markers = [[NSMutableArray alloc] init];
-    
-    /*
-     - we have self.articles, which is the result of the fetch and is an arry of articles.
-     - we loop through this array to create a corresponding array of markers.
-     - markers will store pointers to the articles whose location they visually represent on the map.
-     - important: some articles have locations that are very close or identical. we cluster such articles under a single marker.
-     - in such cases, the marker's userData will point to an array of the articles at that location. the number of elements in the array is the number of articles at that location.
-     - in all other cases, the marker's userData will point directly to the single article it represents.
-     - therefore, there is a one-to-many relationship between markers and articles, not one-to-one.
-     - there is a one-to-one relationship of between markers and the rows in the table view. for cells that represent markers with multiple stories at its location, the user taps to see the full list in a transition to a new table view.
-     - this function sets all this up, including building the self.markers array, each marker's userData, and laying the markers down on the map.
-    */
-    
-    NSLog(@"number of articles: %d", (int)[self.articles count]);
-    
-    int i = 1;
-    for (Article *article in self.articles) {
-        
-        //NSLog(@"article: %d", i);
-        
-        CLLocation *articleLocation = [[CLLocation alloc] initWithLatitude:article.coordinate.latitude longitude:article.coordinate.longitude];
-        
-        // confirm the markers array isn't empty.
-        if ([markers count]) {
-            
-            BOOL locationMatchedExistingMarker = NO;
-            
-            int j = 1;
-            
-            for (GMSMarker *marker in markers) {
-
-                //NSLog(@"marker: %d", j);
-                
-                CLLocationCoordinate2D markerCoordinate;
-                
-                // if the marker's location has already been associated with 2 or more articles, its userData will be an array (of Articles).
-                if ([marker.userData isKindOfClass:[NSMutableArray class]]) { // there are already 2 or more articles at the current marker's location.
-                    NSMutableArray *articlesAtLocation = (NSMutableArray *)marker.userData;
-                    // just use the first article in the array for its coordinate. doesn't matter which we choose; the point is that they're all the same location.
-                    markerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
-                    CLLocation *markerLocation = [[CLLocation alloc] initWithLatitude:markerCoordinate.latitude longitude:markerCoordinate.longitude];
-                    // test whether the location associated with this marker is the same as the current article. if it is, append this article to the array of articles for this marker.
-                    if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
-                        [articlesAtLocation addObject:article];
-                        article.marker = marker;
-                        locationMatchedExistingMarker = YES;
-                        break;
-                    }
-                }
-                
-                // otherwise, it will be an Article.
-                else {
-                    markerCoordinate = ((Article *)marker.userData).coordinate;
-                    CLLocation *markerLocation = [[CLLocation alloc] initWithLatitude:markerCoordinate.latitude longitude:markerCoordinate.longitude];
-                    
-                    //NSLog(@"marker latitude: %f, longitude: %f", markerLocation.coordinate.latitude, markerLocation.coordinate.longitude);
-                    //NSLog(@"article latitude: %f, longitude: %f", articleLocation.coordinate.latitude, articleLocation.coordinate.longitude);
-                    
-                    if ([articleLocation distanceFromLocation:markerLocation] < MARKER_OVERLAP_DISTANCE) {
-                        NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:marker.userData, article, nil];
-                        marker.userData = articlesAtLocation;
-                        article.marker = marker;
-                        locationMatchedExistingMarker = YES;
-                        break;
-                    }
-                }
-                
-                j++;
-                
-            }
-            
-            // if the article's location was not found to exist at one of the markers, add a new marker for it.
-            if (!locationMatchedExistingMarker) {
-                GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
-                newMarker.userData = article;
-                article.marker = newMarker;
-                [markers addObject:newMarker];
-            }
-        }
-        // if markers is empty, add the marker for the first article.
-        else {
-            GMSMarker *newMarker = [GMSMarker markerWithPosition:article.coordinate];
-            newMarker.userData = article;
-            article.marker = newMarker;
-            [markers addObject:newMarker];
-        }
-        i++;
-    }
-    
-    // go through all the markers setting their icons.
-    for (GMSMarker *marker in markers) {
-        marker.icon = [self getIconForMarker:marker selected:NO];
-        marker.map = self.mapView;
-        marker.appearAnimation = kGMSMarkerAnimationPop;
-    }
-    
-    return [NSArray arrayWithArray:markers];
+    [self.articleContainers removeObjectsInArray:articleContainersToRemove];
 }
 
 - (Article *)getArticleFromMarker:(GMSMarker *)marker

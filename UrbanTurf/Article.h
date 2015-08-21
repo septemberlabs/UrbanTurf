@@ -8,6 +8,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import "ArticleContainer.h"
 
 @interface Article : NSObject
 
@@ -22,7 +23,7 @@
 @property (nonatomic, strong) NSString *publication;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *introduction;
-@property (nonatomic, weak) GMSMarker *marker; // make this weak to avoid a retain cycle since the marker will point back to this.
+@property (nonatomic, weak) ArticleContainer *container; // make this weak to avoid a retain cycle since the marker will point back to this.
 
 - (id)initWithTitle:(NSString *)newTitle Location:(CLLocationCoordinate2D)location;
 

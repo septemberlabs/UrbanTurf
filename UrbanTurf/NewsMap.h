@@ -13,6 +13,7 @@
 #import "Article.h"
 #import "ArticleOverlayView.h"
 #import "SearchFilters.h"
+#import "ArticleContainer.h"
 
 @interface NewsMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate, FetcherView, GooglePlacesView, GMSMapViewDelegate, UIScrollViewDelegate, ArticleOverlayViewDelegate, SearchFiltersDelegate>
 
@@ -20,7 +21,7 @@
 @property (nonatomic) CLLocationDegrees longitude;
 
 - (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude zoom:(float)zoom;
-- (void)setFocusOnMarker:(GMSMarker *)markerToReceiveFocus;
+- (void)setFocusOnArticleContainer:(ArticleContainer *)articleContainerToReceiveFocus;
 - (void)loadArticle:(UITapGestureRecognizer *)gestureRecognizer;
 
 @end
