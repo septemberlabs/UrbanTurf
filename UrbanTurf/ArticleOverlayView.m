@@ -19,8 +19,6 @@
 @property (strong, nonatomic) UIView *customViewFromXib;
 @property (strong, nonatomic) NSArray *constraintsWithSuperview;
 
-// whether the view has a one-pixel border along the top.
-@property (nonatomic) BOOL topBorder;
 // anything related to the superview that needs to be accommodated. see Constants.h for the possibilities.
 @property (nonatomic) SuperviewFeature superviewFeature;
 
@@ -47,19 +45,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     if (!self) {
         return nil;
     }
-    
-    return [self initWithFrame:frame withTopBorder:NO];
-}
 
-- (id)initWithFrame:(CGRect)frame withTopBorder:(BOOL)topBorder
-{
-    self = [super initWithFrame:frame];
-    if (!self) {
-        return nil;
-    }
-
-    self.topBorder = topBorder;
-    
     [self initBody];
     
     return self;
@@ -89,6 +75,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     NSDictionary *views = NSDictionaryOfVariableBindings(subview);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[subview]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subview]|" options:0 metrics:nil views:views]];
+
+    // by default the view should recognize all GRs.
+    self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
     
     [self configureUI];
     
@@ -99,6 +88,22 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
     self.customViewFromXib.backgroundColor = backgroundColor;
+}
+
+- (void)setRespondsToTaps:(BOOL)respondsToTaps
+{
+    _respondsToTaps = respondsToTaps;
+    if (respondsToTaps) {
+        [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]];
+    }
+}
+
+- (void)setTopBorder:(BOOL)topBorder
+{
+    _topBorder = topBorder;
+    if (topBorder) {
+        [self addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f];
+    }
 }
 
 - (void)configureUI
@@ -112,14 +117,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // add a light border around the images.
     self.imageView.layer.borderWidth = 1.0f;
     self.imageView.layer.borderColor = [Stylesheet color2].CGColor;
-    
-    // by default the view should recognize all GRs.
-    self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
-    
-    if (self.topBorder) {
-        [self addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f];
-    }
-    
 }
 
 // the height of the view is calculated by summing the height of the right-side components (labels & such) and left-side components (mostly just the image view) and returning whichever is taller.
@@ -275,8 +272,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (UIPanGestureRecognizer *)addPanGestureRecognizer
 {
-    NSLog(@"addPanGestureRecognizer called.");
-    
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panArticleTeaser:)];
     [self addGestureRecognizer:panRecognizer];
     panRecognizer.delegate = self;
@@ -405,14 +400,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                      [self.rightArticleSubview addPanGestureRecognizer];
                                      
                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                         NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
+                                         //NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
                                          [self.leftArticleSubview removeFromSuperview];
                                          [self removeFromSuperview];
-                                         NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
-                                         [self resetPanState];
-
+                                         //NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
                                          // save the right-side article as the now visible article in the cell.
                                          [self.delegate setArticleOverlayView:self.rightArticleSubview];
+                                         [self resetPanState];
                                      });
                                  }
                                  else if (panDirection == Right) {
@@ -422,14 +416,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                      [self.leftArticleSubview addPanGestureRecognizer];
                                      
                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                         NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
+                                         //NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
                                          [self.rightArticleSubview removeFromSuperview];
                                          [self removeFromSuperview];
-                                         NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
-                                         [self resetPanState];
-                                         
+                                         //NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
                                          // save the left-side article as the now visible article in the cell.
                                          [self.delegate setArticleOverlayView:self.leftArticleSubview];
+                                         [self resetPanState];
                                      });
                                  }
                                  else {
@@ -464,9 +457,11 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // LEFT: position == 0
     // RIGHT: position == 1
     
-    ArticleOverlayView *articleSubview = [[ArticleOverlayView alloc] initWithFrame:frame withTopBorder:self.topBorder];
-    articleSubview.translatesAutoresizingMaskIntoConstraints = NO;
+    ArticleOverlayView *articleSubview = [[ArticleOverlayView alloc] initWithFrame:frame];
     articleSubview.delegate = self.delegate;
+    articleSubview.respondsToTaps = self.respondsToTaps;
+    articleSubview.topBorder = self.topBorder;
+    articleSubview.translatesAutoresizingMaskIntoConstraints = NO;
     [superview addSubview:articleSubview];
     
     // if we're generating an overlay to the left, the leading and trailing constraints should be one cell-width to the left (off screen). if right, one cell-width to the right (also off screen).
@@ -512,6 +507,12 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     articleSubview.backgroundColor = self.customViewFromXib.backgroundColor;
     
     return articleSubview;
+}
+
+- (void)loadArticle:(UIGestureRecognizer *)gestureRecognizer
+{
+    NSLog(@"loadArticle called.");
+    [self.delegate loadArticle:self.article];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer

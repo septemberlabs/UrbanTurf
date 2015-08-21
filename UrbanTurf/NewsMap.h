@@ -21,5 +21,6 @@
 
 - (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude zoom:(float)zoom;
 - (void)setFocusOnMarker:(GMSMarker *)markerToReceiveFocus;
+- (void)loadArticle:(UITapGestureRecognizer *)gestureRecognizer;
 
 @end

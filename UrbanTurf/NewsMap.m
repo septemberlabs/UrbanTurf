@@ -456,6 +456,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         }
         
         ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:cell.frame];
+        articleOverlaySubview.delegate = self;
         articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
         [cell addSubview:articleOverlaySubview];
         [articleOverlaySubview setEdgesToSuperview:cell leading:0 trailing:0 top:0 bottom:0 superviewFeature:TableCellSeparator];
@@ -475,6 +476,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             [articleOverlaySubview addPanGestureRecognizer];
             articleOverlaySubview.delegate = self;
         }
+        
+        NSLog(@"subviews of row %d: %@", (int)indexPath.row, cell.subviews);
+        
 
         return cell;
     }
@@ -742,18 +746,17 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 - (ArticleOverlayView *)prepareArticleOverlayViewWithFrame:(CGRect)frame article:(Article *)article superview:(UIView *)superview addPanGestureRecognizer:(BOOL)addPanGestureRecognizer
 {
     // instantiate the subview and set constraints on it to fill the bounds of the placeholder superview self.articleOverlay.
-    ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame withTopBorder:YES];
+    ArticleOverlayView *articleOverlaySubview = [[ArticleOverlayView alloc] initWithFrame:frame];
+    articleOverlaySubview.delegate = self;
+    articleOverlaySubview.respondsToTaps = YES;
+    articleOverlaySubview.topBorder = YES;
     articleOverlaySubview.translatesAutoresizingMaskIntoConstraints = NO;
     [superview addSubview:articleOverlaySubview];
     [articleOverlaySubview setEdgesToSuperview:superview leading:0 trailing:0 top:0 bottom:0 superviewFeature:None];
-    
     [articleOverlaySubview configureTeaserForArticle:article]; // set the values for the article overlay view's various components.
-    [articleOverlaySubview addBorder:UIRectEdgeTop color:[Stylesheet color5] thickness:1.0f]; // set the top border.
-    [articleOverlaySubview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loadArticle:)]]; // add the tap gesture recognizer.
 
     if (addPanGestureRecognizer) {
         [articleOverlaySubview addPanGestureRecognizer];
-        articleOverlaySubview.delegate = self;
     }
 
     return articleOverlaySubview;
@@ -1029,11 +1032,11 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 #pragma mark - Misc
 
-- (void)loadArticle:(UITapGestureRecognizer *)gestureRecognizer
+- (void)loadArticle:(Article *)article
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
     ArticleViewController *articleVC = (ArticleViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ArticleViewController"];
-    articleVC.article = [self getArticleFromMarker:self.tappedMarker];
+    articleVC.article = article;
     [self.navigationController pushViewController:articleVC animated:YES];
 }
 
