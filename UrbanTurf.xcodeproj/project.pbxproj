@@ -21,6 +21,7 @@
 		1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A681A4E26540033AC87 /* ArticleViewController.m */; };
 		1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */; };
 		1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F1EB81A507971007D3B99 /* Stylesheet.m */; };
+		1A6F40C01B86E49700028759 /* ArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F40BF1B86E49700028759 /* ArticleContainer.m */; };
 		1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */; };
 		1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7DB1DC1ABDFB81003DB53F /* Constants.m */; };
 		1A96E19A1B7E59C5002DAFF1 /* ArticleWebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A96E1991B7E59C5002DAFF1 /* ArticleWebViewVC.m */; };
@@ -115,6 +116,8 @@
 		1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
 		1A6F1EB71A507971007D3B99 /* Stylesheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		1A6F1EB81A507971007D3B99 /* Stylesheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stylesheet.m; sourceTree = "<group>"; };
+		1A6F40BE1B86E49700028759 /* ArticleContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleContainer.h; sourceTree = "<group>"; };
+		1A6F40BF1B86E49700028759 /* ArticleContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleContainer.m; sourceTree = "<group>"; };
 		1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeScreenLocationSelection.h; sourceTree = "<group>"; };
 		1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeScreenLocationSelection.m; sourceTree = "<group>"; };
 		1A7DB1DB1ABDFB81003DB53F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -254,6 +257,8 @@
 			children = (
 				1A2E6A561A49F5BD0033AC87 /* Article.h */,
 				1A2E6A571A49F5BD0033AC87 /* Article.m */,
+				1A6F40BE1B86E49700028759 /* ArticleContainer.h */,
+				1A6F40BF1B86E49700028759 /* ArticleContainer.m */,
 				1AF7ADB51B251D17009164F6 /* ArticleView.h */,
 				1AF7ADB61B251D17009164F6 /* ArticleView.m */,
 				1AF7ADB31B251BB4009164F6 /* ArticleView.xib */,
@@ -609,6 +614,7 @@
 				1AECA1691AF059E500EAE054 /* UIButton+AFNetworking.m in Sources */,
 				1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */,
 				1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */,
+				1A6F40C01B86E49700028759 /* ArticleContainer.m in Sources */,
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
 				1AECA1621AF059E500EAE054 /* AFURLConnectionOperation.m in Sources */,

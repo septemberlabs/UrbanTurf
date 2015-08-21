@@ -80,7 +80,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     [super viewDidLoad];
     
     // configure the table view
-    //self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -102,12 +101,14 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
+    // by default the table view is displayed.
     self.listView = YES;
+    
     self.articleOverlaid = NO;
     self.tappedMarker = nil;
     self.originalMapViewBottomEdgeY = self.tableView.frame.origin.y;
     
-    // hairline border between map and articles
+    // hairline border between map and articles.
     self.borderBetweenMapAndTable = [CALayer layer];
     self.borderBetweenMapAndTable.borderColor = [UIColor lightGrayColor].CGColor;
     self.borderBetweenMapAndTable.borderWidth = 0.25f;
@@ -285,7 +286,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             [self.mapView clear];
         });
         self.articles = [NSMutableArray array];
-        self.markers = [NSMutableArray array];
+        self.articleContainers = [NSMutableArray array];
         self.searchFilterTriggeredFetch = NO;
     }
     
