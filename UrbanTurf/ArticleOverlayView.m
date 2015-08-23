@@ -225,14 +225,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     self.introLabel.text = [article.introduction substringWithRange:NSMakeRange(0, 100)]; // body
     [self prepareMetaInfoStringForArticle:article]; // meta info
     
-    GMSMarker *marker = article.marker;
+    ArticleContainer *articleContainer = article.container;
     // there are multiple articles at this location.
-    if ([marker.userData count] > 1) {
-        NSArray *articlesArray = (NSArray *)marker.userData;
-        NSUInteger indexOfArticle = [articlesArray indexOfObject:article];
-        self.placementInArrayLabel.text = [NSString stringWithFormat:@"\u2190 Article %d of %d. Swipe for others. \u2192", (int)(indexOfArticle+1), (int)[articlesArray count]];
+    if ([articleContainer.articles count] > 1) {
+        NSUInteger indexOfArticle = [articleContainer.articles indexOfObject:article];
+        self.placementInArrayLabel.text = [NSString stringWithFormat:@"\u2190 Article %d of %d. Swipe for others. \u2192", (int)(indexOfArticle+1), (int)[articleContainer.articles count]];
     }
-    // if marker.userData is not an array, this is the only article.
+    // this is the only article.
     else {
         self.placementInArrayLabel.text = @"";
     }
@@ -314,21 +313,20 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             if (!self.leftArticleSubview) {
                 
                 Article *articleExiting = self.article;
-                GMSMarker *marker = articleExiting.marker;
-                NSArray *articlesArray = (NSArray *)marker.userData;
-                NSUInteger indexOfArticleExiting = [articlesArray indexOfObject:articleExiting];
+                ArticleContainer *articleContainer = articleExiting.container;
+                NSUInteger indexOfArticleExiting = [articleContainer.articles indexOfObject:articleExiting];
                 
                 // create two new article displays offscreen, one to the left and one to the right.
                 self.leftArticleSubview = [self generateNeighboringArticleOverlayView:0 // 0 for left
                                                                  withFrame:self.superview.frame
                                                                inSuperview:self.superview
                                                     indexOfArticleExiting:indexOfArticleExiting
-                                                             articlesArray:articlesArray];
+                                                             articlesArray:articleContainer.articles];
                 self.rightArticleSubview = [self generateNeighboringArticleOverlayView:1 // 1 for right
                                                                   withFrame:self.superview.frame
                                                                 inSuperview:self.superview
                                                      indexOfArticleExiting:indexOfArticleExiting
-                                                              articlesArray:articlesArray];
+                                                              articlesArray:articleContainer.articles];
             }
             
             // move the target subview and its left and right neighbors.
@@ -427,10 +425,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                  }
                                  else {
                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                         NSLog(@"no pan subviews: %@", self.superview.subviews);
+                                         //NSLog(@"no pan subviews: %@", self.superview.subviews);
                                          [self.leftArticleSubview removeFromSuperview];
                                          [self.rightArticleSubview removeFromSuperview];
-                                         NSLog(@"no pan subviews: %@", self.superview.subviews);
+                                         //NSLog(@"no pan subviews: %@", self.superview.subviews);
                                          [self resetPanState];
                                      });
                                  }

@@ -7,7 +7,6 @@
 //
 
 #import "Article.h"
-#import <CoreLocation/CoreLocation.h>
 
 @implementation Article
 

@@ -19,23 +19,34 @@
 #import <Crashlytics/Crashlytics.h>
 
 @interface NewsMap ()
-@property (weak, nonatomic) IBOutlet UIButton *toggleViewButton;
-@property (weak, nonatomic) IBOutlet UIButton *searchFiltersButton;
-@property (strong, nonatomic) Fetcher *fetcher; // fetches data
-@property (strong, nonatomic) NSArray *searchResults;
-@property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+
+/*
+ these two arrays comprise the model. self.articles is the result of the fetch and is an arry of articles. we construct the array of articleContainers after first populating self.articles. an articleContainer stores the article(s) whose location the articleContainer's marker visually represents on the map. because some articles have locations that are very close or identical, we cluster such articles in a single articleContainer, represented visusally by a single marker. in such cases, the articleContainer's articles array contain multiple elements. therefore, there is a one-to-many relationship between articleContainers and articles, not one-to-one. this relationship is managed and contained by articleContainer. there IS a one-to-one relationship between articleContainers and the rows in the table view (and markers on the map; each articleContainer contains only one marker). for cells that represent articleContainers with multiple stories at its location, the cell is pannable, with the stories ordered in reverse chronological order.
+ */
 @property (strong, nonatomic) NSMutableArray *articles; // of Articles
+@property (strong, nonatomic) NSMutableArray *articleContainers; // of ArticleContainers
+
+@property (strong, nonatomic) Fetcher *fetcher; // fetches data
+
+@property (weak, nonatomic) IBOutlet UIButton *toggleViewButton; // button to right of search field.
+@property (weak, nonatomic) IBOutlet UIButton *searchFiltersButton; // button to left of search field.
+
+// data structures related to search field.
+@property (strong, nonatomic) NSArray *searchResults;
+@property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
+
+// UI components.
+@property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) NSTimer *timer;
 @property (nonatomic) CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
-@property (strong, nonatomic) NSMutableArray *recentSearches; // of NSString
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapViewHeightConstraint;
+
+@property (strong, nonatomic) NSTimer *timer;
 @property (nonatomic) BOOL gestureInitiatedMapMove;
-@property (strong, nonatomic) NSMutableArray *articleContainers; // of GMSMarkers
 @property (strong, nonatomic) ArticleContainer *articleContainerWithFocus; // article container with current focus, if any. list-view mode.
 
-// search filters
+// search filters.
 @property (strong, nonatomic) NSArray *displayOrders;
 @property (strong, nonatomic) NSArray *articleAges;
 @property (strong, nonatomic) NSArray *articleTags;
@@ -198,6 +209,14 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     });
 }
 
+- (NSMutableArray *)recentSearches
+{
+    if (!_recentSearches) {
+        _recentSearches = [[NSMutableArray alloc] init];
+    }
+    return _recentSearches;
+}
+
 - (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude zoom:(float)zoom
 {
     self.latitude = latitude;
@@ -217,14 +236,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         });
     }
     [self fetchData];
-}
-
-- (NSMutableArray *)recentSearches
-{
-    if (!_recentSearches) {
-        _recentSearches = [[NSMutableArray alloc] init];
-    }
-    return _recentSearches;
 }
 
 #pragma mark - Fetching
@@ -267,18 +278,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         processedArticle.article_id = article[@"id"];
         [processedFromJSON addObject:processedArticle];
     }
-    //NSLog(@"processedForTVC: %@", processedForTVC);
-    //self.articles = [processedFromJSON copy];
-    //[self updateDataWithArray:[processedFromJSON copy]];
-    
-    // make all UI updates on on the main queue, namely reloading the tableview and updating the map to add markers for the results of the new fetch.
-    /*
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.mapView clear]; // clear off existing markers
-        self.markers = [self layDownMarkers]; // add all the markers to the map
-        [self.tableView reloadData]; // update the tableview
-    });
-     */
     
     // if the user updating the search filters is what triggered the fetch, we purge the data and clear the map (rather than appending the results of the new fetch to the existing data and adding them to the map).
     if (self.searchFilterTriggeredFetch) {
@@ -292,7 +291,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     
     // first update the data.
     [self updateDataWithArray:[processedFromJSON copy]];
-    // the update the UI (i.e., map and table view).
+    // then update the UI (i.e., map and table view).
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateMarkersOnMap];
         [self.tableView reloadData]; // update the tableview
@@ -477,7 +476,18 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             articleOverlaySubview.delegate = self;
         }
         
-        NSLog(@"subviews of row %d: %@", (int)indexPath.row, cell.subviews);
+        //NSLog(@"subviews of row %d: %@", (int)indexPath.row, cell.subviews);
+        int i = 1;
+        for (UIView *subview in cell.subviews) {
+            if ([subview isKindOfClass:[articleOverlaySubview class]]) {
+                NSLog(@"Row %d. %d: %@", (int)indexPath.row, i, subview);
+                i++;
+            }
+        }
+        if (i >= 3) {
+            NSLog(@"table cell has too many articleOverlaySubviews! (%d to be exact.)", i);
+            [[Crashlytics sharedInstance] crash];
+        }
 
         return cell;
     }
@@ -635,7 +645,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         self.articleOverlaid = NO;
         if (self.tappedMarker) {
             // reset the tapped marker to its default color.
-            self.tappedMarker.icon = [self getIconForMarker:self.tappedMarker selected:NO];
+            ArticleContainer *tappedMarkerArticleContainer = (ArticleContainer *)self.tappedMarker.userData;
+            self.tappedMarker.icon = [self getIconForArticleContainer:tappedMarkerArticleContainer selected:NO];
             // nullify the self.tappedMarker pointer to indicate that there is no tapped marker. the marker continues to exist because there is another pointer to it.
             self.tappedMarker = nil;
         }
@@ -651,10 +662,11 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
      3. Full map is displayed, article is overlaid. Display article for tapped marker unless it's the same marker as the last one tapped.
      */
     
+    ArticleContainer *articleContainer = (ArticleContainer *)marker.userData;
+    
     // we are in list mode, meaning the table view of articles is visible beneath the map.
     if (self.listView) {
-        //NSLog(@"index: %lu", (unsigned long)[self.markers indexOfObject:marker]);
-        [self setFocusOnMarker:marker];
+        [self setFocusOnArticleContainer:articleContainer];
     }
 
     // we are in full-map mode.
@@ -664,7 +676,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         if (!self.articleOverlaid) {
            
             // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-            ArticleContainer *articleContainer = (ArticleContainer *)marker.userData;
             if ([articleContainer.articles count] > 1) {
                 [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[articleContainer articleOfDisplayedTeaser] superview:self.articleOverlay addPanGestureRecognizer:YES];
             }
@@ -686,7 +697,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                              }];
             
             // make the marker green.
-            marker.icon = [self getIconForMarker:marker selected:YES];
+            marker.icon = [self getIconForArticleContainer:articleContainer selected:YES];
 
             // update the state of the article overlay.
             self.articleOverlaid = YES;
@@ -698,7 +709,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             if (![marker isEqual:self.tappedMarker]) {
             
                 // add the gesture recognizer if the cell corresponds to a marker that has multiple articles.
-                ArticleContainer *articleContainer = (ArticleContainer *)marker.userData;
                 if ([articleContainer.articles count] > 1) {
                     [self prepareArticleOverlayViewWithFrame:self.articleOverlay.bounds article:[articleContainer articleOfDisplayedTeaser] superview:self.articleOverlay addPanGestureRecognizer:YES];
                 }
@@ -717,8 +727,9 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                 completion:nil];
                 
                 // reset the existing tapped marker back to the default color and make the newly tapped marker green.
-                self.tappedMarker.icon = [self getIconForMarker:self.tappedMarker selected:NO];
-                marker.icon = [self getIconForMarker:marker selected:YES];
+                ArticleContainer *tappedMarkerArticleContainer = (ArticleContainer *)self.tappedMarker.userData;
+                self.tappedMarker.icon = [self getIconForArticleContainer:tappedMarkerArticleContainer selected:NO];
+                marker.icon = [self getIconForArticleContainer:articleContainer selected:YES];
                 
                 // update the state of the article overlay, namely which marker was last tapped.
                 self.tappedMarker = marker;
@@ -764,7 +775,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    // disable all the pan GRs on the table items that correspond to markers with multiple stories.
+    // disable all the pan GRs on the table items that correspond to articleContainers with multiple stories.
     for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
         panGR.enabled = NO;
     }
@@ -876,12 +887,13 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 {
     // reset all the markers to the default color.
     for (ArticleContainer *articleContainer in self.articleContainers) {
-        articleContainer.marker.icon = [self getIconForMarker:articleContainer.marker selected:NO];
+        articleContainer.marker.icon = [self getIconForArticleContainer:articleContainer selected:NO];
     }
     // move the map to the newly focused article's location and set the corresponding marker to selected.
     [self.mapView animateToLocation:markerToReceiveFocus.position];
     if (highlightMarker) {
-        markerToReceiveFocus.icon = [self getIconForMarker:markerToReceiveFocus selected:YES];
+        ArticleContainer *articleContainerOfMarkerToReceiveFocus = (ArticleContainer *)markerToReceiveFocus.userData;
+        markerToReceiveFocus.icon = [self getIconForArticleContainer:articleContainerOfMarkerToReceiveFocus selected:YES];
     }
 }
 
@@ -914,7 +926,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                  NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
                                  NewsMapTableViewCell *cellWithFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellWithFocus];
                                  cellWithFocus.articleView.backgroundColor = [UIColor whiteColor];
-                                 self.articleContainerWithFocus.icon = [self getIconForMarker:self.articleContainerWithFocus.marker selected:NO];
+                                 self.articleContainerWithFocus.marker.icon = [self getIconForArticleContainer:self.articleContainerWithFocus selected:NO];
                                  self.articleContainerWithFocus = nil; // update the state.
                              }
                          }];
@@ -1014,6 +1026,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 #pragma mark - Misc
 
+// called when an article is tapped in full-mape view.
 - (void)loadArticle:(Article *)article
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
@@ -1026,7 +1039,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 {
     NSArray *addedArticles = [self populateArticlesArray:newDataArray]; // fill self.articles.
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self populateMarkersArray:addedArticles]; // fill self.markers.
+        [self populateArticleContainersArray:addedArticles]; // fill self.articleContainers.
     });
 }
 
@@ -1050,29 +1063,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     return articlesToAdd;
 }
 
-- (void)populateMarkersArray:(NSArray *)articlesToMap // articlesToMap is an array of Articles.
+- (void)populateArticleContainersArray:(NSArray *)articlesToMap // articlesToMap is an array of Articles.
 {
-    /*
-     - we have self.articles, which is the result of the fetch and is an arry of articles.
-     - we loop through this array to create a corresponding array of markers.
-     - markers will store pointers to the articles whose location they visually represent on the map.
-     - important: some articles have locations that are very close or identical. we cluster such articles under a single marker.
-     - in such cases, the marker's userData will point to an array of the articles at that location. the number of elements in the array is the number of articles at that location.
-     - in all other cases, the marker's userData will point directly to the single article it represents.
-     - therefore, there is a one-to-many relationship between markers and articles, not one-to-one.
-     - there is a one-to-one relationship of between markers and the rows in the table view. for cells that represent markers with multiple stories at its location, the user taps to see the full list in a transition to a new table view.
-     - this function sets all this up, including building the self.markers array, each marker's userData, and laying the markers down on the map.
-     */
-    
-    
-    /*** WORKS FOR MOVING MAP, BUT WHAT ABOUT CHANGING A SEARCH FILTER??
-     - Every time the map is moved, download new articles from the API.
-     - Add articles to self.articles that don't yet exist in self.articles (means we need to save article.id).
-     - Add those same newly-added articles to self.markers.
-     - Loop through self.markers. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them and their corresponding articles in self.articles. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
-     */
-    
-    
     NSLog(@"number of articles: %d", (int)[articlesToMap count]);
     
     int i = 1;
@@ -1127,8 +1119,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         if (!locationMatchedExistingMarker) {
             ArticleContainer *newArticleContainer = [[ArticleContainer alloc] init];
             newArticleContainer.marker = [GMSMarker markerWithPosition:article.coordinate];
+            newArticleContainer.marker.userData = newArticleContainer; // marker.userData is a pointer to its containing container.
             NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:article, nil];
             newArticleContainer.articles = articlesAtLocation;
+            newArticleContainer.indexOfDisplayedTeaser = 0; // default is first element in the array (ie, most recent article).
             article.container = newArticleContainer;
             [self.articleContainers addObject:newArticleContainer];
         }
@@ -1136,7 +1130,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     }
 }
 
-// Loop through self.markers. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them and their corresponding articles in self.articles. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
+// Loop through self.articleContainers and examine each one's marker. All markers whose positions are offscreen more than OFF_SCREEN_THRESHOLD, remove them from the map and their corresponding articles and article containers. For markers whose positions are onscreen or within acceptable margin offscreen, if they aren't already displayed (check whether marker.map is nil), display them. If they are already displayed, check whether the current icon isEqual to the icon it should be. If not, display the appropriate marker. (If so, do nothing.)
 - (void)updateMarkersOnMap
 {
     // first remove markers that are offscreen
@@ -1144,7 +1138,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
     for (ArticleContainer *articleContainer in self.articleContainers) {
         GMSMarker *marker = articleContainer.marker;
-        marker.icon = [self getIconForMarker:marker selected:NO];
+        marker.icon = [self getIconForArticleContainer:articleContainer selected:NO];
         if (!marker.map) {
             marker.map = self.mapView;
         }
@@ -1162,30 +1156,26 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
             for (Article *article in articleContainer.articles) {
                 [self.articles removeObject:article];
             }
-            articleContainer.marker.map = nil;
-            [articleContainersToRemove addObject:articleContainer];
+            articleContainer.marker.map = nil; // this removes the marker from the map visually.
+            [articleContainersToRemove addObject:articleContainer]; // add this article container to the list to be removed.
         }
     }
+    // remove all the article containers accrued by the loop above.
     [self.articleContainers removeObjectsInArray:articleContainersToRemove];
 }
 
-- (Article *)getArticleFromMarker:(GMSMarker *)marker
-{
-    return (Article *)[(NSMutableArray *)marker.userData firstObject];
-}
-
-- (UIImage *)getIconForMarker:(GMSMarker *)marker selected:(BOOL)selected
+- (UIImage *)getIconForArticleContainer:(ArticleContainer *)articleContainer selected:(BOOL)selected
 {
     NSString *imageName;
     // we have to fiddle with this a little because the first position is invalid so we don't count it in the count.
     int numberOfMarkerIcons = ((int)[[Constants mapMarkersSelected] count]) - 1;
 
     // if the marker's userData is larger than 1, it means there are multiple articles for the location.
-    if ([marker.userData count] > 1) {
+    if ([articleContainer.articles count] > 1) {
         if (selected) {
             // if the number count is 2-9, choose the corresponding marker.
-            if ([marker.userData count] < numberOfMarkerIcons) {
-                imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[((NSArray *)marker.userData) count]];
+            if ([articleContainer.articles count] < numberOfMarkerIcons) {
+                imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[articleContainer.articles count]];
             }
             // otherwise, choose 9+ (which sits at the end of the array).
             else {
@@ -1194,8 +1184,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         }
         else {
             // if the number count is 2-9, choose the corresponding marker.
-            if ([marker.userData count] < numberOfMarkerIcons) {
-                imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[((NSArray *)marker.userData) count]];
+            if ([articleContainer.articles count] < numberOfMarkerIcons) {
+                imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[articleContainer.articles count]];
             }
             // otherwise, choose 9+ (which sits at the end of the array).
             else {
@@ -1223,6 +1213,10 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         NewsMapTableViewCell *newsMapTableViewCell = (NewsMapTableViewCell *)articleOverlayView.superview;
         newsMapTableViewCell.articleView = articleOverlayView;
     }
+    
+    // record which index is now the current visible article in the article container.
+    ArticleContainer *articleContainer = articleOverlayView.article.container;
+    articleContainer.indexOfDisplayedTeaser = (int)[articleContainer.articles indexOfObject:articleOverlayView.article];
 }
 
 // we save all the pan GRs so that we can deactivate them when the table view starts scrolling vertically.

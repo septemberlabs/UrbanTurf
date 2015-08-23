@@ -10,4 +10,9 @@
 
 @implementation ArticleContainer
 
+- (Article *)articleOfDisplayedTeaser
+{
+    return (Article *)[self.articles objectAtIndex:self.indexOfDisplayedTeaser];
+}
+
 @end

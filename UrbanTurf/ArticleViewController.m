@@ -173,7 +173,7 @@
     // verify that the VC about to be shown is the NewsMap.
     if ([viewController isKindOfClass:[NewsMap class]]) {
         NewsMap *newsMap = (NewsMap *)viewController;
-        [newsMap setFocusOnMarker:self.article.marker];
+        [newsMap setFocusOnArticleContainer:self.article.container];
         
         // unset this VC from being the nav bar's delegate since it has no need to be the delegate anymore so we should nullify that relationship.
         self.navigationController.delegate = nil;
