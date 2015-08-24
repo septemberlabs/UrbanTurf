@@ -47,18 +47,20 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-    // if the favorites button is pressed, send that view controller the current location
-    if ([viewController isKindOfClass:[UINavigationController class]]) {  // the FavoriteLocationsTVC is embedded in a navigation controller, so check for that first
+    // if the favorites button is pressed, send that view controller the current location.
+    if ([viewController isKindOfClass:[UINavigationController class]]) {  // the FavoriteLocationsTVC is embedded in a navigation controller, so check for that first.
         UINavigationController *vc = (UINavigationController *)viewController;
         if ([vc.viewControllers[0] isKindOfClass:[FavoriteLocationsTVC class]]) {
             FavoriteLocationsTVC *favorites = (FavoriteLocationsTVC *)vc.viewControllers[0];
-
-            // loop through the view controllers contained by this tab bar vc until map is found, then pluck out the current location
+            // loop through the view controllers contained by this tab bar vc until map is found, then pluck out the current location.
             for (id vc in self.viewControllers) {
-                if ([vc isKindOfClass:[NewsMap class]]) {
-                    NewsMap *primary = (NewsMap *)vc;
-                    CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake(primary.latitude, primary.longitude);
-                    favorites.currentLocation = currentLocation;
+                if ([vc isKindOfClass:[UINavigationController class]]) { // the NewsMap is embedded in a navigation controller, so check for that first.
+                    UINavigationController *navVC = (UINavigationController *)vc;
+                    if ([navVC.viewControllers[0] isKindOfClass:[NewsMap class]]) {
+                        NewsMap *primary = (NewsMap *)navVC.viewControllers[0];
+                        CLLocationCoordinate2D currentLocation = CLLocationCoordinate2DMake(primary.latitude, primary.longitude);
+                        favorites.currentLocation = currentLocation;
+                    }
                 }
             }
         }

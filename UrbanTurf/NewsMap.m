@@ -74,9 +74,11 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 @implementation NewsMap
 
-#define CHARACTERS_BEFORE_SEARCHING 3
 
+#define CHARACTERS_BEFORE_SEARCHING 3
+static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 @synthesize searchResults = _searchResults;
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -258,7 +260,7 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         }
     }
     
-    [self.fetcher fetchDataWithLatitude:self.latitude longitude:self.longitude radius:LATLON_RADIUS units:RADIUS_UNITS limit:NUM_OF_RESULTS_LIMIT age:days order:order];
+    [self.fetcher fetchDataWithLatitude:self.latitude longitude:self.longitude radius:[self radiusToSearch] units:RADIUS_UNITS limit:NUM_OF_RESULTS_LIMIT age:days order:order];
 }
 
 - (void)receiveData:(NSArray *)fetchedResults
@@ -604,7 +606,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         [self.mapView clear]; // clear off existing markers
         //[self.mapView moveCamera:[GMSCameraUpdate setTarget:selectedLocation zoom:DEFAULT_ZOOM_LEVEL]];
     });
-
 }
 
 #pragma mark - GMSMapViewDelegate
@@ -770,6 +771,39 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
         self.gestureInitiatedMapMove = NO;
     }
 }
+
+// the radius to search is based on the visible area of the map. we take the longest side of the visible map and halve it. this would cover everything, but we expand it with multiplier extraMarginForSearchRadius so that when the user pans around nearby, there are already markers there.
+- (CGFloat)radiusToSearch
+{
+    CLLocationDistance radius;
+    CLLocationDistance distanceAtWidestSide;
+    CLLocation *pointA;
+    CLLocation *pointB;
+    
+    // width is longer than height, so get radius from width.
+    if (self.mapView.bounds.size.width > self.mapView.bounds.size.height) {
+        pointA = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.nearLeft.latitude longitude:self.mapView.projection.visibleRegion.nearLeft.longitude];
+        pointB = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.nearRight.latitude longitude:self.mapView.projection.visibleRegion.nearRight.longitude];
+    }
+    // height is longer than width, so get radius from height.
+    else {
+        pointA = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.nearLeft.latitude longitude:self.mapView.projection.visibleRegion.nearLeft.longitude];
+        pointB = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.farLeft.latitude longitude:self.mapView.projection.visibleRegion.farLeft.longitude];
+    }
+    
+    NSLog(@"point A: %f,%f", pointA.coordinate.latitude, pointA.coordinate.longitude);
+    NSLog(@"point B: %f,%f", pointB.coordinate.latitude, pointB.coordinate.longitude);
+
+    distanceAtWidestSide = [pointA distanceFromLocation:pointB];
+    NSLog(@"distance: %f", distanceAtWidestSide);
+    radius = distanceAtWidestSide / 2; // halve the span to get the radius.
+    NSLog(@"radius: %f", radius);
+    radius = radius * (1.0 + extraMarginForSearchRadius);
+    NSLog(@"radius with extra: %f", radius);
+    
+    return radius;
+}
+
 
 #pragma mark - Article scrolling behavior
 
