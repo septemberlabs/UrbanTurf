@@ -219,11 +219,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     return _recentSearches;
 }
 
+// this method actually just moves the map to the given lat/lon. it is in idleAtCameraPosition where self.latitude and self.longitude are actually set with the new values (and where the model is updated with new data).
 - (void)setLocationWithLatitude:(CLLocationDegrees)latitude andLongitude:(CLLocationDegrees)longitude zoom:(float)zoom
 {
-    self.latitude = latitude;
-    self.longitude = longitude;
-    
     // if the caller wants to control the zoom level, it will be a positive value. otherwise it will be -1.
     if (zoom > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -237,7 +235,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             [self.mapView animateToCameraPosition:[GMSCameraPosition cameraWithLatitude:latitude longitude:longitude zoom:self.mapView.camera.zoom bearing:0 viewingAngle:0]];
         });
     }
-    [self fetchData];
 }
 
 #pragma mark - Fetching
@@ -482,7 +479,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         int i = 1;
         for (UIView *subview in cell.subviews) {
             if ([subview isKindOfClass:[articleOverlaySubview class]]) {
-                NSLog(@"Row %d. %d: %@", (int)indexPath.row, i, subview);
+                //NSLog(@"Row %d. %d: %@", (int)indexPath.row, i, subview);
                 i++;
             }
         }
@@ -612,10 +609,15 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
+    /*
     if (self.gestureInitiatedMapMove) {
         self.gestureInitiatedMapMove = NO;
         [self setLocationWithLatitude:position.target.latitude andLongitude:position.target.longitude zoom:-1];
     }
+     */
+    self.latitude = position.target.latitude;
+    self.longitude = position.target.longitude;
+    [self fetchData];
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
@@ -791,15 +793,15 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         pointB = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.farLeft.latitude longitude:self.mapView.projection.visibleRegion.farLeft.longitude];
     }
     
-    NSLog(@"point A: %f,%f", pointA.coordinate.latitude, pointA.coordinate.longitude);
-    NSLog(@"point B: %f,%f", pointB.coordinate.latitude, pointB.coordinate.longitude);
+    //NSLog(@"point A: %f,%f", pointA.coordinate.latitude, pointA.coordinate.longitude);
+    //NSLog(@"point B: %f,%f", pointB.coordinate.latitude, pointB.coordinate.longitude);
 
     distanceAtWidestSide = [pointA distanceFromLocation:pointB];
-    NSLog(@"distance: %f", distanceAtWidestSide);
+    //NSLog(@"distance: %f", distanceAtWidestSide);
     radius = distanceAtWidestSide / 2; // halve the span to get the radius.
-    NSLog(@"radius: %f", radius);
+    //NSLog(@"radius: %f", radius);
     radius = radius * (1.0 + extraMarginForSearchRadius);
-    NSLog(@"radius with extra: %f", radius);
+    //NSLog(@"radius with extra: %f", radius);
     
     return radius;
 }
@@ -924,7 +926,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         articleContainer.marker.icon = [self getIconForArticleContainer:articleContainer selected:NO];
     }
     // move the map to the newly focused article's location and set the corresponding marker to selected.
-    [self.mapView animateToLocation:markerToReceiveFocus.position];
     if (highlightMarker) {
         ArticleContainer *articleContainerOfMarkerToReceiveFocus = (ArticleContainer *)markerToReceiveFocus.userData;
         markerToReceiveFocus.icon = [self getIconForArticleContainer:articleContainerOfMarkerToReceiveFocus selected:YES];
@@ -966,6 +967,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                          }];
         
         self.listView = NO; // save the state so we know whether to expand or contract next time the button is pressed.
+        [self fetchData];
     }
     
     // show the list, shrink the map
