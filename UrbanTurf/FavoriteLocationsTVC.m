@@ -37,10 +37,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
     [self.tableView reloadData];
-    NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
 }
 
 #pragma mark - Table view data source
@@ -127,9 +125,6 @@
         [defaults synchronize];
 
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-
-        NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
-
     }
     else {
         NSLog(@"Unhandled editing style! %d", (int)editingStyle);

@@ -117,11 +117,8 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
         [defaults setObject:arrayToSave forKey:userDefaultsSavedLocationsKey];
         [defaults synchronize];
         
-        NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
-        
         // return to the saved locations screen
         [self.navigationController popViewControllerAnimated:YES];
-
     }
     
 }

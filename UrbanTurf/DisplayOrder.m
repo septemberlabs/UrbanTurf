@@ -72,9 +72,7 @@
 
         // update the data source (user defaults)
         [defaults setInteger:indexPath.row forKey:userDefaultsDisplayOrderKey];
-        [defaults synchronize];
-        NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
-        
+        [defaults synchronize];        
     }
 
     // uncomment this if you want to add an unwind segue back to automatically return to the Options main menu

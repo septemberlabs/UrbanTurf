@@ -15,7 +15,7 @@
 #import "SearchFilters.h"
 #import "ArticleContainer.h"
 
-@interface NewsMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate, FetcherView, GooglePlacesView, GMSMapViewDelegate, UIScrollViewDelegate, ArticleOverlayViewDelegate, SearchFiltersDelegate>
+@interface NewsMap : UIViewController <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, UISearchBarDelegate, FetcherView, GooglePlacesView, GMSMapViewDelegate, UIScrollViewDelegate, ArticleOverlayViewDelegate, SearchFiltersDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) CLLocationDegrees latitude;
 @property (nonatomic) CLLocationDegrees longitude;

@@ -18,7 +18,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     self.savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
 }
 
@@ -124,8 +123,6 @@
         // update the data source (user defaults)
         [defaults setObject:newlySelectedCell.textLabel.text forKey:userDefaultsHomeScreenLocationKey];
         [defaults synchronize];
-        NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
-        
     }
     
     // uncomment this if you want to add an unwind segue back to automatically return to the Options main menu

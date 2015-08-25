@@ -28,6 +28,9 @@
 
 @property (strong, nonatomic) Fetcher *fetcher; // fetches data
 
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) BOOL locationAwarenessEnabled;
+
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton; // button to right of search field.
 @property (weak, nonatomic) IBOutlet UIButton *searchFiltersButton; // button to left of search field.
 
@@ -145,6 +148,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     //self.navigationBar.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     [self fetchData];
+    
+    self.locationAwarenessEnabled = NO;
+    
+    if ([CLLocationManager locationServicesEnabled]) {
+        [self establishLocationAwarenessPermissions];
+    }
+    
+    //[self.locationManager startUpdatingLocation];
 }
 
 - (void)viewWillLayoutSubviews
@@ -154,6 +165,38 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.articleOverlayHeightConstraint.constant = ARTICLE_OVERLAY_VIEW_HEIGHT;
 }
 
+- (void)establishLocationAwarenessPermissions
+{
+    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    
+    switch (authorizationStatus) {
+        case kCLAuthorizationStatusNotDetermined:
+            NSLog(@"kCLAuthorizationStatusNotDetermined reported in establishLocationAwarenessPermissions.");
+            self.locationAwarenessEnabled = NO;
+            [self.locationManager requestWhenInUseAuthorization];
+            break;
+        case kCLAuthorizationStatusRestricted:
+            NSLog(@"kCLAuthorizationStatusRestricted reported in establishLocationAwarenessPermissions.");
+            self.locationAwarenessEnabled = NO;
+            break;
+        case kCLAuthorizationStatusDenied:
+            NSLog(@"kCLAuthorizationStatusDenied reported in establishLocationAwarenessPermissions.");
+            self.locationAwarenessEnabled = NO;
+            break;
+        case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
+            NSLog(@"kCLAuthorizationStatusAuthorized reported in establishLocationAwarenessPermissions.");
+            self.locationAwarenessEnabled = YES;
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in establishLocationAwarenessPermissions.");
+            self.locationAwarenessEnabled = YES;
+            break;
+    }
+
+    if (self.locationAwarenessEnabled) {
+        [self.locationManager startUpdatingLocation];
+    }
+}
 
 #pragma mark - Accessors
 
@@ -164,6 +207,17 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         _fetcher.delegate = self;
     }
     return _fetcher;
+}
+
+- (CLLocationManager *)locationManager
+{
+    if (!_locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.distanceFilter = 250; // in meters, so a quarter of a kilometer.
+    }
+    return _locationManager;
 }
 
 - (NSArray *)searchResults
@@ -1276,6 +1330,60 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.articleTags = articleTags;
     self.searchFilterTriggeredFetch = YES;
     [self fetchData];
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+
+// For these reasons, it’s recommended that you always call the locationServicesEnabled class method of CLLocationManager before attempting to start either the standard or significant-change location services. If it returns NO and you attempt to start location services anyway, the system prompts the user to confirm whether location services should be re-enabled. Because the user probably disabled location services on purpose, the prompt is likely to be unwelcome.
+
+// Because the location manager object sometimes returns cached events, it’s recommended that you check the timestamp of any location events you receive. (It can take several seconds to obtain a rough location fix, so the old data simply serves as a way to reflect the last known location.) In this example, the method throws away any events that are more than fifteen seconds old under the assumption that events up to that age are likely to be good enough. If you are implementing a navigation app, you might want to lower the threshold.
+
+
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"didFailWithError: %@", error);
+    UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                         message:@"Failed to Get Your Location"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"OK"
+                                               otherButtonTitles:nil];
+    [errorAlert show];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    switch (status) {
+        case kCLAuthorizationStatusNotDetermined:
+            NSLog(@"kCLAuthorizationStatusNotDetermined reported in didChangeAuthorizationStatus.");
+            break;
+        case kCLAuthorizationStatusRestricted:
+            NSLog(@"kCLAuthorizationStatusRestricted reported in didChangeAuthorizationStatus.");
+            self.locationAwarenessEnabled = NO;
+            break;
+        case kCLAuthorizationStatusDenied:
+            NSLog(@"kCLAuthorizationStatusDenied reported in didChangeAuthorizationStatus.");
+            self.locationAwarenessEnabled = NO;
+            break;
+        case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
+            NSLog(@"kCLAuthorizationStatusAuthorized reported in didChangeAuthorizationStatus.");
+            self.locationAwarenessEnabled = YES;
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in didChangeAuthorizationStatus.");
+            self.locationAwarenessEnabled = YES;
+            break;
+    }
+    
+    if (self.locationAwarenessEnabled) {
+        [self.locationManager startUpdatingLocation];
+    }
 }
 
 @end
