@@ -53,4 +53,29 @@
     [task resume];
 }
 
+- (int)numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age
+{
+    NSString *urlToLoad = [NSString stringWithFormat:@"%@near=%f,%f&radius=%f&units=metric&limit=%d&age=%d", API_ADDRESS, latitude, longitude, radius, limit, age];
+    NSLog(@"URL we're loading: %@", urlToLoad);
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlToLoad]];
+    NSURLSessionDownloadTask *task = [self.urlSession downloadTaskWithRequest:request completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {
+        if (!error) {
+            NSDictionary *fetchedPropertyList;
+            NSData *fetchedJSONData = [NSData dataWithContentsOfURL:localFile]; // will block if url is not local!
+            if (fetchedJSONData) {
+                fetchedPropertyList = [NSJSONSerialization JSONObjectWithData:fetchedJSONData options:0 error:NULL];
+            }
+            NSArray *articles = [fetchedPropertyList valueForKeyPath:@"data"];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(receiveData:)]) {
+                [self.delegate receiveData:articles];
+            }
+        }
+        else {
+            NSLog(@"Fetch failed: %@", error.localizedDescription);
+            NSLog(@"Fetch failed: %@", error.userInfo);
+        }
+    }];
+    [task resume];
+}
+
 @end

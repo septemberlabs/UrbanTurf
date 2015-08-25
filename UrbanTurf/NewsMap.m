@@ -67,6 +67,10 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayTopEdgeConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayHeightConstraint;
 
+// alert views related to location awareness checking.
+@property (strong, nonatomic) UIAlertView *cityPrompt;
+@property (strong, nonatomic) UIAlertView *noLocationAwarenessAcknowledgement;
+
 typedef NS_ENUM(NSInteger, LocationUnavailableReason) {
     LocationServicesTurnedOff,
     PermissionDeniedRightNow,
@@ -156,12 +160,31 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     [self fetchData];
     
     self.locationAwarenessEnabled = NO;
+    [self establishLocationAwarenessPermissions];
+}
+
+- (void)loadCurrentLocation
+{
+    /*
+     Goal: to show 5 pieces of news on screen near user's current location.
+     
+     start at zoom level x
+     do while there are < 5 pieces of news returned
+     zoom out
+     if zoom level is too high, prompt for city
+     */
     
-    if ([CLLocationManager locationServicesEnabled]) {
-        [self establishLocationAwarenessPermissions];
+    NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
+    
+    int days = 365;
+    [self.fetcher numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:days];
+}
+
+- (void)receiveNumberOfResults:(int)numberOfResults latitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age
+{
+    if (numberOfResults < 5) {
+        [self.fetcher numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:newRadius units:units age:age];
     }
-    
-    //[self.locationManager startUpdatingLocation];
 }
 
 - (void)viewWillLayoutSubviews
@@ -173,96 +196,125 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)establishLocationAwarenessPermissions
 {
-    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    
-    switch (authorizationStatus) {
-        case kCLAuthorizationStatusNotDetermined:
-            NSLog(@"kCLAuthorizationStatusNotDetermined reported in establishLocationAwarenessPermissions.");
-            self.locationAwarenessEnabled = NO;
-            [self.locationManager requestWhenInUseAuthorization];
-            break;
-        case kCLAuthorizationStatusRestricted:
-            NSLog(@"kCLAuthorizationStatusRestricted reported in establishLocationAwarenessPermissions.");
-            self.locationAwarenessEnabled = NO;
-            break;
-        case kCLAuthorizationStatusDenied:
-            NSLog(@"kCLAuthorizationStatusDenied reported in establishLocationAwarenessPermissions.");
-            self.locationAwarenessEnabled = NO;
-            break;
-        case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
-            NSLog(@"kCLAuthorizationStatusAuthorized reported in establishLocationAwarenessPermissions.");
-            self.locationAwarenessEnabled = YES;
-            break;
-        case kCLAuthorizationStatusAuthorizedWhenInUse:
-            NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in establishLocationAwarenessPermissions.");
-            self.locationAwarenessEnabled = YES;
-            break;
+    // if location services are turned on, check permissions.
+    if ([CLLocationManager locationServicesEnabled]) {
+        
+        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+        
+        switch (authorizationStatus) {
+            case kCLAuthorizationStatusNotDetermined:
+                NSLog(@"kCLAuthorizationStatusNotDetermined reported in establishLocationAwarenessPermissions.");
+                // this means the user hasn't yet specified permission one way or the other, so we call requestWhenInUseAuthorization, which will prompt the user for permission.
+                self.locationAwarenessEnabled = NO;
+                [self.locationManager requestWhenInUseAuthorization];
+                break;
+            case kCLAuthorizationStatusRestricted:
+                NSLog(@"kCLAuthorizationStatusRestricted reported in establishLocationAwarenessPermissions.");
+                // we don't have permission so proceed with fallback.
+                self.locationAwarenessEnabled = NO;
+                [self processLackOfLocationAwareness:PermissionAlreadyDenied];
+                break;
+            case kCLAuthorizationStatusDenied:
+                NSLog(@"kCLAuthorizationStatusDenied reported in establishLocationAwarenessPermissions.");
+                // we don't have permission so proceed with fallback.
+                self.locationAwarenessEnabled = NO;
+                [self processLackOfLocationAwareness:PermissionAlreadyDenied];
+                break;
+            case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
+                NSLog(@"kCLAuthorizationStatusAuthorized reported in establishLocationAwarenessPermissions.");
+                // we have permission so turn on location awareness.
+                self.locationAwarenessEnabled = YES;
+                [self.locationManager startUpdatingLocation];
+                break;
+            case kCLAuthorizationStatusAuthorizedWhenInUse:
+                NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in establishLocationAwarenessPermissions.");
+                // we have permission so turn on location awareness.
+                self.locationAwarenessEnabled = YES;
+                [self.locationManager startUpdatingLocation];
+                break;
+        }
     }
-
-    if (self.locationAwarenessEnabled) {
-        [self.locationManager startUpdatingLocation];
-    }
+    // if location services aren't turned on, proceed with fallback.
     else {
-        [self moveCameraToCityAfter:PermissionAlreadyDenied];
+        [self processLackOfLocationAwareness:LocationServicesTurnedOff];
     }
 }
 
-- (void)moveCameraToCityAfter:(LocationUnavailableReason)reason
+- (void)processLackOfLocationAwareness:(LocationUnavailableReason)reason
 {
-    UIAlertView *alertView;
-    
     // the user has location services turned off altogether.
     if (reason == LocationServicesTurnedOff) {
-        alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Are Off"
-                                               message:@"You can turn on location awareness under Settings at any time."
-                                              delegate:self
-                                     cancelButtonTitle:@"Got it"
-                                     otherButtonTitles:nil];
+        self.noLocationAwarenessAcknowledgement = [[UIAlertView alloc] initWithTitle:@"Location Services Are Off"
+                                                                         message:@"You can turn on location awareness under your phone's Settings at any time. (We recommend it!)"
+                                                                        delegate:self
+                                                               cancelButtonTitle:@"Got it"
+                                                               otherButtonTitles:nil];
+        [self.noLocationAwarenessAcknowledgement show];
+    }
     // the user was just asked to allow location awareness, and said no.
     if (reason == PermissionDeniedRightNow) {
-        alertView = [[UIAlertView alloc] initWithTitle:@"Bummer!"
-                                               message:@"The app works better if it knows your location. If you change your mind, go to Settings to turn on location awareness at any time."
-                                              delegate:self
-                                     cancelButtonTitle:@"Got it"
-                                     otherButtonTitles:nil];
+        self.noLocationAwarenessAcknowledgement = [[UIAlertView alloc] initWithTitle:@"Bummer!"
+                                                                         message:@"The app works better if it knows your location. If you change your mind, go to your phone's Settings to turn on location awareness at any time."
+                                                                        delegate:self
+                                                               cancelButtonTitle:@"Got it"
+                                                               otherButtonTitles:nil];
+        [self.noLocationAwarenessAcknowledgement show];
     }
-    // the user was asked at an earlier date to allow location awareness, and said no. so we don't communicate anything since we already did so the first time around. (left this condition here just for completeness.)
-    if (reason == PermissionAlreadyDenied) {}
+    // the user was asked at an earlier date to allow location awareness, and said no. so we don't communicate anything since we already did so the first time around.
+    if (reason == PermissionAlreadyDenied) {
+        [self promptForOrGoToCity];
     }
-    
-    // if the user selected a city at some previous date, it will be in user defaults and we go there directly.
+}
+
+// this method checks user defaults to see if the user selected a city at some previous date, in which case we go there directly. otherwise we prompt the user to select a city, then save that in user defaults (in UIAlertViewDelegate delegate method clickedButtonAtIndex: below).
+- (void)promptForOrGoToCity
+{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults integerForKey:userDefaultsCityKey]) {
+    if ([defaults objectForKey:userDefaultsCityKey] != nil) {
         NSDictionary *city = (NSDictionary *)[[Constants cities] objectAtIndex:[defaults integerForKey:userDefaultsCityKey]];
         CLLocationDegrees cityCenterLatitude = ((NSNumber *)[city objectForKey:@"CenterLatitude"]).doubleValue;
         CLLocationDegrees cityCenterLongitude = ((NSNumber *)[city objectForKey:@"CenterLongitude"]).doubleValue;
-        [self setLocationWithLatitude:cityCenterLatitude andLongitude:cityCenterLongitude zoom:17];
+        [self setLocationWithLatitude:cityCenterLatitude andLongitude:cityCenterLongitude zoom:12];
     }
-    // otherwise we ask the user to choose which city she wants, the save that in user defaults (in UIAlertViewDelegate delegate method clickedButtonAtIndex: below).
     else {
-        alertView = [[UIAlertView alloc] initWithTitle:@"Choose A City"
-                                               message:@"Choose the city you'd like to view."
-                                              delegate:self
-                                     cancelButtonTitle:nil
-                                     otherButtonTitles:nil];
-        for (NSDictionary *city in [Constants cities]) {
-            NSString *cityName = (NSString *)[city objectForKey:@"Name"];
-            [alertView addButtonWithTitle:cityName];
-        }
-        [alertView show];
+        [self promptToSelectCity];
     }
+}
+
+// just the prompt for the user to select a city.
+- (void)promptToSelectCity
+{
+    self.cityPrompt = [[UIAlertView alloc] initWithTitle:@"Choose A City"
+                                                        message:@"Choose the city you'd like to view."
+                                                       delegate:self
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:nil];
+    for (NSDictionary *city in [Constants cities]) {
+        NSString *cityName = (NSString *)[city objectForKey:@"Name"];
+        [self.cityPrompt addButtonWithTitle:cityName];
+    }
+    [self.cityPrompt show];
 }
 
 #pragma mark - UIAlertViewDelegate
 
+// we check which alertView was clicked in order to know how to proceed.
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSDictionary *selectedCity = (NSDictionary *)[[Constants cities] objectAtIndex:buttonIndex];
-    NSLog(@"selected city: %@", [selectedCity objectForKey:@"Name"]);
-
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:buttonIndex forKey:userDefaultsCityKey];
-    [defaults synchronize];
+    // we don't check which index because there is only one button on self.noLocationAwarenessAcknowledgement.
+    if ([alertView isEqual:self.noLocationAwarenessAcknowledgement]) {
+        [self promptForOrGoToCity];
+    }
+    
+    // the prompt to select a city.
+    if ([alertView isEqual:self.cityPrompt]) {
+        NSDictionary *selectedCity = (NSDictionary *)[[Constants cities] objectAtIndex:buttonIndex];
+        NSLog(@"selected city: %@", [selectedCity objectForKey:@"Name"]);
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setInteger:buttonIndex forKey:userDefaultsCityKey];
+        [defaults synchronize];
+    }
 }
 
 #pragma mark - Accessors
@@ -310,19 +362,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     }
     return _articleContainers;
 }
-
-/* DELETE AFTER 8/20 IF DATE FORMATTING AND SORTING IS WORKING
-- (NSDateFormatter *)dateFormatter
-{
-    if (!_dateFormatter) {
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-        _dateFormatter.timeStyle = NSDateFormatterNoStyle;
-        _dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    }
-    return _dateFormatter;
-}
- */
 
 - (void)setSearchResults:(NSArray *)searchResults
 {
@@ -1401,13 +1440,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 #pragma mark - CLLocationManagerDelegate
 
-
-// For these reasons, it’s recommended that you always call the locationServicesEnabled class method of CLLocationManager before attempting to start either the standard or significant-change location services. If it returns NO and you attempt to start location services anyway, the system prompts the user to confirm whether location services should be re-enabled. Because the user probably disabled location services on purpose, the prompt is likely to be unwelcome.
-
-// Because the location manager object sometimes returns cached events, it’s recommended that you check the timestamp of any location events you receive. (It can take several seconds to obtain a rough location fix, so the old data simply serves as a way to reflect the last known location.) In this example, the method throws away any events that are more than fifteen seconds old under the assumption that events up to that age are likely to be good enough. If you are implementing a navigation app, you might want to lower the threshold.
-
-
-
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"didFailWithError: %@", error);
@@ -1432,27 +1464,28 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             break;
         case kCLAuthorizationStatusRestricted:
             NSLog(@"kCLAuthorizationStatusRestricted reported in didChangeAuthorizationStatus.");
+            // user didn't grant permission so proceed with fallback.
             self.locationAwarenessEnabled = NO;
+            [self processLackOfLocationAwareness:PermissionDeniedRightNow];
             break;
         case kCLAuthorizationStatusDenied:
             NSLog(@"kCLAuthorizationStatusDenied reported in didChangeAuthorizationStatus.");
+            // user didn't grant permission so proceed with fallback.
             self.locationAwarenessEnabled = NO;
+            [self processLackOfLocationAwareness:PermissionDeniedRightNow];
             break;
         case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
             NSLog(@"kCLAuthorizationStatusAuthorized reported in didChangeAuthorizationStatus.");
+            // user granted permission so turn on location awareness.
             self.locationAwarenessEnabled = YES;
+            [self.locationManager startUpdatingLocation];
             break;
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in didChangeAuthorizationStatus.");
+            // user granted permission so turn on location awareness.
             self.locationAwarenessEnabled = YES;
+            [self.locationManager startUpdatingLocation];
             break;
-    }
-    
-    if (self.locationAwarenessEnabled) {
-        [self.locationManager startUpdatingLocation];
-    }
-    else {
-        [self moveCameraToCityAfter:PermissionDeniedRightNow];
     }
 }
 
