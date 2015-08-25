@@ -67,6 +67,12 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayTopEdgeConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayHeightConstraint;
 
+typedef NS_ENUM(NSInteger, LocationUnavailableReason) {
+    LocationServicesTurnedOff,
+    PermissionDeniedRightNow,
+    PermissionAlreadyDenied
+};
+
 typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     Left,
     Right,
@@ -196,6 +202,67 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     if (self.locationAwarenessEnabled) {
         [self.locationManager startUpdatingLocation];
     }
+    else {
+        [self moveCameraToCityAfter:PermissionAlreadyDenied];
+    }
+}
+
+- (void)moveCameraToCityAfter:(LocationUnavailableReason)reason
+{
+    UIAlertView *alertView;
+    
+    // the user has location services turned off altogether.
+    if (reason == LocationServicesTurnedOff) {
+        alertView = [[UIAlertView alloc] initWithTitle:@"Location Services Are Off"
+                                               message:@"You can turn on location awareness under Settings at any time."
+                                              delegate:self
+                                     cancelButtonTitle:@"Got it"
+                                     otherButtonTitles:nil];
+    // the user was just asked to allow location awareness, and said no.
+    if (reason == PermissionDeniedRightNow) {
+        alertView = [[UIAlertView alloc] initWithTitle:@"Bummer!"
+                                               message:@"The app works better if it knows your location. If you change your mind, go to Settings to turn on location awareness at any time."
+                                              delegate:self
+                                     cancelButtonTitle:@"Got it"
+                                     otherButtonTitles:nil];
+    }
+    // the user was asked at an earlier date to allow location awareness, and said no. so we don't communicate anything since we already did so the first time around. (left this condition here just for completeness.)
+    if (reason == PermissionAlreadyDenied) {}
+    }
+    
+    // if the user selected a city at some previous date, it will be in user defaults and we go there directly.
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults integerForKey:userDefaultsCityKey]) {
+        NSDictionary *city = (NSDictionary *)[[Constants cities] objectAtIndex:[defaults integerForKey:userDefaultsCityKey]];
+        CLLocationDegrees cityCenterLatitude = ((NSNumber *)[city objectForKey:@"CenterLatitude"]).doubleValue;
+        CLLocationDegrees cityCenterLongitude = ((NSNumber *)[city objectForKey:@"CenterLongitude"]).doubleValue;
+        [self setLocationWithLatitude:cityCenterLatitude andLongitude:cityCenterLongitude zoom:17];
+    }
+    // otherwise we ask the user to choose which city she wants, the save that in user defaults (in UIAlertViewDelegate delegate method clickedButtonAtIndex: below).
+    else {
+        alertView = [[UIAlertView alloc] initWithTitle:@"Choose A City"
+                                               message:@"Choose the city you'd like to view."
+                                              delegate:self
+                                     cancelButtonTitle:nil
+                                     otherButtonTitles:nil];
+        for (NSDictionary *city in [Constants cities]) {
+            NSString *cityName = (NSString *)[city objectForKey:@"Name"];
+            [alertView addButtonWithTitle:cityName];
+        }
+        [alertView show];
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSDictionary *selectedCity = (NSDictionary *)[[Constants cities] objectAtIndex:buttonIndex];
+    NSLog(@"selected city: %@", [selectedCity objectForKey:@"Name"]);
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:buttonIndex forKey:userDefaultsCityKey];
+    [defaults synchronize];
 }
 
 #pragma mark - Accessors
@@ -1383,6 +1450,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     
     if (self.locationAwarenessEnabled) {
         [self.locationManager startUpdatingLocation];
+    }
+    else {
+        [self moveCameraToCityAfter:PermissionDeniedRightNow];
     }
 }
 

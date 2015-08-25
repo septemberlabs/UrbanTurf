@@ -41,6 +41,8 @@ NSString * const userDefaultsSavedLocationsKey = @"savedLocations";
 NSString * const userDefaultsVersionKey = @"version";
 NSString * const version = @"0.9";
 
+NSString * const userDefaultsCity = @"city";
+
 const CLLocationCoordinate2D home = {38.925162, -77.044052};
 const CLLocationCoordinate2D lincolnMemorial = {38.889262, -77.048568};
 const CLLocationCoordinate2D office = {38.914384, -77.041262};
@@ -65,10 +67,42 @@ double const LATLON_RADIUS = 2.5;
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 NSString * const RADIUS_UNITS = @"metric"; // metric|english
 
-
 @implementation Constants
 
 // thank you: http://stackoverflow.com/questions/20544616/static-nsarray-of-strings-how-where-to-initialize-in-a-view-controller
++ (NSArray *)cities
+{
+    static NSArray *cities;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cities = @[
+                        @{@"Name" : @"Washington DC",
+                          @"CenterLatitude" : [NSNumber numberWithDouble:38.8993488],
+                          @"CenterLongitude" : [NSNumber numberWithDouble:-77.0145665],
+                          @"UpperLeftLatitude" : [NSNumber numberWithDouble:39.037085],
+                          @"UpperLeftLongitude" : [NSNumber numberWithDouble:-77.211634],
+                          @"UpperRightLatitude" : [NSNumber numberWithDouble:39.041352],
+                          @"UpperRightLongitude" : [NSNumber numberWithDouble:-76.872431],
+                          @"BottomRightLatitude" : [NSNumber numberWithDouble:38.772052],
+                          @"BottomRightLongitude" : [NSNumber numberWithDouble:-76.849085],
+                          @"BottomRightLatitude" : [NSNumber numberWithDouble:38.782758],
+                          @"BottomRightLongitude" : [NSNumber numberWithDouble:-77.199274]},
+                        @{@"Name" : @"San Francisco",
+                          @"CenterLatitude" : [NSNumber numberWithDouble:37.7577],
+                          @"CenterLongitude" : [NSNumber numberWithDouble:-122.4376],
+                          @"UpperLeftLatitude" : [NSNumber numberWithDouble:37.815422],
+                          @"UpperLeftLongitude" : [NSNumber numberWithDouble:-122.537361],
+                          @"UpperRightLatitude" : [NSNumber numberWithDouble:37.936288],
+                          @"UpperRightLongitude" : [NSNumber numberWithDouble:-122.182365],
+                          @"BottomRightLatitude" : [NSNumber numberWithDouble:37.601934],
+                          @"BottomRightLongitude" : [NSNumber numberWithDouble:-122.096535],
+                          @"BottomRightLatitude" : [NSNumber numberWithDouble:37.590509],
+                          @"BottomRightLongitude" : [NSNumber numberWithDouble:-122.538048]}
+                        ];
+    });
+    return cities;
+}
+
 + (NSArray *)displayOrders
 {
     static NSArray *displayOrders;

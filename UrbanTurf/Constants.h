@@ -44,6 +44,9 @@ extern NSString * const userDefaultsSavedLocationsKey;
 extern NSString * const userDefaultsVersionKey;
 extern NSString * const version;
 
+extern NSString * const userDefaultsCityKey;
++ (NSArray *)cities;
+
 // constants used for pre-chosen locations
 extern CLLocationCoordinate2D const home;
 extern CLLocationCoordinate2D const lincolnMemorial;
