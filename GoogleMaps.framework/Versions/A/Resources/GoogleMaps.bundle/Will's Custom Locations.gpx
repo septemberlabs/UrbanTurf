@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="Xcode"> 
+
+    <wpt lat="37.7388057" lon="-122.4236416">
+        <name>17 Appleton Ave.</name>
+    </wpt>
+    <wpt lat="37.7466099" lon="-122.435582">
+        <name>Mel\'s House</name>
+    </wpt>
+    <wpt lat="37.850829" lon="-122.274611">
+        <name>Marjory\'s House</name>
+    </wpt>
+    <wpt lat="37.7735849" lon="-122.415824">
+        <name>PARISOMA</name>
+    </wpt>
+    <wpt lat="37.7947159" lon="-122.4078309">
+        <name>Mandarin Tower</name>
+    </wpt>
+    <wpt lat="38.9143837" lon="-77.0412618">
+        <name>Old UT Office</name>
+    </wpt>
+    <wpt lat="38.914551" lon="-77.021098">
+        <name>New UT Office</name>
+    </wpt>
+    <wpt lat="38.896993" lon="-77.006422">
+        <name>Union Station</name>
+    </wpt>
+    <wpt lat="38.925162" lon="-77.0440519">
+        <name>1820 Clydesdale</name>
+    </wpt>
+    
+</gpx>

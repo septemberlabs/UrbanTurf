@@ -71,6 +71,9 @@
 @property (strong, nonatomic) UIAlertView *cityPrompt;
 @property (strong, nonatomic) UIAlertView *noLocationAwarenessAcknowledgement;
 
+// state to track whether we're in the launch process.
+@property (nonatomic) BOOL thisIsLaunch;
+
 typedef NS_ENUM(NSInteger, LocationUnavailableReason) {
     LocationServicesTurnedOff,
     PermissionDeniedRightNow,
@@ -157,33 +160,33 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
     //self.navigationBar.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    [self fetchData];
+    //[self fetchData];
+    
+    self.thisIsLaunch = NO;
     
     self.locationAwarenessEnabled = NO;
     [self establishLocationAwarenessPermissions];
 }
 
-- (void)loadCurrentLocation
-{
-    /*
-     Goal: to show 5 pieces of news on screen near user's current location.
-     
-     start at zoom level x
-     do while there are < 5 pieces of news returned
-     zoom out
-     if zoom level is too high, prompt for city
-     */
-    
-    NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
-    
-    int days = 365;
-    [self.fetcher numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:days];
-}
-
+#define SEARCH_RESULTS_MINIMUM 5
+#define INCREMENT_TO_RADIUS 1.0
+#define MAX_RADIUS_TO_SEARCH 4.0
+//The purpose of this method is to show SEARCH_RESULTS_MINIMUM pieces of news on the map near user's current location. Increase the radius by INCREMENT_TO_RADIUS and try again if the current radius doesn't yield SEARCH_RESULTS_MINIMUM results. Repeat until we have at least SEARCH_RESULTS_MINIMUM results or the radius is greater than MAX_RADIUS_TO_SEARCH, in which case we prompt the user to select one of the hard-coded city options.
 - (void)receiveNumberOfResults:(int)numberOfResults latitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age
 {
-    if (numberOfResults < 5) {
-        [self.fetcher numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:newRadius units:units age:age];
+    // if the number of search results at this radius is SEARCH_RESULTS_MINIMUM or more, display the map.
+    if (numberOfResults >= SEARCH_RESULTS_MINIMUM) {
+        [self setLocationWithLatitude:latitude andLongitude:longitude zoom:DEFAULT_ZOOM_LEVEL];
+    }
+    // otherwise, extend the map
+    else {
+        float newRadius = radius + INCREMENT_TO_RADIUS; // add INCREMENT_TO_RADIUS kilometers of radius each time to expand the scope of search results.
+        if (newRadius < MAX_RADIUS_TO_SEARCH) { // the max radius we want to expand to before giving up is MAX_RADIUS_TO_SEARCH.
+            [self.fetcher numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:newRadius units:units age:age];
+        }
+        else {
+            [self promptForOrGoToCity];
+        }
     }
 }
 
@@ -224,12 +227,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                 NSLog(@"kCLAuthorizationStatusAuthorized reported in establishLocationAwarenessPermissions.");
                 // we have permission so turn on location awareness.
                 self.locationAwarenessEnabled = YES;
+                self.thisIsLaunch = YES;
                 [self.locationManager startUpdatingLocation];
                 break;
             case kCLAuthorizationStatusAuthorizedWhenInUse:
                 NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in establishLocationAwarenessPermissions.");
                 // we have permission so turn on location awareness.
                 self.locationAwarenessEnabled = YES;
+                self.thisIsLaunch = YES;
                 [self.locationManager startUpdatingLocation];
                 break;
         }
@@ -417,7 +422,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         }
     }
     
-    [self.fetcher fetchDataWithLatitude:self.latitude longitude:self.longitude radius:[self radiusToSearch] units:RADIUS_UNITS limit:NUM_OF_RESULTS_LIMIT age:days order:order];
+    [self.fetcher fetchDataAtLatidude:self.latitude longitude:self.longitude radius:[self radiusToSearch] units:RADIUS_UNITS age:days limit:NUM_OF_RESULTS_LIMIT order:order];
 }
 
 - (void)receiveData:(NSArray *)fetchedResults
@@ -1453,7 +1458,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    
+    CLLocation *location = [locations lastObject];
+    NSLog(@"location: %@", location);
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -1478,12 +1484,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             NSLog(@"kCLAuthorizationStatusAuthorized reported in didChangeAuthorizationStatus.");
             // user granted permission so turn on location awareness.
             self.locationAwarenessEnabled = YES;
+            self.thisIsLaunch = YES;
             [self.locationManager startUpdatingLocation];
             break;
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in didChangeAuthorizationStatus.");
             // user granted permission so turn on location awareness.
             self.locationAwarenessEnabled = YES;
+            self.thisIsLaunch = YES;
             [self.locationManager startUpdatingLocation];
             break;
     }

@@ -55,6 +55,7 @@
 		1AD33F671AB5530000DE1DE2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */; };
 		1AD33F681AB5530000DE1DE2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */; };
 		1AD33F691AB5530000DE1DE2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */; };
+		1AE325111B8D4C0B004437E2 /* default.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 1AE325101B8D4C0B004437E2 /* default.gpx */; };
 		1AECA15D1AF059E500EAE054 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA1391AF059E500EAE054 /* AFHTTPRequestOperation.m */; };
 		1AECA15E1AF059E500EAE054 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA13B1AF059E500EAE054 /* AFHTTPRequestOperationManager.m */; };
 		1AECA15F1AF059E500EAE054 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA13D1AF059E500EAE054 /* AFHTTPSessionManager.m */; };
@@ -168,6 +169,17 @@
 		1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1AE325101B8D4C0B004437E2 /* default.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = default.gpx; path = ../../../Downloads/default.gpx; sourceTree = "<group>"; };
+		1AE325131B8D4FB1004437E2 /* 17 Appleton Ave.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "17 Appleton Ave.gpx"; sourceTree = "<group>"; };
+		1AE325141B8D4FCA004437E2 /* Mel's House.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Mel's House.gpx"; sourceTree = "<group>"; };
+		1AE325151B8D4FE1004437E2 /* Marjory's House.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Marjory's House.gpx"; sourceTree = "<group>"; };
+		1AE325161B8D4FE9004437E2 /* PARISOMA.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PARISOMA.gpx; sourceTree = "<group>"; };
+		1AE325171B8D4FF7004437E2 /* Mandarin Tower.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Mandarin Tower.gpx"; sourceTree = "<group>"; };
+		1AE325181B8D4FFE004437E2 /* Old UT Office.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Old UT Office.gpx"; sourceTree = "<group>"; };
+		1AE325191B8D5007004437E2 /* New UT Office.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "New UT Office.gpx"; sourceTree = "<group>"; };
+		1AE3251A1B8D5014004437E2 /* Union Station.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Union Station.gpx"; sourceTree = "<group>"; };
+		1AE3251B1B8D5021004437E2 /* 1820 Clydesdale.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "1820 Clydesdale.gpx"; sourceTree = "<group>"; };
+		1AE3251C1B8D502D004437E2 /* 604 Kings Cloister Circle.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "604 Kings Cloister Circle.gpx"; sourceTree = "<group>"; };
 		1AECA1381AF059E500EAE054 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		1AECA1391AF059E500EAE054 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		1AECA13A1AF059E500EAE054 /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -288,6 +300,7 @@
 		1AB1A5521A48E3D900369211 = {
 			isa = PBXGroup;
 			children = (
+				1AE325101B8D4C0B004437E2 /* default.gpx */,
 				1A2E6A651A4A1E650033AC87 /* MapKit.framework */,
 				1A12DDD11B80333E0033046F /* Fabric.framework */,
 				1A12DDD21B80333E0033046F /* Crashlytics.framework */,
@@ -354,6 +367,7 @@
 				1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */,
 				1AB1A55F1A48E3D900369211 /* Info.plist */,
 				1AB1A5601A48E3D900369211 /* main.m */,
+				1AE3251D1B8D50C4004437E2 /* Custom Locations */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -407,6 +421,23 @@
 				1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */,
 			);
 			name = "Favorite Locations";
+			sourceTree = "<group>";
+		};
+		1AE3251D1B8D50C4004437E2 /* Custom Locations */ = {
+			isa = PBXGroup;
+			children = (
+				1AE3251A1B8D5014004437E2 /* Union Station.gpx */,
+				1AE3251B1B8D5021004437E2 /* 1820 Clydesdale.gpx */,
+				1AE3251C1B8D502D004437E2 /* 604 Kings Cloister Circle.gpx */,
+				1AE325171B8D4FF7004437E2 /* Mandarin Tower.gpx */,
+				1AE325181B8D4FFE004437E2 /* Old UT Office.gpx */,
+				1AE325191B8D5007004437E2 /* New UT Office.gpx */,
+				1AE325151B8D4FE1004437E2 /* Marjory's House.gpx */,
+				1AE325161B8D4FE9004437E2 /* PARISOMA.gpx */,
+				1AE325131B8D4FB1004437E2 /* 17 Appleton Ave.gpx */,
+				1AE325141B8D4FCA004437E2 /* Mel's House.gpx */,
+			);
+			name = "Custom Locations";
 			sourceTree = "<group>";
 		};
 		1AECA1371AF059E500EAE054 /* AFNetworking */ = {
@@ -575,6 +606,7 @@
 				1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */,
 				1AB7BF001ACDC97C003BCCC0 /* RadiusSliderCell.xib in Resources */,
 				1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */,
+				1AE325111B8D4C0B004437E2 /* default.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
