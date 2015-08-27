@@ -48,11 +48,10 @@ const CLLocationCoordinate2D lincolnMemorial = {38.889262, -77.048568};
 const CLLocationCoordinate2D office = {38.914384, -77.041262};
 const CLLocationCoordinate2D kingsCloister = {38.816724, -77.075691};
 const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
-//const float LATLON_RADIUS = 0.5; // radius from the given lat/lon for which to return photos
-//#define LATLON_RADIUS (0.5) // used to define it thusly in HoodieTVC.m
 
 // UI
 float const FONT_POINT_SIZE = 12.0;
+NSString * const map_marker_currentLocation = @"blue marker 48x48";
 NSString * const map_marker_default = @"red marker 48x48";
 NSString * const map_marker_selected = @"green marker 48x48";
 NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
@@ -63,7 +62,7 @@ int const ARTICLE_OVERLAY_VIEW_HEIGHT = 135;
 
 NSString * const API_ADDRESS = @"http://app.urbanturf.com/api/articles?";
 int const NUM_OF_RESULTS_LIMIT = 100;
-double const LATLON_RADIUS = 2.5;
+double const BASE_RADIUS_FROM_USER_LOCATION = 0.5; // meters
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 NSString * const RADIUS_UNITS = @"metric"; // metric|english
 

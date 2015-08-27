@@ -22,7 +22,7 @@
 
 @implementation UrbanTurfFetcher
 
-- (void)fetchDataAtLatidude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age limit:(int)limit order:(NSString *)order
+- (void)fetchDataAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age limit:(int)limit order:(NSString *)order
 {
     if ((latitude == 0) || (longitude == 0)) {
         CLLocationCoordinate2D testLocation = office;

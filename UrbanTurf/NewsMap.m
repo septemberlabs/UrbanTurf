@@ -40,6 +40,7 @@
 
 // UI components.
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+@property (strong, nonatomic) GMSMarker *currentLocation;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
@@ -168,6 +169,15 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     [self establishLocationAwarenessPermissions];
 }
 
+- (void)displayMap
+{
+    self.mapView = [[GMSMapView alloc] initWithFrame:<#(CGRect)#>]
+    self.mapView.delegate = self;
+    self.mapView.settings.myLocationButton = NO;
+    self.mapView.indoorEnabled = NO; // disabled this to suppress the random error "Encountered indoor level with missing enclosing_building field" we were getting.
+}
+
+
 #define SEARCH_RESULTS_MINIMUM 5
 #define INCREMENT_TO_RADIUS 1.0
 #define MAX_RADIUS_TO_SEARCH 4.0
@@ -177,6 +187,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // if the number of search results at this radius is SEARCH_RESULTS_MINIMUM or more, display the map.
     if (numberOfResults >= SEARCH_RESULTS_MINIMUM) {
         [self setLocationWithLatitude:latitude andLongitude:longitude zoom:DEFAULT_ZOOM_LEVEL];
+        NSLog(@"Made it!");
     }
     // otherwise, extend the map
     else {
@@ -406,6 +417,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)fetchData
 {
+    [self.fetcher fetchDataAtLatitude:self.latitude longitude:self.longitude radius:[self radiusToSearch] units:RADIUS_UNITS age:[self getSelectedArticleAge] limit:NUM_OF_RESULTS_LIMIT order:[self getSelectedDisplayOrder]];
+}
+
+// loop through self.displayOrders and set days to item whose "Value" is set to YES.
+- (NSString *)getSelectedDisplayOrder
+{
     NSString *order;
     for (NSDictionary *displayOrder in self.displayOrders) {
         if (((NSNumber *)[displayOrder objectForKey:@"Value"]).boolValue) {
@@ -413,7 +430,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             break;
         }
     }
-    
+    return order;
+}
+
+// loop through self.articleAges and set days to item whose "Value" is set to YES.
+- (int)getSelectedArticleAge
+{
     int days = -1;
     for (NSDictionary *articleAge in self.articleAges) {
         if (((NSNumber *)[articleAge objectForKey:@"Value"]).boolValue) {
@@ -421,9 +443,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             break;
         }
     }
-    
-    [self.fetcher fetchDataAtLatidude:self.latitude longitude:self.longitude radius:[self radiusToSearch] units:RADIUS_UNITS age:days limit:NUM_OF_RESULTS_LIMIT order:order];
+    return days;
 }
+
 
 - (void)receiveData:(NSArray *)fetchedResults
 {
@@ -444,13 +466,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     }
     
     // if the user updating the search filters is what triggered the fetch, we purge the data and clear the map (rather than appending the results of the new fetch to the existing data and adding them to the map).
-    if (self.searchFilterTriggeredFetch) {
+    if (self.searchFilterTriggeredFetch || self.thisIsLaunch) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.mapView clear];
         });
         self.articles = [NSMutableArray array];
         self.articleContainers = [NSMutableArray array];
         self.searchFilterTriggeredFetch = NO;
+        self.thisIsLaunch = NO;
     }
     
     // first update the data.
@@ -783,6 +806,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.latitude = position.target.latitude;
     self.longitude = position.target.longitude;
     [self fetchData];
+    NSLog(@"fetchData called after camera moved.");
 }
 
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
@@ -958,15 +982,16 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         pointB = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.farLeft.latitude longitude:self.mapView.projection.visibleRegion.farLeft.longitude];
     }
     
-    //NSLog(@"point A: %f,%f", pointA.coordinate.latitude, pointA.coordinate.longitude);
-    //NSLog(@"point B: %f,%f", pointB.coordinate.latitude, pointB.coordinate.longitude);
+    NSLog(@"point A: %f,%f", pointA.coordinate.latitude, pointA.coordinate.longitude);
+    NSLog(@"point B: %f,%f", pointB.coordinate.latitude, pointB.coordinate.longitude);
 
-    distanceAtWidestSide = [pointA distanceFromLocation:pointB];
-    //NSLog(@"distance: %f", distanceAtWidestSide);
+    distanceAtWidestSide = [pointA distanceFromLocation:pointB]; // return value in meters.
+    NSLog(@"distance: %f", distanceAtWidestSide);
     radius = distanceAtWidestSide / 2; // halve the span to get the radius.
-    //NSLog(@"radius: %f", radius);
+    radius = radius / 1000; // divide by 1000 to convert kilometers.
+    NSLog(@"radius: %f", radius);
     radius = radius * (1.0 + extraMarginForSearchRadius);
-    //NSLog(@"radius with extra: %f", radius);
+    NSLog(@"radius with extra: %f", radius);
     
     return radius;
 }
@@ -1458,8 +1483,34 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    CLLocation *location = [locations lastObject];
-    NSLog(@"location: %@", location);
+    CLLocation *mostRecentlyReportedLocation = [locations lastObject];
+    NSLog(@"location: %@", mostRecentlyReportedLocation);
+    if (!self.currentLocation) {
+        self.currentLocation = [GMSMarker markerWithPosition:mostRecentlyReportedLocation.coordinate];
+        self.currentLocation.icon = [UIImage imageNamed:map_marker_currentLocation];
+        self.currentLocation.map = self.mapView;
+    }
+    else {
+        self.currentLocation.position = mostRecentlyReportedLocation.coordinate;
+    }
+    
+    //[self setLocationWithLatitude:mostRecentlyReportedLocation.coordinate.latitude andLongitude:mostRecentlyReportedLocation.coordinate.longitude zoom:DEFAULT_ZOOM_LEVEL];
+    
+    [self.fetcher numberOfResultsAtLatitude:mostRecentlyReportedLocation.coordinate.latitude
+                                  longitude:mostRecentlyReportedLocation.coordinate.longitude
+                                     radius:BASE_RADIUS_FROM_USER_LOCATION
+                                      units:RADIUS_UNITS
+                                        age:[self getSelectedArticleAge]];
+    /* UNCOMMENT THIS TO ENABLE CHECKING ONLY UPON LAUNCH, VERSUS ANYTIME THE LOCATION IS UPDATED.
+    if (self.thisIsLaunch) {
+        [self.fetcher numberOfResultsAtLatitude:mostRecentlyReportedLocation.coordinate.latitude
+                                      longitude:mostRecentlyReportedLocation.coordinate.longitude
+                                         radius:BASE_RADIUS_FROM_USER_LOCATION
+                                          units:RADIUS_UNITS
+                                            age:[self getSelectedArticleAge]];
+        self.thisIsLaunch = NO;
+    }
+     */
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status

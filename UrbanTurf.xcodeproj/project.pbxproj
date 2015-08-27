@@ -55,7 +55,6 @@
 		1AD33F671AB5530000DE1DE2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */; };
 		1AD33F681AB5530000DE1DE2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */; };
 		1AD33F691AB5530000DE1DE2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */; };
-		1AE325111B8D4C0B004437E2 /* default.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 1AE325101B8D4C0B004437E2 /* default.gpx */; };
 		1AECA15D1AF059E500EAE054 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA1391AF059E500EAE054 /* AFHTTPRequestOperation.m */; };
 		1AECA15E1AF059E500EAE054 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA13B1AF059E500EAE054 /* AFHTTPRequestOperationManager.m */; };
 		1AECA15F1AF059E500EAE054 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA13D1AF059E500EAE054 /* AFHTTPSessionManager.m */; };
@@ -169,7 +168,6 @@
 		1AD33F5B1AB5530000DE1DE2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1AD33F5C1AB5530000DE1DE2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1AD33F5D1AB5530000DE1DE2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		1AE325101B8D4C0B004437E2 /* default.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = default.gpx; path = ../../../Downloads/default.gpx; sourceTree = "<group>"; };
 		1AE325131B8D4FB1004437E2 /* 17 Appleton Ave.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "17 Appleton Ave.gpx"; sourceTree = "<group>"; };
 		1AE325141B8D4FCA004437E2 /* Mel's House.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Mel's House.gpx"; sourceTree = "<group>"; };
 		1AE325151B8D4FE1004437E2 /* Marjory's House.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Marjory's House.gpx"; sourceTree = "<group>"; };
@@ -300,7 +298,6 @@
 		1AB1A5521A48E3D900369211 = {
 			isa = PBXGroup;
 			children = (
-				1AE325101B8D4C0B004437E2 /* default.gpx */,
 				1A2E6A651A4A1E650033AC87 /* MapKit.framework */,
 				1A12DDD11B80333E0033046F /* Fabric.framework */,
 				1A12DDD21B80333E0033046F /* Crashlytics.framework */,
@@ -606,7 +603,6 @@
 				1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */,
 				1AB7BF001ACDC97C003BCCC0 /* RadiusSliderCell.xib in Resources */,
 				1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */,
-				1AE325111B8D4C0B004437E2 /* default.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
