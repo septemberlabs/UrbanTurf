@@ -76,8 +76,8 @@ NSString * const RADIUS_UNITS = @"metric"; // metric|english
     dispatch_once(&onceToken, ^{
         cities = @[
                         @{@"Name" : @"Washington DC",
-                          @"CenterLatitude" : [NSNumber numberWithDouble:38.8993488],
-                          @"CenterLongitude" : [NSNumber numberWithDouble:-77.0145665],
+                          @"CenterLatitude" : [NSNumber numberWithDouble:38.909677], // 16th & P
+                          @"CenterLongitude" : [NSNumber numberWithDouble:-77.036518],
                           @"UpperLeftLatitude" : [NSNumber numberWithDouble:39.037085],
                           @"UpperLeftLongitude" : [NSNumber numberWithDouble:-77.211634],
                           @"UpperRightLatitude" : [NSNumber numberWithDouble:39.041352],
@@ -87,8 +87,8 @@ NSString * const RADIUS_UNITS = @"metric"; // metric|english
                           @"BottomRightLatitude" : [NSNumber numberWithDouble:38.782758],
                           @"BottomRightLongitude" : [NSNumber numberWithDouble:-77.199274]},
                         @{@"Name" : @"San Francisco",
-                          @"CenterLatitude" : [NSNumber numberWithDouble:37.7577],
-                          @"CenterLongitude" : [NSNumber numberWithDouble:-122.4376],
+                          @"CenterLatitude" : [NSNumber numberWithDouble:37.776692], // annointing Twitter HQ as the center of SF.
+                          @"CenterLongitude" : [NSNumber numberWithDouble:-122.4167819],
                           @"UpperLeftLatitude" : [NSNumber numberWithDouble:37.815422],
                           @"UpperLeftLongitude" : [NSNumber numberWithDouble:-122.537361],
                           @"UpperRightLatitude" : [NSNumber numberWithDouble:37.936288],

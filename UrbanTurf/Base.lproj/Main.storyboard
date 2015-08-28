@@ -529,6 +529,9 @@
                                     <constraint firstAttribute="height" constant="124" id="Arp-Th-NNN"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="i1Y-Yb-DoU">
+                                <rect key="frame" x="290" y="265" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -537,7 +540,9 @@
                             <constraint firstAttribute="trailing" secondItem="HLc-Kg-4Pz" secondAttribute="trailing" id="FdN-Z8-YTp"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="Ior-gv-7aL"/>
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="IuV-t7-y18"/>
+                            <constraint firstAttribute="centerY" secondItem="i1Y-Yb-DoU" secondAttribute="centerY" id="KRQ-EM-Okl"/>
                             <constraint firstAttribute="trailing" secondItem="8Xm-ZY-1dp" secondAttribute="trailing" id="Occ-J7-prc"/>
+                            <constraint firstAttribute="centerX" secondItem="i1Y-Yb-DoU" secondAttribute="centerX" id="QvK-Cc-nHF"/>
                             <constraint firstAttribute="trailing" secondItem="Z6b-sw-l5K" secondAttribute="trailing" id="SL7-J4-fN0"/>
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eMf-O7-xdd"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="top" secondItem="65P-iN-QSW" secondAttribute="bottom" id="fRI-lx-8Pt"/>
@@ -556,6 +561,7 @@
                         <outlet property="mapContainerViewHeightConstraint" destination="fkE-uh-KRW" id="xtX-mG-Uz2"/>
                         <outlet property="searchDisplayController" destination="StY-bM-Ueg" id="TgF-s7-wWI"/>
                         <outlet property="searchFiltersButton" destination="iRU-d9-LkK" id="Q72-R1-iyl"/>
+                        <outlet property="spinner" destination="i1Y-Yb-DoU" id="AR2-jc-wz3"/>
                         <outlet property="tableView" destination="Z6b-sw-l5K" id="blO-gm-OV3"/>
                         <outlet property="toggleViewButton" destination="Tcz-a2-ut1" id="yGK-pP-weL"/>
                     </connections>
@@ -718,16 +724,22 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9hp-6D-nwR">
+                                <rect key="frame" x="290" y="266" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottomMargin" secondItem="Yb0-XH-FNL" secondAttribute="bottom" id="0sR-3O-LR5"/>
                             <constraint firstItem="Yb0-XH-FNL" firstAttribute="top" secondItem="MWc-kS-UXn" secondAttribute="topMargin" id="7D3-cy-FGU"/>
                             <constraint firstItem="Yb0-XH-FNL" firstAttribute="leading" secondItem="MWc-kS-UXn" secondAttribute="leading" id="7X9-u2-40o"/>
+                            <constraint firstAttribute="centerX" secondItem="9hp-6D-nwR" secondAttribute="centerX" id="GtS-vd-Hgz"/>
                             <constraint firstAttribute="trailing" secondItem="Yb0-XH-FNL" secondAttribute="trailing" id="Vle-ld-9AF"/>
+                            <constraint firstAttribute="centerY" secondItem="9hp-6D-nwR" secondAttribute="centerY" id="hXU-xA-kJY"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="spinner" destination="9hp-6D-nwR" id="bPC-uN-bnT"/>
                         <outlet property="webView" destination="Yb0-XH-FNL" id="zJI-iW-aLv"/>
                     </connections>
                 </viewController>

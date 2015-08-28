@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ArticleWebViewVC : UIViewController
+@interface ArticleWebViewVC : UIViewController <UIWebViewDelegate>
 @property (strong, nonatomic) NSString *urlToLoad;
 @end

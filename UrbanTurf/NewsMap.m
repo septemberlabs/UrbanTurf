@@ -46,6 +46,7 @@
 @property (nonatomic) CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapContainerViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) ArticleContainer *articleContainerWithFocus; // article container with current focus, if any. list-view mode.
@@ -132,6 +133,10 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // by default the table view is displayed.
     self.listView = YES;
     
+    // hide the spinner unless necessary.
+    //self.spinner.hidden = YES;
+    self.spinner.hidesWhenStopped = YES;
+    
     self.articleOverlaid = NO;
     self.tappedMarker = nil;
     self.originalMapViewBottomEdgeY = self.tableView.frame.origin.y;
@@ -211,59 +216,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
     return _mapView;
 }
-
-- (void)instantiateMapAtLocation:(CLLocationCoordinate2D)location
-{
-    GMSCameraPosition *cameraPosition = [[GMSCameraPosition alloc] initWithTarget:location zoom:DEFAULT_ZOOM_LEVEL bearing:0 viewingAngle:0];
-    
-    self.mapView = [GMSMapView mapWithFrame:self.mapContainerView.bounds camera:cameraPosition];
-    self.mapView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.mapView.delegate = self;
-    self.mapView.settings.myLocationButton = NO;
-    self.mapView.indoorEnabled = NO; // disabled this to suppress the random error "Encountered indoor level with missing enclosing_building field" we were getting.
-    
-    [self.mapContainerView addSubview:self.mapView];
-    
-    UIView *subview = self.mapView;
-    UIView *superview = self.mapContainerView;
-    
-    // pin the map view to the edges of the map container view.
-    NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:subview
-                                                                         attribute:NSLayoutAttributeLeading
-                                                                         relatedBy:NSLayoutRelationEqual
-                                                                            toItem:superview
-                                                                         attribute:NSLayoutAttributeLeading
-                                                                        multiplier:1.0
-                                                                          constant:0];
-    NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:subview
-                                                                          attribute:NSLayoutAttributeTrailing
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:superview
-                                                                          attribute:NSLayoutAttributeTrailing
-                                                                         multiplier:1.0
-                                                                           constant:0];
-    NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:subview
-                                                                     attribute:NSLayoutAttributeTop
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:superview
-                                                                     attribute:NSLayoutAttributeTop
-                                                                    multiplier:1.0
-                                                                      constant:0];
-    NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:subview
-                                                                        attribute:NSLayoutAttributeBottom
-                                                                        relatedBy:NSLayoutRelationEqual
-                                                                           toItem:superview
-                                                                        attribute:NSLayoutAttributeBottom
-                                                                       multiplier:1.0
-                                                                         constant:0];
-
-    NSArray *arrayOfConstraints = [NSArray arrayWithObjects:leadingConstraint, trailingConstraint, topConstraint, bottomConstraint, nil];
-    
-    for (NSLayoutConstraint *constraint in arrayOfConstraints) {
-        [superview addConstraint:constraint];
-    }
-}
-
 
 #define SEARCH_RESULTS_MINIMUM 5
 #define INCREMENT_TO_RADIUS 1.0
@@ -350,7 +302,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                                                                         delegate:self
                                                                cancelButtonTitle:@"Got it"
                                                                otherButtonTitles:nil];
-        [self.noLocationAwarenessAcknowledgement show];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.noLocationAwarenessAcknowledgement show];
+        });
     }
     // the user was just asked to allow location awareness, and said no.
     if (reason == PermissionDeniedRightNow) {
@@ -359,7 +313,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                                                                         delegate:self
                                                                cancelButtonTitle:@"Got it"
                                                                otherButtonTitles:nil];
-        [self.noLocationAwarenessAcknowledgement show];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.noLocationAwarenessAcknowledgement show];
+        });
     }
     // the user was asked at an earlier date to allow location awareness, and said no. so we don't communicate anything since we already did so the first time around.
     if (reason == PermissionAlreadyDenied) {
@@ -394,7 +350,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         NSString *cityName = (NSString *)[city objectForKey:@"Name"];
         [self.cityPrompt addButtonWithTitle:cityName];
     }
-    [self.cityPrompt show];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.cityPrompt show];
+    });
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -411,6 +369,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     if ([alertView isEqual:self.cityPrompt]) {
         NSDictionary *selectedCity = (NSDictionary *)[[Constants cities] objectAtIndex:buttonIndex];
         NSLog(@"selected city: %@", [selectedCity objectForKey:@"Name"]);
+        CLLocationDegrees latitude = ((NSNumber *)[selectedCity objectForKey:@"CenterLatitude"]).doubleValue;
+        CLLocationDegrees longitude = ((NSNumber *)[selectedCity objectForKey:@"CenterLongitude"]).doubleValue;
+        [self setLocationWithLatitude:latitude andLongitude:longitude zoom:DEFAULT_ZOOM_LEVEL];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setInteger:buttonIndex forKey:userDefaultsCityKey];
@@ -501,6 +462,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 - (void)fetchData
 {
     [self.fetcher fetchDataAtLatitude:self.latitude longitude:self.longitude radius:[self radiusToSearch] units:RADIUS_UNITS age:[self getSelectedArticleAge] limit:NUM_OF_RESULTS_LIMIT order:[self getSelectedDisplayOrder]];
+    [self.spinner startAnimating];
 }
 
 // loop through self.displayOrders and set days to item whose "Value" is set to YES.
@@ -552,6 +514,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     if (self.clearDataAndMapUponFetchReturn) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.mapView clear];
+            if (self.currentLocationMarker != nil) {
+                self.currentLocationMarker.map = self.mapView;
+            }
         });
         self.articles = [NSMutableArray array];
         self.articleContainers = [NSMutableArray array];
@@ -567,6 +532,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateMarkersOnMap];
         [self.tableView reloadData]; // update the tableview
+        [self.spinner stopAnimating];
     });
 }
 
@@ -873,8 +839,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     dispatch_async(dispatch_get_main_queue(), ^{
         // return the table to the top
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        //[self.mapView clear]; // clear off existing markers
-        //[self.mapView moveCamera:[GMSCameraUpdate setTarget:selectedLocation zoom:DEFAULT_ZOOM_LEVEL]];
     });
 }
 
@@ -1252,7 +1216,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                          }
                          completion:^(BOOL finished) {
                              self.borderBetweenMapAndTable.opacity = 1.0; // display the border instantly once the animation has completed.
-                             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:NO]; // scroll to the top of the table view.
+                             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO]; // scroll to the top of the table view.
                          }];
 
         self.listView = YES; // save the state so we know whether to expand or contract next time the button is pressed.
@@ -1447,6 +1411,11 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         }
         marker.appearAnimation = kGMSMarkerAnimationPop;
     }
+    
+    // if the currentLocationMarker was set during a call to didUpdateLocations, display it on the map now.
+    if (self.currentLocationMarker != nil) {
+        self.currentLocationMarker.map = self.mapView;
+    }
 }
 
 - (void)removeOffscreenMarkers
@@ -1549,6 +1518,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"didFailWithError: %@", error);
+    self.currentLocationMarker = nil;
     UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                          message:@"Failed to Get Your Location"
                                                         delegate:nil
@@ -1561,32 +1531,25 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 {
     CLLocation *mostRecentlyReportedLocation = [locations lastObject];
     NSLog(@"location: %@", mostRecentlyReportedLocation);
+
+    // create the current location marker if it doesn't exist; update its location if it does. don't actually display it on the map here (by setting its map parameter), instead doing that when the other markers are displayed. we don't touch the map view at all in this method.
     if (!self.currentLocationMarker) {
         self.currentLocationMarker = [GMSMarker markerWithPosition:mostRecentlyReportedLocation.coordinate];
         self.currentLocationMarker.icon = [UIImage imageNamed:map_marker_currentLocation];
-        self.currentLocationMarker.map = self.mapView;
     }
     else {
         self.currentLocationMarker.position = mostRecentlyReportedLocation.coordinate;
     }
     
-    [self setLocationWithLatitude:mostRecentlyReportedLocation.coordinate.latitude andLongitude:mostRecentlyReportedLocation.coordinate.longitude zoom:DEFAULT_ZOOM_LEVEL];
-    
     [self.locationManager stopUpdatingLocation];
-    
-    
+
     //[self setLocationWithLatitude:mostRecentlyReportedLocation.coordinate.latitude andLongitude:mostRecentlyReportedLocation.coordinate.longitude zoom:DEFAULT_ZOOM_LEVEL];
-
-    // UNCOMMENT THIS TO ENABLE CHECKING ONLY UPON LAUNCH, VERSUS ANYTIME THE LOCATION IS UPDATED.
-    /*
-    [self instantiateMapAtLocation:(CLLocationCoordinate2DMake(mostRecentlyReportedLocation.coordinate.latitude, mostRecentlyReportedLocation.coordinate.longitude))];
-
+    
     [self.fetcher numberOfResultsAtLatitude:mostRecentlyReportedLocation.coordinate.latitude
                                   longitude:mostRecentlyReportedLocation.coordinate.longitude
                                      radius:BASE_RADIUS_FROM_USER_LOCATION
                                       units:RADIUS_UNITS
                                         age:[self getSelectedArticleAge]];
-     */
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
