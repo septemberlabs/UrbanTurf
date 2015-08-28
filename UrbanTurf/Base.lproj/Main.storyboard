@@ -437,10 +437,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RTz-VU-U5z" customClass="GMSMapView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HLc-Kg-4Pz" userLabel="Map Container View">
                                 <rect key="frame" x="0.0" y="64" width="600" height="150"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="pgg-4k-MOo"/>
+                                    <constraint firstAttribute="height" constant="150" id="fkE-uh-KRW"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="132" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Z6b-sw-l5K">
@@ -531,18 +532,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="RTz-VU-U5z" secondAttribute="trailing" id="1VF-9I-CB4"/>
+                            <constraint firstItem="HLc-Kg-4Pz" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="4MW-c0-bfh"/>
                             <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="Z6b-sw-l5K" secondAttribute="bottom" id="DWX-GN-N9N"/>
+                            <constraint firstAttribute="trailing" secondItem="HLc-Kg-4Pz" secondAttribute="trailing" id="FdN-Z8-YTp"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="Ior-gv-7aL"/>
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="IuV-t7-y18"/>
                             <constraint firstAttribute="trailing" secondItem="8Xm-ZY-1dp" secondAttribute="trailing" id="Occ-J7-prc"/>
-                            <constraint firstItem="Z6b-sw-l5K" firstAttribute="top" secondItem="RTz-VU-U5z" secondAttribute="bottom" id="Oh3-K1-hbe"/>
                             <constraint firstAttribute="trailing" secondItem="Z6b-sw-l5K" secondAttribute="trailing" id="SL7-J4-fN0"/>
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eMf-O7-xdd"/>
-                            <constraint firstItem="RTz-VU-U5z" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eiS-cf-54B"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="top" secondItem="65P-iN-QSW" secondAttribute="bottom" id="fRI-lx-8Pt"/>
-                            <constraint firstItem="RTz-VU-U5z" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="bottom" id="po2-1c-gas"/>
+                            <constraint firstItem="HLc-Kg-4Pz" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="bottom" id="olS-c9-qrL"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="qUo-yk-ODc"/>
+                            <constraint firstItem="Z6b-sw-l5K" firstAttribute="top" secondItem="HLc-Kg-4Pz" secondAttribute="bottom" id="s59-t7-C8J"/>
                             <constraint firstAttribute="trailing" secondItem="Sal-Vu-s9R" secondAttribute="trailing" id="veR-E0-Tzi"/>
                         </constraints>
                     </view>
@@ -551,8 +552,8 @@
                         <outlet property="articleOverlay" destination="Sal-Vu-s9R" id="DaA-jV-Pgt"/>
                         <outlet property="articleOverlayHeightConstraint" destination="Arp-Th-NNN" id="1Zf-X7-tt1"/>
                         <outlet property="articleOverlayTopEdgeConstraint" destination="fRI-lx-8Pt" id="gkK-Nm-CFg"/>
-                        <outlet property="mapView" destination="RTz-VU-U5z" id="lck-rh-mzN"/>
-                        <outlet property="mapViewHeightConstraint" destination="pgg-4k-MOo" id="x2j-sp-8DP"/>
+                        <outlet property="mapContainerView" destination="HLc-Kg-4Pz" id="wXL-aO-ve3"/>
+                        <outlet property="mapContainerViewHeightConstraint" destination="fkE-uh-KRW" id="xtX-mG-Uz2"/>
                         <outlet property="searchDisplayController" destination="StY-bM-Ueg" id="TgF-s7-wWI"/>
                         <outlet property="searchFiltersButton" destination="iRU-d9-LkK" id="Q72-R1-iyl"/>
                         <outlet property="tableView" destination="Z6b-sw-l5K" id="blO-gm-OV3"/>
