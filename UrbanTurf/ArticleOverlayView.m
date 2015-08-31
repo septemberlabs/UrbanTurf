@@ -253,14 +253,14 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                      };
     
     // concatenate the publication name and date, separating them with •
-    NSMutableString *metaInfoString = [article.publication mutableCopy];
-    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", [[Constants dateFormatter] stringFromDate:article.date]]];
+    NSMutableString *metaInfoString = [[[Constants dateFormatter] stringFromDate:article.date] mutableCopy];
+    [metaInfoString appendString:[NSString stringWithFormat:@" • %@", article.publication]];
     
     // make it attributed with publicationAttributes for the whole string
     NSMutableAttributedString *metaInfoAttributedString = [[[NSAttributedString alloc] initWithString:metaInfoString attributes:publicationAttributes] mutableCopy];
     
     // re-attribute the date, which begins at the end of the publication string and continues through to the end
-    NSRange rangeOfDateInfo = NSMakeRange([article.publication length], ([metaInfoString length] - [article.publication length]));
+    NSRange rangeOfDateInfo = NSMakeRange(0, ([metaInfoString length] - [article.publication length]));
     [metaInfoAttributedString setAttributes:dateAttributes range:rangeOfDateInfo];
     
     // set the label with the value

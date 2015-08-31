@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */; };
-		1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView - working.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView - working.xib */; };
 		1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */; };
 		1A0E1DA11B3394A2002F3DF9 /* UIView+AddBorders.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */; };
 		1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A0F7A761B7D7E27001DBD89 /* ArticleOverlayView.xib */; };
@@ -94,7 +93,6 @@
 /* Begin PBXFileReference section */
 		1A04DDA11B2390E5001D9480 /* NewsMapTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTableViewCell.h; sourceTree = "<group>"; };
 		1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTableViewCell.m; sourceTree = "<group>"; };
-		1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView - working.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ArticleOverlayView - working.xib"; sourceTree = "<group>"; };
 		1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleOverlayView.h; sourceTree = "<group>"; };
 		1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleOverlayView.m; sourceTree = "<group>"; };
 		1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AddBorders.h"; sourceTree = "<group>"; };
@@ -278,7 +276,6 @@
 				1A2E6A681A4E26540033AC87 /* ArticleViewController.m */,
 				1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */,
 				1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */,
-				1A059D811B1FBFBA00FF4F64 /* ArticleOverlayView - working.xib */,
 				1A0F7A761B7D7E27001DBD89 /* ArticleOverlayView.xib */,
 				1A96E1981B7E59C5002DAFF1 /* ArticleWebViewVC.h */,
 				1A96E1991B7E59C5002DAFF1 /* ArticleWebViewVC.m */,
@@ -599,7 +596,6 @@
 			files = (
 				1AF7ADB41B251BB4009164F6 /* ArticleView.xib in Resources */,
 				1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */,
-				1A059D821B1FBFBA00FF4F64 /* ArticleOverlayView - working.xib in Resources */,
 				1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */,
 				1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */,
 				1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */,

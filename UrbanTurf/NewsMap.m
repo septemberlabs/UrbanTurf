@@ -847,6 +847,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 - (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
     NSLog(@"idleAtCameraPosition called.");
+    [self removeArticleOverlay];
     self.latitude = position.target.latitude;
     self.longitude = position.target.longitude;
     [self fetchData];
@@ -1441,38 +1442,28 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     NSString *imageName;
     // we have to fiddle with this a little because the first position is invalid so we don't count it in the count.
     int numberOfMarkerIcons = ((int)[[Constants mapMarkersSelected] count]) - 1;
-
-    // if the marker's userData is larger than 1, it means there are multiple articles for the location.
-    if ([articleContainer.articles count] > 1) {
-        if (selected) {
-            // if the number count is 2-9, choose the corresponding marker.
-            if ([articleContainer.articles count] < numberOfMarkerIcons) {
-                imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[articleContainer.articles count]];
-            }
-            // otherwise, choose 9+ (which sits at the end of the array).
-            else {
-                imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:numberOfMarkerIcons];
-            }
+    
+    if (selected) {
+        // if the number count is 1-9, choose the corresponding marker.
+        if ([articleContainer.articles count] < numberOfMarkerIcons) {
+            imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[articleContainer.articles count]];
         }
+        // otherwise, choose 9+ (which sits at the end of the array).
         else {
-            // if the number count is 2-9, choose the corresponding marker.
-            if ([articleContainer.articles count] < numberOfMarkerIcons) {
-                imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[articleContainer.articles count]];
-            }
-            // otherwise, choose 9+ (which sits at the end of the array).
-            else {
-                imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:numberOfMarkerIcons];
-            }
+            imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:numberOfMarkerIcons];
         }
     }
     else {
-        if (selected) {
-            imageName = map_marker_selected;
+        // if the number count is 1-9, choose the corresponding marker.
+        if ([articleContainer.articles count] < numberOfMarkerIcons) {
+            imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[articleContainer.articles count]];
         }
+        // otherwise, choose 9+ (which sits at the end of the array).
         else {
-            imageName = map_marker_default;
+            imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:numberOfMarkerIcons];
         }
     }
+
     //NSLog(@"imageName: %@", imageName);
     return [[UIImage imageNamed:imageName] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
 }

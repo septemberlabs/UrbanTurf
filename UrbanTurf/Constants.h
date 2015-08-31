@@ -55,11 +55,10 @@ extern CLLocationCoordinate2D const kingsCloister;
 extern CLLocationCoordinate2D const jacksonHoleSquare;
 
 // UI
+extern NSString * const image_not_downloaded;
 extern float const FONT_POINT_SIZE;
 extern NSString * const map_marker_currentLocation;
-extern NSString * const map_marker_default;
 + (NSArray *)mapMarkersDefault;
-extern NSString * const map_marker_selected;
 + (NSArray *)mapMarkersSelected;
 extern NSString * const map_marker_insets;
 extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker

@@ -152,7 +152,7 @@
     NSString *mapDimensions = [NSString stringWithFormat:@"%dx%d", (int)self.articleView.mapImageView.frame.size.width, (int)self.articleView.mapImageView.frame.size.height];
     NSDictionary *params = @{
                              @"center" : latlonString,
-                             @"zoom" : @"15",
+                             @"zoom" : @"14",
                              @"size" : mapDimensions,
                              @"maptype" : @"roadmap",
                              @"markers" : latlonString,

@@ -50,10 +50,9 @@ const CLLocationCoordinate2D kingsCloister = {38.816724, -77.075691};
 const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
 
 // UI
+NSString * const image_not_downloaded = @"placeholder 250x250";
 float const FONT_POINT_SIZE = 12.0;
-NSString * const map_marker_currentLocation = @"blue marker 48x48";
-NSString * const map_marker_default = @"red marker 48x48";
-NSString * const map_marker_selected = @"green marker 48x48";
+NSString * const map_marker_currentLocation = @"blue marker 72x72";
 NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
 CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
 CGFloat const PAN_THRESHOLD = 10;
@@ -171,16 +170,16 @@ NSString * const RADIUS_UNITS = @"metric"; // metric|english
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mapMarkersDefault = @[@"INVALID",
-                              @"red marker 48x48 - 1",
-                              @"red marker 48x48 - 2",
-                              @"red marker 48x48 - 3",
-                              @"red marker 48x48 - 4",
-                              @"red marker 48x48 - 5",
-                              @"red marker 48x48 - 6",
-                              @"red marker 48x48 - 7",
-                              @"red marker 48x48 - 8",
-                              @"red marker 48x48 - 9",
-                              @"red marker 48x48 - 9 plus",
+                              @"red marker 72x72 - 1",
+                              @"red marker 72x72 - 2",
+                              @"red marker 72x72 - 3",
+                              @"red marker 72x72 - 4",
+                              @"red marker 72x72 - 5",
+                              @"red marker 72x72 - 6",
+                              @"red marker 72x72 - 7",
+                              @"red marker 72x72 - 8",
+                              @"red marker 72x72 - 9",
+                              @"red marker 72x72 - 9 plus",
                               ];
     });
     return mapMarkersDefault;
@@ -192,16 +191,16 @@ NSString * const RADIUS_UNITS = @"metric"; // metric|english
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mapMarkersSelected = @[@"INVALID",
-                               @"green marker 48x48 - 1",
-                               @"green marker 48x48 - 2",
-                               @"green marker 48x48 - 3",
-                               @"green marker 48x48 - 4",
-                               @"green marker 48x48 - 5",
-                               @"green marker 48x48 - 6",
-                               @"green marker 48x48 - 7",
-                               @"green marker 48x48 - 8",
-                               @"green marker 48x48 - 9",
-                               @"green marker 48x48 - 9 plus",
+                               @"red marker 72x72 - 1 selected",
+                               @"red marker 72x72 - 2 selected",
+                               @"red marker 72x72 - 3 selected",
+                               @"red marker 72x72 - 4 selected",
+                               @"red marker 72x72 - 5 selected",
+                               @"red marker 72x72 - 6 selected",
+                               @"red marker 72x72 - 7 selected",
+                               @"red marker 72x72 - 8 selected",
+                               @"red marker 72x72 - 9 selected",
+                               @"red marker 72x72 - 9 plus selected",
                                ];
     });
     return mapMarkersSelected;

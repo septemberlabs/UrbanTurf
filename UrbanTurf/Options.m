@@ -24,7 +24,8 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
-    self.displayOrderCell.detailTextLabel.text = (NSString *)[[Constants displayOrders] objectAtIndex:[defaults integerForKey:userDefaultsDisplayOrderKey]];
+    NSDictionary *displayOrder = [[Constants displayOrders] objectAtIndex:[defaults integerForKey:userDefaultsDisplayOrderKey]];
+    self.displayOrderCell.detailTextLabel.text = (NSString *)[displayOrder objectForKey:@"Menu Item"];
     self.searchRadiusCell.detailTextLabel.text = [NSString stringWithFormat:@"%.1f mi", [defaults floatForKey:userDefaultsRadiusKey]];
     self.homeScreenCell.detailTextLabel.text = [defaults stringForKey:userDefaultsHomeScreenLocationKey];
     self.versionCell.detailTextLabel.text = [defaults stringForKey:userDefaultsVersionKey];
