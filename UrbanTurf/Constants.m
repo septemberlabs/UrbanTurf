@@ -53,7 +53,7 @@ const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
 NSString * const image_not_downloaded = @"placeholder 250x250";
 float const FONT_POINT_SIZE = 12.0;
 NSString * const map_marker_currentLocation = @"blue marker 72x72";
-NSString * const map_marker_insets = @"{0, 0, 0, 0}"; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
+UIEdgeInsets const map_marker_insets = {34.0, 34.0, 34.0, 34.0}; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
 CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
 CGFloat const PAN_THRESHOLD = 10;
 CGFloat const PANNED_DISTANCE_THRESHOLD = 0.20;

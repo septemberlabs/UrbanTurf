@@ -26,6 +26,7 @@
 		1A96E19A1B7E59C5002DAFF1 /* ArticleWebViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A96E1991B7E59C5002DAFF1 /* ArticleWebViewVC.m */; };
 		1A9E486D1B83002100CC7A8A /* SearchFilters.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9E486C1B83002100CC7A8A /* SearchFilters.m */; };
 		1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */; };
+		1AA297091B9414140019FBCE /* MarkerImageHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA297081B9414140019FBCE /* MarkerImageHolder.m */; };
 		1AB1A5611A48E3D900369211 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5601A48E3D900369211 /* main.m */; };
 		1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A5631A48E3D900369211 /* AppDelegate.m */; };
 		1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56B1A48E3D900369211 /* Main.storyboard */; };
@@ -128,6 +129,8 @@
 		1AA0E3951AB0C5AE00E61F21 /* SaveFavoriteLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveFavoriteLocation.m; sourceTree = "<group>"; };
 		1AA28AFF1B902E5D00452B93 /* San Jose.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "San Jose.gpx"; sourceTree = "<group>"; };
 		1AA28B001B902E9000452B93 /* Jackson Hole.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Jackson Hole.gpx"; sourceTree = "<group>"; };
+		1AA297071B9414140019FBCE /* MarkerImageHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerImageHolder.h; sourceTree = "<group>"; };
+		1AA297081B9414140019FBCE /* MarkerImageHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkerImageHolder.m; sourceTree = "<group>"; };
 		1AB1A55B1A48E3D900369211 /* UrbanTurf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UrbanTurf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A55F1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A5601A48E3D900369211 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -344,6 +347,8 @@
 				1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */,
 				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
 				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
+				1AA297071B9414140019FBCE /* MarkerImageHolder.h */,
+				1AA297081B9414140019FBCE /* MarkerImageHolder.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
 				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
@@ -659,6 +664,7 @@
 				1AECA16A1AF059E500EAE054 /* UIImageView+AFNetworking.m in Sources */,
 				1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */,
 				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,
+				1AA297091B9414140019FBCE /* MarkerImageHolder.m in Sources */,
 				1AECA1671AF059E500EAE054 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				1AF4D2E31AC37D18003168AD /* NewsMap.m in Sources */,
 				1AECA16C1AF059E500EAE054 /* UIRefreshControl+AFNetworking.m in Sources */,

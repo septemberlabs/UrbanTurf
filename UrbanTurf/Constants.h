@@ -60,7 +60,7 @@ extern float const FONT_POINT_SIZE;
 extern NSString * const map_marker_currentLocation;
 + (NSArray *)mapMarkersDefault;
 + (NSArray *)mapMarkersSelected;
-extern NSString * const map_marker_insets;
+extern UIEdgeInsets const map_marker_insets;
 extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker
 extern CGFloat const PAN_THRESHOLD; // horizontal distance (px) that a pan translation must return before triggering a visual response from the UI.
 extern CGFloat const PANNED_DISTANCE_THRESHOLD; // horizontal distance as percentage of view width that user must pan for neighboring article to move in.

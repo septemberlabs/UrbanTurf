@@ -17,6 +17,7 @@
 #import "ArticleViewController.h"
 #import "UIView+AddBorders.h"
 #import <Crashlytics/Crashlytics.h>
+#import "MarkerImageHolder.h"
 
 @interface NewsMap ()
 
@@ -42,6 +43,7 @@
 @property (strong, nonatomic) GMSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIView *mapContainerView;
 @property (strong, nonatomic) GMSMarker *currentLocationMarker;
+@property (strong, nonatomic) MarkerImageHolder *markerImageHolder;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) CGFloat originalMapViewBottomEdgeY;
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
@@ -417,12 +419,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     return _articles;
 }
 
-- (NSArray *)markers
+- (MarkerImageHolder *)markerImageHolder
 {
-    if (!_articleContainers) {
-        _articleContainers = [[NSMutableArray alloc] init];
+    if (!_markerImageHolder) {
+        _markerImageHolder = [[MarkerImageHolder alloc] init];
     }
-    return _articleContainers;
+    return _markerImageHolder;
 }
 
 - (void)setSearchResults:(NSArray *)searchResults
@@ -882,7 +884,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         if (self.tappedMarker) {
             // reset the tapped marker to its default color.
             ArticleContainer *tappedMarkerArticleContainer = (ArticleContainer *)self.tappedMarker.userData;
-            self.tappedMarker.icon = [self getIconForArticleContainer:tappedMarkerArticleContainer selected:NO];
+            self.tappedMarker.icon = [self.markerImageHolder getMarkerForArticleContainer:tappedMarkerArticleContainer selected:NO];
             // nullify the self.tappedMarker pointer to indicate that there is no tapped marker. the marker continues to exist because there is another pointer to it.
             self.tappedMarker = nil;
         }
@@ -933,7 +935,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                              }];
             
             // make the marker green.
-            marker.icon = [self getIconForArticleContainer:articleContainer selected:YES];
+            marker.icon = [self.markerImageHolder getMarkerForArticleContainer:articleContainer selected:YES];
 
             // update the state of the article overlay.
             self.articleOverlaid = YES;
@@ -964,8 +966,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                 
                 // reset the existing tapped marker back to the default color and make the newly tapped marker green.
                 ArticleContainer *tappedMarkerArticleContainer = (ArticleContainer *)self.tappedMarker.userData;
-                self.tappedMarker.icon = [self getIconForArticleContainer:tappedMarkerArticleContainer selected:NO];
-                marker.icon = [self getIconForArticleContainer:articleContainer selected:YES];
+                self.tappedMarker.icon = [self.markerImageHolder getMarkerForArticleContainer:tappedMarkerArticleContainer selected:NO];
+                marker.icon = [self.markerImageHolder getMarkerForArticleContainer:articleContainer selected:YES];
                 
                 // update the state of the article overlay, namely which marker was last tapped.
                 self.tappedMarker = marker;
@@ -1154,12 +1156,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 {
     // reset all the markers to the default color.
     for (ArticleContainer *articleContainer in self.articleContainers) {
-        articleContainer.marker.icon = [self getIconForArticleContainer:articleContainer selected:NO];
+        articleContainer.marker.icon = [self.markerImageHolder getMarkerForArticleContainer:articleContainer selected:NO];
     }
     // move the map to the newly focused article's location and set the corresponding marker to selected.
     if (highlightMarker) {
         ArticleContainer *articleContainerOfMarkerToReceiveFocus = (ArticleContainer *)markerToReceiveFocus.userData;
-        markerToReceiveFocus.icon = [self getIconForArticleContainer:articleContainerOfMarkerToReceiveFocus selected:YES];
+        markerToReceiveFocus.icon = [self.markerImageHolder getMarkerForArticleContainer:articleContainerOfMarkerToReceiveFocus selected:YES];
     }
 }
 
@@ -1192,7 +1194,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                                  NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
                                  NewsMapTableViewCell *cellWithFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellWithFocus];
                                  cellWithFocus.articleView.backgroundColor = [UIColor whiteColor];
-                                 self.articleContainerWithFocus.marker.icon = [self getIconForArticleContainer:self.articleContainerWithFocus selected:NO];
+                                 self.articleContainerWithFocus.marker.icon = [self.markerImageHolder getMarkerForArticleContainer:self.articleContainerWithFocus selected:NO];
                                  self.articleContainerWithFocus = nil; // update the state.
                              }
                          }];
@@ -1406,7 +1408,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
     for (ArticleContainer *articleContainer in self.articleContainers) {
         GMSMarker *marker = articleContainer.marker;
-        marker.icon = [self getIconForArticleContainer:articleContainer selected:NO];
+        marker.icon = [self.markerImageHolder getMarkerForArticleContainer:articleContainer selected:NO];
         if (!marker.map) {
             marker.map = self.mapView;
         }
@@ -1435,37 +1437,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     }
     // remove all the article containers accrued by the loop above.
     [self.articleContainers removeObjectsInArray:articleContainersToRemove];
-}
-
-- (UIImage *)getIconForArticleContainer:(ArticleContainer *)articleContainer selected:(BOOL)selected
-{
-    NSString *imageName;
-    // we have to fiddle with this a little because the first position is invalid so we don't count it in the count.
-    int numberOfMarkerIcons = ((int)[[Constants mapMarkersSelected] count]) - 1;
-    
-    if (selected) {
-        // if the number count is 1-9, choose the corresponding marker.
-        if ([articleContainer.articles count] < numberOfMarkerIcons) {
-            imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:[articleContainer.articles count]];
-        }
-        // otherwise, choose 9+ (which sits at the end of the array).
-        else {
-            imageName = (NSString *)[[Constants mapMarkersSelected] objectAtIndex:numberOfMarkerIcons];
-        }
-    }
-    else {
-        // if the number count is 1-9, choose the corresponding marker.
-        if ([articleContainer.articles count] < numberOfMarkerIcons) {
-            imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:[articleContainer.articles count]];
-        }
-        // otherwise, choose 9+ (which sits at the end of the array).
-        else {
-            imageName = (NSString *)[[Constants mapMarkersDefault] objectAtIndex:numberOfMarkerIcons];
-        }
-    }
-
-    //NSLog(@"imageName: %@", imageName);
-    return [[UIImage imageNamed:imageName] imageWithAlignmentRectInsets:UIEdgeInsetsFromString(map_marker_insets)];
 }
 
 #pragma mark - ArticleOverlayViewDelegate
