@@ -37,7 +37,7 @@ extern NSString * const ARTICLE_TAGS_TABLE_HEADER;
 extern NSString * const ARTICLE_TAGS_TABLE_FOOTER;
 
 extern NSString * const userDefaultsHomeScreenLocationKey;
-extern NSString * const homeScreenLocation;
+extern NSString * const currentLocationString;
 
 extern NSString * const userDefaultsSavedLocationsKey;
 
@@ -46,6 +46,8 @@ extern NSString * const version;
 
 extern NSString * const userDefaultsCityKey;
 + (NSArray *)cities;
+extern NSString * const HOME_CITY_TABLE_HEADER;
+extern NSString * const HOME_CITY_TABLE_FOOTER;
 
 // constants used for pre-chosen locations
 extern CLLocationCoordinate2D const home;

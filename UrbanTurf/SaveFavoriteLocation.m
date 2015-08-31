@@ -147,6 +147,7 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
 // update the lat/lon readout in real time as the user pans around the map
 - (void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
 {
+    self.currentLocation = position.target;
     self.latlonLabel.text = [NSString stringWithFormat:@"%f, %f", position.target.latitude, position.target.longitude];
 }
 

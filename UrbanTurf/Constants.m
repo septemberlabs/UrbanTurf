@@ -35,6 +35,7 @@ NSString * const ARTICLE_TAGS_TABLE_HEADER = @"Types of stories to display";
 NSString * const ARTICLE_TAGS_TABLE_FOOTER = @"";
 
 NSString * const userDefaultsHomeScreenLocationKey = @"homeScreenLocation";
+NSString * const currentLocationString = @"Current Location";
 
 NSString * const userDefaultsSavedLocationsKey = @"savedLocations";
 
@@ -42,6 +43,8 @@ NSString * const userDefaultsVersionKey = @"version";
 NSString * const version = @"0.9";
 
 NSString * const userDefaultsCityKey = @"city";
+NSString * const HOME_CITY_TABLE_HEADER = @"";
+NSString * const HOME_CITY_TABLE_FOOTER = @"This is the area that will display by default if your current location is disabled or otherwise unavailable.";
 
 const CLLocationCoordinate2D home = {38.925162, -77.044052};
 const CLLocationCoordinate2D lincolnMemorial = {38.889262, -77.048568};

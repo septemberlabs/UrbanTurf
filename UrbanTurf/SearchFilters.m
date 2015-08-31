@@ -12,7 +12,7 @@
 
 @interface SearchFilters ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIButton *updateMapButton;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navBar;
 @end
 
 @implementation SearchFilters
@@ -24,7 +24,12 @@
     self.tableView.dataSource = self;
     [self.tableView reloadData];
     
-    self.updateMapButton.backgroundColor = [Stylesheet color1];
+    self.navBar.delegate = self;
+}
+
+// this forces the status bar to adopt the color of the nav bar, which wasn't happening by default and had an ugly effect. thank you: http://stackoverflow.com/questions/20668583/how-to-add-custom-navigation-bar-to-a-full-screen-vc-in-ios-7-and-make-it-tint-t
+- (UIBarPosition)positionForBar:(id <UIBarPositioning>)bar {
+    return UIBarPositionTopAttached;
 }
 
 - (void)setDisplayOrders:(NSMutableArray *)displayOrders
@@ -51,8 +56,12 @@
     }
 }
 
-- (IBAction)returnToNewsMap:(id)sender
-{
+- (IBAction)cancel:(id)sender {
+    [self.delegate updateSearchFilters:self displayOrders:nil articleAges:nil articleTags:nil save:NO];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)save:(id)sender {
     NSMutableArray *displayOrdersToReturn = [[NSMutableArray alloc] initWithCapacity:[self.displayOrders count]];
     for (NSMutableDictionary *displayOrder in self.displayOrders) {
         [displayOrdersToReturn addObject:[NSDictionary dictionaryWithDictionary:displayOrder]];
@@ -68,7 +77,7 @@
         [articleTagsToReturn addObject:[NSDictionary dictionaryWithDictionary:tag]];
     }
     
-    [self.delegate updateSearchFilters:[NSArray arrayWithArray:displayOrdersToReturn] articleAges:[NSArray arrayWithArray:articleAgesToReturn] articleTags:[NSArray arrayWithArray:articleTagsToReturn]];
+    [self.delegate updateSearchFilters:self displayOrders:[NSArray arrayWithArray:displayOrdersToReturn] articleAges:[NSArray arrayWithArray:articleAgesToReturn] articleTags:[NSArray arrayWithArray:articleTagsToReturn] save:YES];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

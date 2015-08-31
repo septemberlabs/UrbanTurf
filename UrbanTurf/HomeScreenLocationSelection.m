@@ -74,8 +74,8 @@
     }
     
     if (indexPath.section == 0) {
-        cell.textLabel.text = @"Current Location";
-        if ([currentHomeScreenLocation isEqualToString:@"Current Location"]) {
+        cell.textLabel.text = currentLocationString;
+        if ([currentHomeScreenLocation isEqualToString:currentLocationString]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
         else {

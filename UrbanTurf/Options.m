@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *displayOrderCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *searchRadiusCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *homeScreenCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *homeMarketCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *versionCell;
 @end
 
@@ -24,10 +25,26 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
+    
+    // display order.
     NSDictionary *displayOrder = [[Constants displayOrders] objectAtIndex:[defaults integerForKey:userDefaultsDisplayOrderKey]];
     self.displayOrderCell.detailTextLabel.text = (NSString *)[displayOrder objectForKey:@"Menu Item"];
+    
+    // radius.
     self.searchRadiusCell.detailTextLabel.text = [NSString stringWithFormat:@"%.1f mi", [defaults floatForKey:userDefaultsRadiusKey]];
+    
+    // default location.
     self.homeScreenCell.detailTextLabel.text = [defaults stringForKey:userDefaultsHomeScreenLocationKey];
+    
+    // home market. it may not yet be set, in which we case display a value saying as much.
+    if ([defaults objectForKey:userDefaultsCityKey] != nil) {
+        NSDictionary *city = (NSDictionary *)[[Constants cities] objectAtIndex:[defaults integerForKey:userDefaultsCityKey]];
+        self.homeMarketCell.detailTextLabel.text = (NSString *)[city objectForKey:@"Name"];
+    }
+    else {
+        self.homeMarketCell.detailTextLabel.text = @"Unspecified";
+    }
+    
     self.versionCell.detailTextLabel.text = [defaults stringForKey:userDefaultsVersionKey];
 }
 

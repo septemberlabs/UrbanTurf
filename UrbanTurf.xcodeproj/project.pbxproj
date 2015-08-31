@@ -79,6 +79,7 @@
 		1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB61B251D17009164F6 /* ArticleView.m */; };
 		1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9B1371ACCADF8004F3A5B /* Radius.m */; };
 		1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */; };
+		1AFC88321B94C169002F491F /* HomeMarketTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC88311B94C169002F491F /* HomeMarketTVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -230,6 +231,8 @@
 		1AF9B1371ACCADF8004F3A5B /* Radius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Radius.m; sourceTree = "<group>"; };
 		1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteLocationsTVC.h; sourceTree = "<group>"; };
 		1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteLocationsTVC.m; sourceTree = "<group>"; };
+		1AFC88301B94C169002F491F /* HomeMarketTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeMarketTVC.h; sourceTree = "<group>"; };
+		1AFC88311B94C169002F491F /* HomeMarketTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeMarketTVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -393,6 +396,8 @@
 		1AB7BF061ACDD219003BCCC0 /* Options */ = {
 			isa = PBXGroup;
 			children = (
+				1AFC88301B94C169002F491F /* HomeMarketTVC.h */,
+				1AFC88311B94C169002F491F /* HomeMarketTVC.m */,
 				1AC8126D1ABF904500ABD302 /* Options.h */,
 				1AC8126E1ABF904500ABD302 /* Options.m */,
 				1AB7BF071ACDFB6E003BCCC0 /* SearchOptions.h */,
@@ -661,6 +666,7 @@
 				1AECA1681AF059E500EAE054 /* UIAlertView+AFNetworking.m in Sources */,
 				1AECA16D1AF059E500EAE054 /* UIWebView+AFNetworking.m in Sources */,
 				1AECA1651AF059E500EAE054 /* AFURLSessionManager.m in Sources */,
+				1AFC88321B94C169002F491F /* HomeMarketTVC.m in Sources */,
 				1AECA16A1AF059E500EAE054 /* UIImageView+AFNetworking.m in Sources */,
 				1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */,
 				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,

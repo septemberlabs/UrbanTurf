@@ -155,7 +155,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.clearDataAndMapUponFetchReturn = YES;
     
     self.locationAwarenessEnabled = NO;
-    [self establishLocationAwarenessPermissions];
+
+    [self goToDefaultLocation];
 }
 
 - (GMSMapView *)mapView
@@ -1296,6 +1297,47 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 #pragma mark - Misc
 
+- (void)goToDefaultLocation
+{
+    // if the user has a default location selected, go there.
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:userDefaultsHomeScreenLocationKey] != nil) {
+        
+        NSString *homeScreenLocation = [defaults stringForKey:userDefaultsHomeScreenLocationKey];
+        
+        // user's default location is current location anyway, so initiate attempt to go to current location.
+        if ([homeScreenLocation isEqualToString:currentLocationString]) {
+            [self establishLocationAwarenessPermissions];
+        }
+        else {
+            CLLocationDegrees latitude = 0;
+            CLLocationDegrees longitude = 0;
+            NSArray *savedLocations = [[NSUserDefaults standardUserDefaults] arrayForKey:userDefaultsSavedLocationsKey];
+            for (NSDictionary *savedLocation in savedLocations) {
+                NSString *savedLocationName = (NSString *)savedLocation[@"Name"];
+                if ([homeScreenLocation isEqualToString:savedLocationName]) {
+                    latitude = ((NSNumber *)savedLocation[@"Latitude"]).doubleValue;
+                    longitude = ((NSNumber *)savedLocation[@"Longitude"]).doubleValue;
+                    break;
+                }
+            }
+            // if latitude is something other than 0, we found the match in the user's saved locations and we go there.
+            if (latitude != 0) {
+                [self setLocationWithLatitude:latitude andLongitude:longitude zoom:DEFAULT_ZOOM_LEVEL];
+            }
+            // if latitude is 0, we didn't find a match so initiate attempt to go to current location.
+            else {
+                [self establishLocationAwarenessPermissions];
+            }
+        }
+    }
+    // user has no default location saved so initiate attempt to go to current location.
+    else {
+        [self establishLocationAwarenessPermissions];
+    }
+}
+
+
 // called when an article is tapped in full-mape view.
 - (void)loadArticle:(Article *)article
 {
@@ -1467,12 +1509,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 #pragma mark - SearchFiltersTVCDelegate
 
-- (void)updateSearchFilters:(NSArray *)displayOrders articleAges:(NSArray *)articleAges articleTags:(NSArray *)articleTags
+- (void)updateSearchFilters:(SearchFilters *)searchFiltersVC displayOrders:(NSArray *)displayOrders articleAges:(NSArray *)articleAges articleTags:(NSArray *)articleTags save:(BOOL)shouldUpdate
 {
-    self.displayOrders = displayOrders;
-    self.articleAges = articleAges;
-    self.articleTags = articleTags;
-    [self fetchData];
+    if (shouldUpdate) {
+        self.displayOrders = displayOrders;
+        self.articleAges = articleAges;
+        self.articleTags = articleTags;
+        [self fetchData];
+    }
 }
 
 #pragma mark - CLLocationManagerDelegate

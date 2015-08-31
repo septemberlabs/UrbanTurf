@@ -15,12 +15,6 @@
 
 @implementation DisplayOrder
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.tableView.layer.borderWidth = 1.0f;
-    self.tableView.layer.borderColor = [[UIColor greenColor] CGColor];
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -39,7 +33,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier];
     }
 
-    cell.textLabel.text = (NSString *)[[Constants displayOrders] objectAtIndex:indexPath.row];
+    NSDictionary *displayOrder = (NSDictionary *)[[Constants displayOrders] objectAtIndex:indexPath.row];
+    cell.textLabel.text = (NSString *)[displayOrder objectForKey:@"Menu Item"];
     
     if (indexPath.row == [[NSUserDefaults standardUserDefaults] integerForKey:userDefaultsDisplayOrderKey]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;

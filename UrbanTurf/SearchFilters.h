@@ -10,7 +10,7 @@
 
 @protocol SearchFiltersDelegate; // forward declaration
 
-@interface SearchFilters : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface SearchFilters : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationBarDelegate>
 @property (nonatomic, weak) id<SearchFiltersDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray *displayOrders;
 @property (strong, nonatomic) NSMutableArray *articleAges;
@@ -20,5 +20,5 @@
 // delegate protocol
 @protocol SearchFiltersDelegate <NSObject>
 @required
-- (void)updateSearchFilters:(NSArray *)displayOrders articleAges:(NSArray *)articleAges articleTags:(NSArray *)articleTags;
+- (void)updateSearchFilters:(SearchFilters *)searchFiltersVC displayOrders:(NSArray *)displayOrders articleAges:(NSArray *)articleAges articleTags:(NSArray *)articleTags save:(BOOL)shouldUpdate;
 @end // end of delegate protocol
