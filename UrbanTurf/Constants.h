@@ -59,6 +59,7 @@ extern CLLocationCoordinate2D const jacksonHoleSquare;
 // UI
 extern NSString * const image_not_downloaded;
 extern float const FONT_POINT_SIZE;
+extern NSString * const map_marker_remoteURL;
 extern NSString * const map_marker_currentLocation;
 + (NSArray *)mapMarkersDefault;
 + (NSArray *)mapMarkersSelected;

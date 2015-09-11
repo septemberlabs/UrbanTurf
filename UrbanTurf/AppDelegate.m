@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "Stylesheet.h"
 #import "Constants.h"
 #import <GoogleMaps/GoogleMaps.h>
 #import <Fabric/Fabric.h>
@@ -21,6 +22,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // nav bar look
+    [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack]; // this forces status bar text to be white.
+    [[UINavigationBar appearance] setBarTintColor:[Stylesheet color6]];
+    [[UINavigationBar appearance] setTintColor:[Stylesheet color7]];
+    [[UINavigationBar appearance] setTranslucent:NO];
     
     // prepare the app defaults
     NSArray *defaultsKeys = [NSArray arrayWithObjects:

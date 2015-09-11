@@ -34,6 +34,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton; // button to right of search field.
 @property (weak, nonatomic) IBOutlet UIButton *searchFiltersButton; // button to left of search field.
+@property (strong, nonatomic) UIImage *expandMap;
+@property (strong, nonatomic) UIImage *contractMap;
 
 // data structures related to search field.
 @property (strong, nonatomic) NSArray *searchResults;
@@ -49,6 +51,8 @@
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapContainerViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+
+@property (weak, nonatomic) IBOutlet UIView *searchControlsContainerView;
 
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) ArticleContainer *articleContainerWithFocus; // article container with current focus, if any. list-view mode.
@@ -111,27 +115,46 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 {
     [super viewDidLoad];
     
+    // we add this here just to force the status bar to use this color.
+    self.view.backgroundColor = [Stylesheet color6];
+    
     // configure the table view
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
     // map view button
+    self.expandMap = [UIImage imageNamed:@"expand-map"];
+    self.contractMap = [UIImage imageNamed:@"contract-map"];
+    [self.toggleViewButton setImage:self.expandMap forState:UIControlStateNormal];
+    self.toggleViewButton.tintColor = [Stylesheet color7];
+    /*
     [self.toggleViewButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
     [self.toggleViewButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
     [self.toggleViewButton setTitle:[NSString stringWithUTF8String:"\ue80f"] forState:UIControlStateNormal];
+     */
     
     // search filters button
+    [self.searchFiltersButton setImage:[UIImage imageNamed:@"sliders"] forState:UIControlStateNormal];
+    self.searchFiltersButton.tintColor = [Stylesheet color7];
+    
+    /*
     [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
     [self.searchFiltersButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
     [self.searchFiltersButton setTitle:[NSString stringWithUTF8String:"\ue804"] forState:UIControlStateNormal];
+     */
     
     // search filters. see Constants.m for the values each array element represents.
     self.displayOrders = [Constants displayOrders];
     self.articleAges = [Constants articleAges];
     self.articleTags = [Constants articleTags];
-
-    self.searchDisplayController.searchBar.tintColor = [Stylesheet color1];
     
+    // this took lots of doing to get right. the trick was setting the background image to an empty image, and then setting backgroundColor rather than barTintColor. thank you: http://stackoverflow.com/questions/19301091/how-to-change-background-color-of-uisearchbar-in-ios7
+    self.searchDisplayController.searchBar.searchBarStyle = UISearchBarStyleDefault;
+    self.searchDisplayController.searchBar.translucent = NO;
+    self.searchDisplayController.searchBar.backgroundImage = [[UIImage alloc] init];
+    self.searchDisplayController.searchBar.backgroundColor = [Stylesheet color6];
+    self.searchDisplayController.searchBar.tintColor = [Stylesheet color7];
+        
     // by default the table view is displayed.
     self.listView = YES;
     
@@ -159,6 +182,11 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     [self goToDefaultLocation];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
 - (GMSMapView *)mapView
 {
     if (!_mapView) {
@@ -169,7 +197,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         self.mapView = [GMSMapView mapWithFrame:self.mapContainerView.bounds camera:cameraPosition];
         self.mapView.translatesAutoresizingMaskIntoConstraints = NO;
         self.mapView.delegate = self;
-        self.mapView.settings.myLocationButton = NO;
+        self.mapView.settings.myLocationButton = YES;
+        self.mapView.settings.compassButton = YES;
         self.mapView.indoorEnabled = NO; // disabled this to suppress the random error "Encountered indoor level with missing enclosing_building field" we were getting.
         
         // add it the screen.
@@ -1201,6 +1230,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                          }];
         
         self.listView = NO; // save the state so we know whether to expand or contract next time the button is pressed.
+        [self.toggleViewButton setImage:self.contractMap forState:UIControlStateNormal];
     }
     
     // show the list, shrink the map
@@ -1224,6 +1254,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                          }];
 
         self.listView = YES; // save the state so we know whether to expand or contract next time the button is pressed.
+        [self.toggleViewButton setImage:self.expandMap forState:UIControlStateNormal];
     }
 
     [self fetchData];

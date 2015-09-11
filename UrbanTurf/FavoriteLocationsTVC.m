@@ -67,11 +67,11 @@
     }
     else {
         if ([self.savedLocations count]) {
-            return @"Favorites";
+            return @"Your Locations";
         }
         // if there are no saved locations, indicate this to the user
         else {
-            return @"No Favorites";
+            return @"No Saved Locations";
         }
     }    
 }
@@ -85,7 +85,7 @@
     }
     
     if (indexPath.section == 0) {
-        cell.textLabel.text = @"Add This Location to Favorites";
+        cell.textLabel.text = @"Add This to Your Locations";
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else {

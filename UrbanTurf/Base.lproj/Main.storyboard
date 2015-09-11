@@ -11,7 +11,7 @@
             <objects>
                 <tableViewController id="xZv-Qt-1ax" userLabel="Options - Main Menu" customClass="Options" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ODp-KX-3v6">
-                        <rect key="frame" x="0.0" y="64" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
@@ -153,7 +153,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="About" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="pvY-nJ-WGF">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -167,7 +167,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Version" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Uzz-GB-agv">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="100.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NLe-Lz-9z4">
@@ -229,7 +229,7 @@
                             <outlet property="delegate" destination="xZv-Qt-1ax" id="Swa-0p-zth"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Options" id="9gB-ym-tQ8"/>
+                    <navigationItem key="navigationItem" title="Settings" id="9gB-ym-tQ8"/>
                     <connections>
                         <outlet property="displayOrderCell" destination="Ff9-wX-KOi" id="jJ6-LP-EIE"/>
                         <outlet property="homeMarketCell" destination="v5t-Zf-CkQ" id="ZVU-6D-hME"/>
@@ -247,7 +247,7 @@
             <objects>
                 <tableViewController id="6fc-Ri-spC" userLabel="Options - Radius" customClass="RadiusOld" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="3wc-bc-aAv">
-                        <rect key="frame" x="0.0" y="64" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
@@ -363,7 +363,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="cGN-VR-iRk">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="DYC-fT-Vqb">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -391,6 +391,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.8784313725490196" green="0.88235294117647056" blue="0.88627450980392153" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="j9b-vJ-qSZ" kind="relationship" relationship="viewControllers" id="Pxa-Fj-V7X"/>
@@ -514,9 +515,10 @@
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRU-d9-LkK" userLabel="Search Filters Button">
-                                        <rect key="frame" x="8" y="6" width="40" height="44"/>
+                                        <rect key="frame" x="8" y="9.5" width="25" height="25"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="40" id="72S-o8-jNa"/>
+                                            <constraint firstAttribute="height" constant="25" id="6hw-0V-NtM"/>
+                                            <constraint firstAttribute="width" constant="25" id="72S-o8-jNa"/>
                                         </constraints>
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -526,38 +528,33 @@
                                             <segue destination="jq8-Rm-jiI" kind="presentation" identifier="SearchFiltersSegue" id="A5U-Wf-BD1"/>
                                         </connections>
                                     </button>
-                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Go to location..." translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
-                                        <rect key="frame" x="48" y="0.0" width="512" height="44"/>
+                                    <searchBar contentMode="redraw" placeholder="Go to location..." translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdZ-fx-JPL">
+                                        <rect key="frame" x="33" y="0.0" width="534" height="44"/>
                                         <textInputTraits key="textInputTraits"/>
                                         <connections>
                                             <outlet property="delegate" destination="STl-BS-KjN" id="u0B-Tn-MVL"/>
                                         </connections>
                                     </searchBar>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tcz-a2-ut1" userLabel="Toggle View Button">
-                                        <rect key="frame" x="560" y="6" width="40" height="44"/>
+                                        <rect key="frame" x="567" y="9" width="25" height="25"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="40" id="kuN-bA-CnG"/>
+                                            <constraint firstAttribute="width" constant="25" id="kuN-bA-CnG"/>
+                                            <constraint firstAttribute="height" constant="25" id="qJL-gU-XfL"/>
                                         </constraints>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
                                         <connections>
                                             <action selector="pressToggleViewButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="f3G-l2-R2H"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="iRU-d9-LkK" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="top" constant="6" id="5dh-ib-QxN"/>
-                                    <constraint firstItem="Tcz-a2-ut1" firstAttribute="height" secondItem="jdZ-fx-JPL" secondAttribute="height" id="AZl-WC-uRf"/>
+                                    <constraint firstItem="jdZ-fx-JPL" firstAttribute="centerY" secondItem="iRU-d9-LkK" secondAttribute="centerY" id="4fZ-8z-O4V"/>
                                     <constraint firstAttribute="centerY" secondItem="jdZ-fx-JPL" secondAttribute="centerY" id="M4i-X7-VFV"/>
                                     <constraint firstItem="jdZ-fx-JPL" firstAttribute="leading" secondItem="iRU-d9-LkK" secondAttribute="trailing" id="ZIs-sk-pHk"/>
-                                    <constraint firstAttribute="trailing" secondItem="Tcz-a2-ut1" secondAttribute="trailing" id="apD-nZ-SLm"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tcz-a2-ut1" secondAttribute="trailing" constant="8" id="apD-nZ-SLm"/>
                                     <constraint firstItem="iRU-d9-LkK" firstAttribute="leading" secondItem="8Xm-ZY-1dp" secondAttribute="leading" constant="8" id="avr-7K-jLs"/>
-                                    <constraint firstItem="iRU-d9-LkK" firstAttribute="height" secondItem="jdZ-fx-JPL" secondAttribute="height" id="imY-XH-xWF"/>
+                                    <constraint firstItem="Tcz-a2-ut1" firstAttribute="centerY" secondItem="jdZ-fx-JPL" secondAttribute="centerY" id="hcq-fD-yoV"/>
                                     <constraint firstItem="Tcz-a2-ut1" firstAttribute="leading" secondItem="jdZ-fx-JPL" secondAttribute="trailing" id="lnT-FZ-VXO"/>
                                     <constraint firstItem="jdZ-fx-JPL" firstAttribute="height" secondItem="8Xm-ZY-1dp" secondAttribute="height" id="uz0-VH-Jyg"/>
-                                    <constraint firstItem="Tcz-a2-ut1" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="top" constant="6" id="z2T-G9-zax"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sal-Vu-s9R" userLabel="Article Overlay">
@@ -571,7 +568,7 @@
                                 <rect key="frame" x="290" y="265" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.25882352939999997" green="0.47058823529999999" blue="0.098039215690000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="HLc-Kg-4Pz" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="4MW-c0-bfh"/>
                             <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="Z6b-sw-l5K" secondAttribute="bottom" id="DWX-GN-N9N"/>
@@ -597,6 +594,7 @@
                         <outlet property="articleOverlayTopEdgeConstraint" destination="fRI-lx-8Pt" id="gkK-Nm-CFg"/>
                         <outlet property="mapContainerView" destination="HLc-Kg-4Pz" id="wXL-aO-ve3"/>
                         <outlet property="mapContainerViewHeightConstraint" destination="fkE-uh-KRW" id="xtX-mG-Uz2"/>
+                        <outlet property="searchControlsContainerView" destination="8Xm-ZY-1dp" id="QuB-T2-yGo"/>
                         <outlet property="searchDisplayController" destination="StY-bM-Ueg" id="TgF-s7-wWI"/>
                         <outlet property="searchFiltersButton" destination="iRU-d9-LkK" id="Q72-R1-iyl"/>
                         <outlet property="spinner" destination="i1Y-Yb-DoU" id="AR2-jc-wz3"/>
@@ -763,7 +761,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9hp-6D-nwR">
-                                <rect key="frame" x="290" y="266" width="20" height="20"/>
+                                <rect key="frame" x="290" y="265.5" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -785,7 +783,7 @@
             </objects>
             <point key="canvasLocation" x="2305" y="458"/>
         </scene>
-        <!--Favorite Locations-->
+        <!--My Locations-->
         <scene sceneID="dPT-HX-wJh">
             <objects>
                 <viewController id="rSN-jO-E3e" customClass="FavoriteLocationsTVC" sceneMemberID="viewController">
@@ -819,7 +817,7 @@
                             <constraint firstAttribute="trailing" secondItem="CME-kH-gmC" secondAttribute="trailing" id="eGi-qM-9ha"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Favorite Locations" id="MG4-VW-yD7"/>
+                    <navigationItem key="navigationItem" title="My Locations" id="MG4-VW-yD7"/>
                     <connections>
                         <outlet property="navigationBar" destination="MG4-VW-yD7" id="Isw-O6-bVh"/>
                         <outlet property="tableView" destination="CME-kH-gmC" id="UoQ-rZ-lNC"/>
@@ -960,7 +958,7 @@
             <objects>
                 <tableViewController id="dU6-70-Xsi" userLabel="Options - Home Screen" customClass="HomeScreenLocationSelection" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="2e0-nR-s10">
-                        <rect key="frame" x="0.0" y="64" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
@@ -987,7 +985,7 @@
         <scene sceneID="Z9F-A9-tZh">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ZL4-cQ-v6S" userLabel="Nav Controller - Options Main Menu" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Options" id="nEa-jl-Tcc"/>
+                    <tabBarItem key="tabBarItem" title="Settings" id="nEa-jl-Tcc"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ptc-85-BAv">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1002,11 +1000,11 @@
             </objects>
             <point key="canvasLocation" x="-168" y="2058"/>
         </scene>
-        <!--Google Map-->
+        <!--Nav Controller - News Map-->
         <scene sceneID="rP4-zE-xUr">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="t0W-QG-CKB" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Google Map" id="uov-xH-laq"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="t0W-QG-CKB" userLabel="Nav Controller - News Map" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" selectedImage="Star Filled-32" id="uov-xH-laq"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U97-AZ-qpo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1023,6 +1021,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Star Filled-32" width="16" height="16"/>
         <image name="cursor-crosshair" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>

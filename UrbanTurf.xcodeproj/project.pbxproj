@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A04AFF71BA26D3D00B2B526 /* UIImage+ColorOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A04AFF61BA26D3D00B2B526 /* UIImage+ColorOverlay.m */; };
 		1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */; };
 		1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A059D8F1B1FC54F00FF4F64 /* ArticleOverlayView.m */; };
 		1A0E1DA11B3394A2002F3DF9 /* UIView+AddBorders.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */; };
@@ -93,6 +94,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A04AFF51BA26D3D00B2B526 /* UIImage+ColorOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ColorOverlay.h"; sourceTree = "<group>"; };
+		1A04AFF61BA26D3D00B2B526 /* UIImage+ColorOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ColorOverlay.m"; sourceTree = "<group>"; };
 		1A04DDA11B2390E5001D9480 /* NewsMapTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTableViewCell.h; sourceTree = "<group>"; };
 		1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTableViewCell.m; sourceTree = "<group>"; };
 		1A059D8E1B1FC54F00FF4F64 /* ArticleOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleOverlayView.h; sourceTree = "<group>"; };
@@ -354,6 +357,8 @@
 				1AA297081B9414140019FBCE /* MarkerImageHolder.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
+				1A04AFF51BA26D3D00B2B526 /* UIImage+ColorOverlay.h */,
+				1A04AFF61BA26D3D00B2B526 /* UIImage+ColorOverlay.m */,
 				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
 				1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
@@ -652,6 +657,7 @@
 				1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */,
 				1AECA1691AF059E500EAE054 /* UIButton+AFNetworking.m in Sources */,
 				1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */,
+				1A04AFF71BA26D3D00B2B526 /* UIImage+ColorOverlay.m in Sources */,
 				1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */,
 				1A6F40C01B86E49700028759 /* ArticleContainer.m in Sources */,
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,

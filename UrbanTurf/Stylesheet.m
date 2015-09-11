@@ -17,6 +17,8 @@ static UIColor *_color2 = nil;
 static UIColor *_color3 = nil;
 static UIColor *_color4 = nil;
 static UIColor *_color5 = nil;
+static UIColor *_color6 = nil;
+static UIColor *_color7 = nil;
 static NSString *_fonticons = nil;
 static CGFloat _searchBarFontIconSize;
 static CGFloat _tabBarFontIconSize;
@@ -76,6 +78,12 @@ static CGFloat _tabBarFontIconSize;
     // Light grey used for border between map and views beneath.
     _color5 = [UIColor lightGrayColor];
     
+    // RGB: 81, 136, 33. Green used in title bar.
+    _color6 = [UIColor colorWithRed:(81/255.f) green:(136/255.f) blue:(33/255.f) alpha: 1];
+    
+    // White. For text in title bar.
+    _color7 = [UIColor whiteColor];
+    
     _fonticons = @"fontello";
     
     _searchBarFontIconSize = 22.0;
@@ -90,6 +98,8 @@ static CGFloat _tabBarFontIconSize;
 + (UIColor*)color3 { return _color3; }
 + (UIColor*)color4 { return _color4; }
 + (UIColor*)color5 { return _color5; }
++ (UIColor*)color6 { return _color6; }
++ (UIColor*)color7 { return _color7; }
 + (NSString*)fonticons { return _fonticons; }
 + (CGFloat)searchBarFontIconSize { return _searchBarFontIconSize; }
 + (CGFloat)tabBarFontIconSize { return _tabBarFontIconSize; }

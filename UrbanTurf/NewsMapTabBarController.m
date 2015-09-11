@@ -11,6 +11,7 @@
 #import "FavoriteLocationsTVC.h"
 #import "NewsMap.h"
 #import "Constants.h"
+#import "UIImage+ColorOverlay.h"
 
 @interface NewsMapTabBarController ()
 
@@ -21,26 +22,82 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIImageRenderingMode renderingMode = UIImageRenderingModeAlwaysTemplate;
+    NSArray *tabs =  @[
+                       @{@"Selected Image" : @"tabbar-favorites",
+                         @"Unselected Image" : @"tabbar-favorites-selected",
+                         @"Title" : @"My Locations"},
+                       @{@"Selected Image" : @"tabbar-map",
+                         @"Unselected Image" : @"tabbar-map-selected",
+                         @"Title" : @"News Map"},
+                       @{@"Selected Image" : @"tabbar-settings",
+                         @"Unselected Image" : @"tabbar-settings-selected",
+                         @"Title" : @"Settings"},
+                       ];
+    int i = 0;
+    for (NSDictionary *tab in tabs) {
+        UIImage *icon = [UIImage imageNamed:(NSString *)[tab objectForKey:@"Selected Image"]];
+        icon = [icon imageWithRenderingMode:renderingMode];
+        UIImage *iconSelected = [UIImage imageNamed:(NSString *)[tab objectForKey:@"Unselected Image"]];
+        iconSelected = [iconSelected imageWithRenderingMode:renderingMode];
+        UITabBarItem *button = [self.tabBar.items objectAtIndex:i];
+        button.title = (NSString *)[tab objectForKey:@"Title"];
+        button.image = icon;
+        button.selectedImage = iconSelected;
+        i++;
+    }
+    
+    // The following uses the category UIImage+ColorOverlay to correctly color unselected tab text and icons, which apparently is quite difficult to do. thank you: http://stackoverflow.com/questions/11512783/unselected-uitabbar-color/24106632#24106632
+    
+    // set colors for SELECTED tabs
+    [self.tabBar setTintColor:[Stylesheet color6]];
+    [[UITabBarItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName : [Stylesheet color6] }
+                                             forState:UIControlStateSelected];
+    
+    // set colors for UNSELECTED tabs
+    UIColor *unselectedColor = [UIColor purpleColor];
+    // unselected text
+    [[UITabBarItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName : unselectedColor }
+                                             forState:UIControlStateNormal];
+    
+    // generate the correctly-colored unselected images based on the images set above.
+    for (UITabBarItem *item in self.tabBar.items) {
+        // use the category's imageWithColor: method
+        item.image = [[item.image imageWithColor:unselectedColor] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
+    
+    
+    
+    /******************************* old Fontello font icons method below. *******************************
 
     // thank you for font icon explanation: http://xcode.jackietrillo.com/?p=280
-
+    
     NSDictionary* attributesNormal =  @{
                                         NSFontAttributeName: [UIFont fontWithName:@"fontello" size:34.0],
                                         UITextAttributeTextColor: [Stylesheet color1]
                                         };
     
-    for (UITabBarItem* tabBarItem in self.tabBar.items) {
+     for (UITabBarItem* tabBarItem in self.tabBar.items) {
         [tabBarItem setTitleTextAttributes:attributesNormal forState:UIControlStateNormal];
         [tabBarItem setTitlePositionAdjustment:UIOffsetMake(0.0, -8.0)];
-    }
+     }
     
     [[self.tabBar.items objectAtIndex:0] setTitle:[NSString stringWithUTF8String:"\ue818"]]; // left: Star for bookmarked locations. "Saved Locations"
     [[self.tabBar.items objectAtIndex:1] setTitle:[NSString stringWithUTF8String:"\ue800"]]; // center: Map marker for all map interactions. "News Map"
     [[self.tabBar.items objectAtIndex:2] setTitle:[NSString stringWithUTF8String:"\ue808"]]; // right: Gear for options. "Options"
+     
+    ******************************* old Fontello font icons method below. *******************************/
+
     
     self.selectedIndex = 1; // default view controller is the news map
     self.delegate = self; // the delegate is used to intercept button presses
 
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 #pragma mark - Selection of tab bar button (UITabBarControllerDelegate)

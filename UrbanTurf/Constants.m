@@ -55,6 +55,7 @@ const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
 // UI
 NSString * const image_not_downloaded = @"placeholder 250x250";
 float const FONT_POINT_SIZE = 12.0;
+NSString * const map_marker_remoteURL = @"http://septemberlabs.com/apps/hoodie/graphics/marker_googlemaps_remote_38x38.png";
 NSString * const map_marker_currentLocation = @"blue marker 72x72";
 UIEdgeInsets const map_marker_insets = {34.0, 34.0, 34.0, 34.0}; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
 CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.

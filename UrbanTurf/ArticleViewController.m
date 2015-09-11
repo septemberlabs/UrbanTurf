@@ -32,11 +32,17 @@
 
 @implementation ArticleViewController
 
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    NSLog(@"preferredStatusBarStyle called.");
+    return UIStatusBarStyleLightContent;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     // turn on the navigation bar, which we want for the Back button.
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];    
     // set self to the delegate so we can capture and act on the action of the user tapping Back.
     self.navigationController.delegate = self;
     
@@ -94,12 +100,17 @@
     [self processImage];
 }
 
-- (void)viewDidLayoutSubviews
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidLayoutSubviews];
+    [super viewDidAppear:animated];
 
     // wait to load the map image until here since the map views's frame size won't be known earlier, and it is a required parameter for the URL.
     [self.articleView.mapImageView setImageWithURL:[self googleStaticMapURL]];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
 
     // calculate the final article view height now that all the dynamic content has been loaded, and force one more layout.
     self.articleViewHeight.constant = [self.articleView dynamicallyCalculatedHeight];
@@ -148,14 +159,15 @@
 - (NSURL *)googleStaticMapURL
 {
     // format here: https://developers.google.com/maps/documentation/staticmaps/
-    NSString *latlonString = [NSString stringWithFormat:@"%f,%f", self.article.coordinate.latitude, self.article.coordinate.longitude];
+    NSString *markersString = [NSString stringWithFormat:@"icon:%@|shadow:false|%f,%f", map_marker_remoteURL, self.article.coordinate.latitude, self.article.coordinate.longitude];
+    NSString *centerString = [NSString stringWithFormat:@"%f,%f", self.article.coordinate.latitude, self.article.coordinate.longitude];
     NSString *mapDimensions = [NSString stringWithFormat:@"%dx%d", (int)self.articleView.mapImageView.frame.size.width, (int)self.articleView.mapImageView.frame.size.height];
     NSDictionary *params = @{
-                             @"center" : latlonString,
-                             @"zoom" : @"14",
+                             @"center" : centerString,
+                             @"zoom" : @"15",
                              @"size" : mapDimensions,
                              @"maptype" : @"roadmap",
-                             @"markers" : latlonString,
+                             @"markers" : markersString,
                              @"scale" : @"2"
                              };
     NSString *mapImageURL = googleStaticMapBaseURL;
