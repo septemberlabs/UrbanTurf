@@ -8,12 +8,21 @@
 
 #import "HomeMarketTVC.h"
 #import "Constants.h"
+#import "Stylesheet.h"
 
 @interface HomeMarketTVC ()
 
 @end
 
 @implementation HomeMarketTVC
+
+#pragma mark - Table view data source
+
+- (void)viewDidLoad
+{
+    // colors the check marks.
+    self.tableView.tintColor = [Stylesheet color6];
+}
 
 #pragma mark - Table view data source
 

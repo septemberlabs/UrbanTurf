@@ -14,7 +14,7 @@
 		1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A0F7A761B7D7E27001DBD89 /* ArticleOverlayView.xib */; };
 		1A12DDD31B80333E0033046F /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A12DDD11B80333E0033046F /* Fabric.framework */; };
 		1A12DDD41B80333E0033046F /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A12DDD21B80333E0033046F /* Crashlytics.framework */; };
-		1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */; };
+		1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* TabBarController.m */; };
 		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
 		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
 		1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5E1A49F6D70033AC87 /* UrbanTurfFetcher.m */; };
@@ -34,14 +34,8 @@
 		1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A56E1A48E3D900369211 /* Images.xcassets */; };
 		1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB1A5701A48E3D900369211 /* LaunchScreen.xib */; };
 		1AB1A57E1A48E3D900369211 /* UrbanTurfTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */; };
-		1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BEFD1ACDC97C003BCCC0 /* RadiusSliderCell.m */; };
-		1AB7BF001ACDC97C003BCCC0 /* RadiusSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB7BEFE1ACDC97C003BCCC0 /* RadiusSliderCell.xib */; };
-		1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */; };
-		1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */; };
-		1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */; };
 		1AC8126C1ABF3A1F00ABD302 /* DisplayOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */; };
 		1AC8126F1ABF904500ABD302 /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC8126E1ABF904500ABD302 /* Options.m */; };
-		1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC812711ABFDAB000ABD302 /* RadiusOld.m */; };
 		1AD33F4F1AB551F500DE1DE2 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */; };
 		1AD33F511AB5526E00DE1DE2 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */; };
 		1AD33F5E1AB5530000DE1DE2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD33F521AB552FF00DE1DE2 /* AVFoundation.framework */; };
@@ -78,7 +72,6 @@
 		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
 		1AF7ADB41B251BB4009164F6 /* ArticleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB31B251BB4009164F6 /* ArticleView.xib */; };
 		1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB61B251D17009164F6 /* ArticleView.m */; };
-		1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9B1371ACCADF8004F3A5B /* Radius.m */; };
 		1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */; };
 		1AFC88321B94C169002F491F /* HomeMarketTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC88311B94C169002F491F /* HomeMarketTVC.m */; };
 /* End PBXBuildFile section */
@@ -105,8 +98,8 @@
 		1A0F7A761B7D7E27001DBD89 /* ArticleOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleOverlayView.xib; sourceTree = "<group>"; };
 		1A12DDD11B80333E0033046F /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1A12DDD21B80333E0033046F /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMapTabBarController.h; sourceTree = "<group>"; };
-		1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMapTabBarController.m; sourceTree = "<group>"; };
+		1A2CEBDA1A8AC725004DE623 /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
+		1A2CEBDB1A8AC725004DE623 /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		1A2E6A571A49F5BD0033AC87 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
 		1A2E6A591A49F6160033AC87 /* Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fetcher.h; sourceTree = "<group>"; };
@@ -146,20 +139,10 @@
 		1AB1A5771A48E3D900369211 /* UrbanTurfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UrbanTurfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB1A57C1A48E3D900369211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AB1A57D1A48E3D900369211 /* UrbanTurfTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UrbanTurfTests.m; sourceTree = "<group>"; };
-		1AB7BEFC1ACDC97C003BCCC0 /* RadiusSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusSliderCell.h; sourceTree = "<group>"; };
-		1AB7BEFD1ACDC97C003BCCC0 /* RadiusSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusSliderCell.m; sourceTree = "<group>"; };
-		1AB7BEFE1ACDC97C003BCCC0 /* RadiusSliderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadiusSliderCell.xib; sourceTree = "<group>"; };
-		1AB7BF011ACDD0B1003BCCC0 /* RadiusLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusLabelCell.h; sourceTree = "<group>"; };
-		1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusLabelCell.m; sourceTree = "<group>"; };
-		1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadiusLabelCell.xib; sourceTree = "<group>"; };
-		1AB7BF071ACDFB6E003BCCC0 /* SearchOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchOptions.h; sourceTree = "<group>"; };
-		1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchOptions.m; sourceTree = "<group>"; };
 		1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayOrder.h; sourceTree = "<group>"; };
 		1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayOrder.m; sourceTree = "<group>"; };
 		1AC8126D1ABF904500ABD302 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
 		1AC8126E1ABF904500ABD302 /* Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Options.m; sourceTree = "<group>"; };
-		1AC812701ABFDAB000ABD302 /* RadiusOld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadiusOld.h; sourceTree = "<group>"; };
-		1AC812711ABFDAB000ABD302 /* RadiusOld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadiusOld.m; sourceTree = "<group>"; };
 		1AD3175E1B06DADF005774D2 /* UrbanTurf-prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UrbanTurf-prefix.pch"; sourceTree = "<group>"; };
 		1AD33F4E1AB551F500DE1DE2 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = SOURCE_ROOT; };
@@ -230,8 +213,6 @@
 		1AF7ADB31B251BB4009164F6 /* ArticleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleView.xib; sourceTree = "<group>"; };
 		1AF7ADB51B251D17009164F6 /* ArticleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleView.h; sourceTree = "<group>"; };
 		1AF7ADB61B251D17009164F6 /* ArticleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleView.m; sourceTree = "<group>"; };
-		1AF9B1361ACCADF8004F3A5B /* Radius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Radius.h; sourceTree = "<group>"; };
-		1AF9B1371ACCADF8004F3A5B /* Radius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Radius.m; sourceTree = "<group>"; };
 		1AFBC7F81AAFD18E00561916 /* FavoriteLocationsTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteLocationsTVC.h; sourceTree = "<group>"; };
 		1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteLocationsTVC.m; sourceTree = "<group>"; };
 		1AFC88301B94C169002F491F /* HomeMarketTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeMarketTVC.h; sourceTree = "<group>"; };
@@ -303,6 +284,34 @@
 			name = Fetchers;
 			sourceTree = "<group>";
 		};
+		1A5FF0121BA4CC35008285DE /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				1A04AFF51BA26D3D00B2B526 /* UIImage+ColorOverlay.h */,
+				1A04AFF61BA26D3D00B2B526 /* UIImage+ColorOverlay.m */,
+				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
+				1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		1A5FF0131BA4CFB1008285DE /* News Map */ = {
+			isa = PBXGroup;
+			children = (
+				1A04DDA11B2390E5001D9480 /* NewsMapTableViewCell.h */,
+				1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */,
+				1AECA16E1AF05CD000EAE054 /* GooglePlacesClient.h */,
+				1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */,
+				1A9E486B1B83002100CC7A8A /* SearchFilters.h */,
+				1A9E486C1B83002100CC7A8A /* SearchFilters.m */,
+				1AF4D2E11AC37D18003168AD /* NewsMap.h */,
+				1AF4D2E21AC37D18003168AD /* NewsMap.m */,
+				1AA297071B9414140019FBCE /* MarkerImageHolder.h */,
+				1AA297081B9414140019FBCE /* MarkerImageHolder.m */,
+			);
+			name = "News Map";
+			sourceTree = "<group>";
+		};
 		1AB1A5521A48E3D900369211 = {
 			isa = PBXGroup;
 			children = (
@@ -329,42 +338,28 @@
 			isa = PBXGroup;
 			children = (
 				1A0F7A751B7D6F66001DBD89 /* Article */,
-				1AB7BF061ACDD219003BCCC0 /* Options */,
 				1A2E6A5C1A49F61D0033AC87 /* Fetchers */,
 				1AC3FBB01ACEDF4F00933C64 /* Favorite Locations */,
-				1AECA1371AF059E500EAE054 /* AFNetworking */,
-				1AECA14B1AF059E500EAE054 /* UIKit+AFNetworking */,
-				1A7DB1DB1ABDFB81003DB53F /* Constants.h */,
-				1A7DB1DC1ABDFB81003DB53F /* Constants.m */,
-				1A04DDA11B2390E5001D9480 /* NewsMapTableViewCell.h */,
-				1A04DDA21B2390E5001D9480 /* NewsMapTableViewCell.m */,
-				1AECA16E1AF05CD000EAE054 /* GooglePlacesClient.h */,
-				1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */,
+				1A5FF0131BA4CFB1008285DE /* News Map */,
+				1AB7BF061ACDD219003BCCC0 /* Options */,
 				1AB1A5621A48E3D900369211 /* AppDelegate.h */,
 				1AB1A5631A48E3D900369211 /* AppDelegate.m */,
+				1A7DB1DB1ABDFB81003DB53F /* Constants.h */,
+				1A7DB1DC1ABDFB81003DB53F /* Constants.m */,
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
-				1A9E486B1B83002100CC7A8A /* SearchFilters.h */,
-				1A9E486C1B83002100CC7A8A /* SearchFilters.m */,
-				1AF9B1361ACCADF8004F3A5B /* Radius.h */,
-				1AF9B1371ACCADF8004F3A5B /* Radius.m */,
-				1AF4D2E11AC37D18003168AD /* NewsMap.h */,
-				1AF4D2E21AC37D18003168AD /* NewsMap.m */,
-				1A2CEBDA1A8AC725004DE623 /* NewsMapTabBarController.h */,
-				1A2CEBDB1A8AC725004DE623 /* NewsMapTabBarController.m */,
+				1A2CEBDA1A8AC725004DE623 /* TabBarController.h */,
+				1A2CEBDB1A8AC725004DE623 /* TabBarController.m */,
 				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
 				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
-				1AA297071B9414140019FBCE /* MarkerImageHolder.h */,
-				1AA297081B9414140019FBCE /* MarkerImageHolder.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
-				1A04AFF51BA26D3D00B2B526 /* UIImage+ColorOverlay.h */,
-				1A04AFF61BA26D3D00B2B526 /* UIImage+ColorOverlay.m */,
-				1A0E1D9F1B3394A2002F3DF9 /* UIView+AddBorders.h */,
-				1A0E1DA01B3394A2002F3DF9 /* UIView+AddBorders.m */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
 				1AB1A5701A48E3D900369211 /* LaunchScreen.xib */,
 				1AD3175E1B06DADF005774D2 /* UrbanTurf-prefix.pch */,
+				1A5FF0121BA4CC35008285DE /* Categories */,
 				1AB1A55E1A48E3D900369211 /* Supporting Files */,
+				1AECA1371AF059E500EAE054 /* AFNetworking */,
+				1AECA14B1AF059E500EAE054 /* UIKit+AFNetworking */,
 			);
 			path = UrbanTurf;
 			sourceTree = "<group>";
@@ -405,20 +400,10 @@
 				1AFC88311B94C169002F491F /* HomeMarketTVC.m */,
 				1AC8126D1ABF904500ABD302 /* Options.h */,
 				1AC8126E1ABF904500ABD302 /* Options.m */,
-				1AB7BF071ACDFB6E003BCCC0 /* SearchOptions.h */,
-				1AB7BF081ACDFB6E003BCCC0 /* SearchOptions.m */,
 				1A7208DD1AC0D13F0054CA38 /* HomeScreenLocationSelection.h */,
 				1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */,
-				1AC812701ABFDAB000ABD302 /* RadiusOld.h */,
-				1AC812711ABFDAB000ABD302 /* RadiusOld.m */,
 				1AC8126A1ABF3A1F00ABD302 /* DisplayOrder.h */,
 				1AC8126B1ABF3A1F00ABD302 /* DisplayOrder.m */,
-				1AB7BF011ACDD0B1003BCCC0 /* RadiusLabelCell.h */,
-				1AB7BF021ACDD0B1003BCCC0 /* RadiusLabelCell.m */,
-				1AB7BF031ACDD0B1003BCCC0 /* RadiusLabelCell.xib */,
-				1AB7BEFC1ACDC97C003BCCC0 /* RadiusSliderCell.h */,
-				1AB7BEFD1ACDC97C003BCCC0 /* RadiusSliderCell.m */,
-				1AB7BEFE1ACDC97C003BCCC0 /* RadiusSliderCell.xib */,
 			);
 			name = Options;
 			sourceTree = "<group>";
@@ -617,8 +602,6 @@
 				1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */,
 				1AD33F511AB5526E00DE1DE2 /* GoogleMaps.bundle in Resources */,
 				1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */,
-				1AB7BF001ACDC97C003BCCC0 /* RadiusSliderCell.xib in Resources */,
-				1AB7BF051ACDD0B1003BCCC0 /* RadiusLabelCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,16 +637,13 @@
 			files = (
 				1AECA16B1AF059E500EAE054 /* UIProgressView+AFNetworking.m in Sources */,
 				1AECA1611AF059E500EAE054 /* AFSecurityPolicy.m in Sources */,
-				1AB7BF041ACDD0B1003BCCC0 /* RadiusLabelCell.m in Sources */,
 				1AECA1691AF059E500EAE054 /* UIButton+AFNetworking.m in Sources */,
-				1AB7BEFF1ACDC97C003BCCC0 /* RadiusSliderCell.m in Sources */,
 				1A04AFF71BA26D3D00B2B526 /* UIImage+ColorOverlay.m in Sources */,
 				1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */,
 				1A6F40C01B86E49700028759 /* ArticleContainer.m in Sources */,
 				1AB1A5641A48E3D900369211 /* AppDelegate.m in Sources */,
 				1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */,
 				1AECA1621AF059E500EAE054 /* AFURLConnectionOperation.m in Sources */,
-				1AB7BF091ACDFB6E003BCCC0 /* SearchOptions.m in Sources */,
 				1A0E1DA11B3394A2002F3DF9 /* UIView+AddBorders.m in Sources */,
 				1A059D901B1FC54F00FF4F64 /* ArticleOverlayView.m in Sources */,
 				1A04DDA31B2390E5001D9480 /* NewsMapTableViewCell.m in Sources */,
@@ -675,7 +655,6 @@
 				1AECA1651AF059E500EAE054 /* AFURLSessionManager.m in Sources */,
 				1AFC88321B94C169002F491F /* HomeMarketTVC.m in Sources */,
 				1AECA16A1AF059E500EAE054 /* UIImageView+AFNetworking.m in Sources */,
-				1AF9B1381ACCADF8004F3A5B /* Radius.m in Sources */,
 				1A7DB1DD1ABDFB81003DB53F /* Constants.m in Sources */,
 				1AA297091B9414140019FBCE /* MarkerImageHolder.m in Sources */,
 				1AECA1671AF059E500EAE054 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
@@ -685,7 +664,6 @@
 				1AECA15E1AF059E500EAE054 /* AFHTTPRequestOperationManager.m in Sources */,
 				1AECA15D1AF059E500EAE054 /* AFHTTPRequestOperation.m in Sources */,
 				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
-				1AC812721ABFDAB000ABD302 /* RadiusOld.m in Sources */,
 				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
 				1A96E19A1B7E59C5002DAFF1 /* ArticleWebViewVC.m in Sources */,
 				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
@@ -696,7 +674,7 @@
 				1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */,
 				1AECA1661AF059E500EAE054 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				1AB1A5611A48E3D900369211 /* main.m in Sources */,
-				1A2CEBDC1A8AC725004DE623 /* NewsMapTabBarController.m in Sources */,
+				1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */,
 				1AA0E3961AB0C5AE00E61F21 /* SaveFavoriteLocation.m in Sources */,
 				1AECA1631AF059E500EAE054 /* AFURLRequestSerialization.m in Sources */,
 				1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */,

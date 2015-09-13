@@ -11,7 +11,6 @@
 
 @interface Options ()
 @property (weak, nonatomic) IBOutlet UITableViewCell *displayOrderCell;
-@property (weak, nonatomic) IBOutlet UITableViewCell *searchRadiusCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *homeScreenCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *homeMarketCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *versionCell;
@@ -29,9 +28,6 @@
     // display order.
     NSDictionary *displayOrder = [[Constants displayOrders] objectAtIndex:[defaults integerForKey:userDefaultsDisplayOrderKey]];
     self.displayOrderCell.detailTextLabel.text = (NSString *)[displayOrder objectForKey:@"Menu Item"];
-    
-    // radius.
-    self.searchRadiusCell.detailTextLabel.text = [NSString stringWithFormat:@"%.1f mi", [defaults floatForKey:userDefaultsRadiusKey]];
     
     // default location.
     self.homeScreenCell.detailTextLabel.text = [defaults stringForKey:userDefaultsHomeScreenLocationKey];
@@ -53,9 +49,6 @@
     if([segue.identifier isEqualToString:@"ShowDisplayOrderOptionsScreen"]) {
     }
 
-    if([segue.identifier isEqualToString:@"ShowRadiusOptionsScreen"]) {
-    }
-    
     if([segue.identifier isEqualToString:@"ShowHomeScreenOptionsScreen"]) {
     }
 

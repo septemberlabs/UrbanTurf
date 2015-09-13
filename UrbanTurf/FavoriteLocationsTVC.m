@@ -9,7 +9,7 @@
 #import "Constants.h"
 #import "FavoriteLocationsTVC.h"
 #import "SaveFavoriteLocation.h"
-#import "NewsMapTabBarController.h"
+#import "TabBarController.h"
 
 @interface FavoriteLocationsTVC ()
 @property (strong, nonatomic) NSArray *savedLocations;
@@ -144,10 +144,10 @@
     
     // the second section is all the saved locations. communicate the selected location to the tab bar controller, which will load the news map at that location.
     if (indexPath.section == 1) {
-        if ([self.tabBarController isKindOfClass:[NewsMapTabBarController class]]) {
+        if ([self.tabBarController isKindOfClass:[TabBarController class]]) {
             NSNumber *latitude = [[self.savedLocations objectAtIndex:indexPath.row] objectForKey:@"Latitude"];
             NSNumber *longitude = [[self.savedLocations objectAtIndex:indexPath.row] objectForKey:@"Longitude"];
-            NewsMapTabBarController *tabBarController = (NewsMapTabBarController *)self.tabBarController;
+            TabBarController *tabBarController = (TabBarController *)self.tabBarController;
             [tabBarController prepareAndLoadNewsMap:(CLLocationCoordinate2DMake([latitude floatValue], [longitude floatValue]))];
         }
     }

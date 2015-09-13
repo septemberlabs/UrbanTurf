@@ -1,23 +1,23 @@
 //
-//  NewsMapTabBarController.m
+//  TabBarController.m
 //  UrbanTurf
 //
 //  Created by Will Smith on 2/10/15.
 //  Copyright (c) 2015 Will Smith. All rights reserved.
 //
 
-#import "NewsMapTabBarController.h"
+#import "TabBarController.h"
 #import "Stylesheet.h"
 #import "FavoriteLocationsTVC.h"
 #import "NewsMap.h"
 #import "Constants.h"
 #import "UIImage+ColorOverlay.h"
 
-@interface NewsMapTabBarController ()
+@interface TabBarController ()
 
 @end
 
-@implementation NewsMapTabBarController
+@implementation TabBarController
 
 - (void)viewDidLoad
 {

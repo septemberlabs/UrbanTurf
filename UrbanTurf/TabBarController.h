@@ -1,5 +1,5 @@
 //
-//  NewsMapTabBarController.h
+//  TabBarController.h
 //  UrbanTurf
 //
 //  Created by Will Smith on 2/10/15.
@@ -8,7 +8,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 
-@interface NewsMapTabBarController : UITabBarController <UITabBarControllerDelegate>
+@interface TabBarController : UITabBarController <UITabBarControllerDelegate>
 
 - (void)prepareAndLoadNewsMap:(CLLocationCoordinate2D)location;
 

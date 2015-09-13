@@ -23,6 +23,9 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.tableView reloadData];
+
+    // colors the check marks.
+    self.tableView.tintColor = [Stylesheet color6];
     
     self.navBar.delegate = self;
 }

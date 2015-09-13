@@ -17,13 +17,6 @@ NSString * const googleStaticMapBaseURL = @"https://maps.googleapis.com/maps/api
 
 #pragma mark - USER DEFAULTS
 
-NSString * const userDefaultsRadiusKey = @"searchRadius";
-double const defaultSearchRadius = 0.2;
-double const minRadius = 0.1;
-double const maxRadius = 2.0;
-NSString * const RADIUS_TABLE_HEADER = @"This is the header";
-NSString * const RADIUS_TABLE_FOOTER = @"This is the footer";
-
 NSString * const userDefaultsDisplayOrderKey = @"displayOrder";
 NSString * const DISPLAY_ORDER_TABLE_HEADER = @"Order to display stories";
 NSString * const DISPLAY_ORDER_TABLE_FOOTER = @"Stories are listed either according to distance from the center of the map or in reverse chronological order.";

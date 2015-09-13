@@ -18,10 +18,10 @@
 @property (nonatomic) BOOL respondsToTaps; // whether the view has a tap GR to respond with article loading.
 @property (strong, nonatomic) Article *article; // store a reference to the article being displayed to be able to identify which article it is.
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *placementInArrayLabel;
 @property (weak, nonatomic) IBOutlet UILabel *headlineLabel;
 @property (weak, nonatomic) IBOutlet UILabel *introLabel;
 @property (weak, nonatomic) IBOutlet UILabel *metaInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *placementInArrayLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenImageViewAndSuperview;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenHeadlineAndSuperview;

@@ -9,6 +9,8 @@
 #import "SaveFavoriteLocation.h"
 #import "Constants.h"
 #import <GoogleMaps/GoogleMaps.h>
+#import "Stylesheet.h"
+#import "UIView+AddBorders.h"
 
 @interface SaveFavoriteLocation ()
 @property (weak, nonatomic) IBOutlet UIView *locationInfo;
@@ -23,21 +25,17 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
 
 @implementation SaveFavoriteLocation
 
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     self.nameTextField.text = defaultNameTextFieldContent;
     self.latlonLabel.text = [NSString stringWithFormat:@"%f, %f", self.currentLocation.latitude, self.currentLocation.longitude];
     
-    // hairline border between location info and map
-    CALayer *bottomBorder = [CALayer layer];
-    bottomBorder.borderColor = [UIColor lightGrayColor].CGColor;
-    bottomBorder.borderWidth = 0.25f;
-    bottomBorder.frame = CGRectMake(0, CGRectGetHeight(self.locationInfo.frame) - 1.0, CGRectGetWidth(self.locationInfo.frame) - 1, 0.25f);
-    [self.locationInfo.layer addSublayer:bottomBorder];
+    // hairline border between location info and map.
+    [self.locationInfo addBorder:UIRectEdgeBottom color:[Stylesheet color5] thickness:0.5f];
     
-    // get notified when the user selects the text field in order to clear the text and set the color back to black
+    // get notified when the user selects the text field in order to clear the text and set the color back to black.
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(prepareTextField:)
                                                  name:UITextFieldTextDidBeginEditingNotification
@@ -45,7 +43,6 @@ static NSString *const defaultNameTextFieldContent = @"e.g., \"Home\" or \"Work\
     
     [self.mapView moveCamera:[GMSCameraUpdate setTarget:self.currentLocation zoom:16.0f]];
     self.mapView.delegate = self;
-
 }
 
 - (void)viewWillLayoutSubviews

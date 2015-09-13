@@ -79,6 +79,12 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     // by default the view should recognize all GRs.
     self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
     
+    // reduced these all to 0 in the storyboard, as well as setting the preferred width to explicit with a 0 value. this was done to correct an Xcode warning, "Automatic Preferred Max Layout Width is not available on iOS versions prior to 8.0." but with all the labels' number of lines set to 0, the labels were growing to have as many lines as their contained text needed (correct behavior according to the docs). setting them here forced them back to their intended sizes.
+    self.headlineLabel.numberOfLines = 2;
+    self.introLabel.numberOfLines = 3;
+    self.metaInfoLabel.numberOfLines = 1;
+    self.placementInArrayLabel.numberOfLines = 1;
+    
     [self configureUI];
     
     // save a pointer to the custom view loaded from the xib.

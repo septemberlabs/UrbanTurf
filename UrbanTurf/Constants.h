@@ -16,13 +16,6 @@ extern NSString * const googleStaticMapBaseURL;
 
 #pragma mark - USER DEFAULTS
 
-extern NSString * const userDefaultsRadiusKey;
-extern double const defaultSearchRadius;
-extern double const minRadius;
-extern double const maxRadius;
-extern NSString * const RADIUS_TABLE_HEADER;
-extern NSString * const RADIUS_TABLE_FOOTER;
-
 extern NSString * const userDefaultsDisplayOrderKey;
 + (NSArray *)displayOrders;
 + (NSArray *)articleAges;

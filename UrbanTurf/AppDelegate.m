@@ -30,13 +30,11 @@
     
     // prepare the app defaults
     NSArray *defaultsKeys = [NSArray arrayWithObjects:
-                             userDefaultsRadiusKey,
                              userDefaultsDisplayOrderKey,
                              userDefaultsHomeScreenLocationKey,
                              userDefaultsVersionKey,
                              nil];
     NSArray *defaultsValues = [NSArray arrayWithObjects:
-                               [NSNumber numberWithDouble:defaultSearchRadius],
                                [NSNumber numberWithInt:0], // the first element in the array, Closest First
                                @"Current Location",
                                version,
