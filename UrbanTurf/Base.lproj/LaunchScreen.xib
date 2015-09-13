@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iPhone 6 Launch Images" translatesAutoresizingMaskIntoConstraints="NO" id="itt-qZ-Zvv">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch-images-iphone-6" translatesAutoresizingMaskIntoConstraints="NO" id="itt-qZ-Zvv">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                 </imageView>
             </subviews>
@@ -28,6 +28,6 @@
         </view>
     </objects>
     <resources>
-        <image name="iPhone 6 Launch Images" width="375" height="667"/>
+        <image name="launch-images-iphone-6" width="375" height="667"/>
     </resources>
 </document>

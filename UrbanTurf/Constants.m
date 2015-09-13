@@ -62,6 +62,8 @@ double const BASE_RADIUS_FROM_USER_LOCATION = 0.5; // meters
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 NSString * const RADIUS_UNITS = @"metric"; // metric|english
 
+CLLocationDistance const DISTANCE_FILTER = 100; // in meters, so a tenth of a kilometer.
+
 @implementation Constants
 
 // thank you: http://stackoverflow.com/questions/20544616/static-nsarray-of-strings-how-where-to-initialize-in-a-view-controller

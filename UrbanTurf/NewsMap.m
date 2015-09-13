@@ -118,6 +118,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // we add this here just to force the status bar to use this color.
     self.view.backgroundColor = [Stylesheet color6];
     
+    self.latitude = 0.0;
+    self.longitude = 0.0;
+    
     // configure the table view
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -427,8 +430,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        _locationManager.distanceFilter = 250; // in meters, so a quarter of a kilometer.
+        _locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+        _locationManager.distanceFilter = DISTANCE_FILTER;
     }
     return _locationManager;
 }
@@ -878,7 +881,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void) mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
-    NSLog(@"idleAtCameraPosition called.");
     [self removeArticleOverlay];
     self.latitude = position.target.latitude;
     self.longitude = position.target.longitude;
@@ -1578,9 +1580,26 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         self.currentLocationMarker.position = mostRecentlyReportedLocation.coordinate;
     }
     
-    [self.locationManager stopUpdatingLocation];
+    //[self.locationManager stopUpdatingLocation];
 
     //[self setLocationWithLatitude:mostRecentlyReportedLocation.coordinate.latitude andLongitude:mostRecentlyReportedLocation.coordinate.longitude zoom:DEFAULT_ZOOM_LEVEL];
+    
+    // before we kick off another fetch, we check that both the distance has been far enough, and time long enough, to warrant it.
+    if (self.latitude != 0.0) {
+        
+    }
+    /*
+     if the time since the last fetch (not update!) is greater than MINIMUM_FETCH_UPDATE_TIME, proceed
+        if the existing location has been set (ie, not equal to 0.0), proceed
+            if the distance between the existing location and the new location is greater than locationManager.distanceFilter, fetch!
+            else, do nothing
+        else
+            fetch! (because this should be the first fetch ever)
+     else, do nothing
+     
+     Also, figure out if this fetching will be occuring and screwing stuff up if NewsMap is not the active VC.
+
+    */
     
     [self.fetcher numberOfResultsAtLatitude:mostRecentlyReportedLocation.coordinate.latitude
                                   longitude:mostRecentlyReportedLocation.coordinate.longitude

@@ -34,7 +34,6 @@
 
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
-    NSLog(@"preferredStatusBarStyle called.");
     return UIStatusBarStyleLightContent;
 }
 
