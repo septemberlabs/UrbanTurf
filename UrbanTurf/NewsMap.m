@@ -47,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet UIView *mapContainerView;
 @property (strong, nonatomic) GMSMarker *currentLocationMarker;
 @property (strong, nonatomic) MarkerImageHolder *markerImageHolder;
+@property (weak, nonatomic) IBOutlet UIImageView *crosshairs;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) CGFloat originalMapViewBottomEdgeY; // the y-coordinate of the bottom edge of the map, list-view mode.
 @property (nonatomic, strong) CALayer *borderBetweenMapAndTable; // hairline between map and table view.
@@ -169,6 +170,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     [clearButton setImage:[clearButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     clearButton.tintColor = [Stylesheet color7];
     
+    // the crosshairs are hidden by default.
+    self.crosshairs.hidden = YES;
 
     // by default the table view is displayed.
     self.listView = YES;
@@ -874,6 +877,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     dispatch_async(dispatch_get_main_queue(), ^{
         // return the table to the top
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+        // make sure the crosshairs are showing.
+        if (self.crosshairs.hidden) [self showCrosshairs];
     });
 }
 
@@ -938,6 +944,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     
     // we are in list mode, meaning the table view of articles is visible beneath the map.
     if (self.listView) {
+        if (!self.crosshairs.hidden) [self hideCrosshairs]; // hide the crosshairs if they're not already hidden.
         [self setFocusOnArticleContainer:articleContainer];
     }
 
@@ -1036,9 +1043,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture
 {
-    // if a gesture started the move we don't want to clear the data/map after the fetch.
     if (gesture) {
+        // if a gesture started the move we don't want to clear the data/map after the fetch.
         self.clearDataAndMapUponFetchReturn = NO;
+        
+        // also, re-display the crosshairs if the map is moving due to a user gesture.
+        if (self.crosshairs.hidden) [self showCrosshairs];
     }
 }
 
@@ -1069,6 +1079,33 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     return radius;
 }
 
+- (void)hideCrosshairs
+{
+    // decrease the alpha from totally opaque to totally transparent, and upon completion hide the view altogether.
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         self.crosshairs.alpha = 0.0;
+                     }
+                     completion:^(BOOL finished) {
+                         self.crosshairs.hidden = YES;
+                     }];
+}
+
+- (void)showCrosshairs
+{
+    self.crosshairs.hidden = NO;
+    self.crosshairs.alpha = 1.0;
+    
+    /* COULDN'T GET THIS FADE-IN EFFECT TO WORK --
+     self.crosshairs.alpha = 0.0; // make it totally transparent before unhiding it just in case for some reason it isn't already.
+     self.crosshairs.hidden = NO; // unhide it.
+     // increase the alpha from totally transparent to totally opaque.
+     [UIView animateWithDuration:0.5
+     animations:^{
+     self.crosshairs.alpha = 1.0;
+     }];
+     */
+}
 
 #pragma mark - Article scrolling behavior
 
@@ -1078,6 +1115,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     for (UIPanGestureRecognizer *panGR in self.tableViewPanGestureRecognizers) {
         panGR.enabled = NO;
     }
+    
+    if (!self.crosshairs.hidden) [self hideCrosshairs];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate

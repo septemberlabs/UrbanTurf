@@ -385,11 +385,20 @@
                                             <action selector="currentLocationTapped:" destination="STl-BS-KjN" eventType="touchUpInside" id="LUg-x8-8WQ"/>
                                         </connections>
                                     </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cursor-crosshair" translatesAutoresizingMaskIntoConstraints="NO" id="cBE-fd-WmG" userLabel="Crosshairs">
+                                        <rect key="frame" x="284" y="59" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="2tz-Lr-6EU"/>
+                                            <constraint firstAttribute="width" constant="32" id="vuP-c5-VTs"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="cbW-m1-mb9" secondAttribute="bottom" constant="8" id="6nk-od-M5J"/>
+                                    <constraint firstAttribute="centerY" secondItem="cBE-fd-WmG" secondAttribute="centerY" id="Use-FG-iRh"/>
                                     <constraint firstAttribute="height" constant="150" id="fkE-uh-KRW"/>
                                     <constraint firstAttribute="trailing" secondItem="cbW-m1-mb9" secondAttribute="trailing" constant="8" id="whW-eq-wAJ"/>
+                                    <constraint firstAttribute="centerX" secondItem="cBE-fd-WmG" secondAttribute="centerX" id="xjJ-NL-3jL"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="132" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Z6b-sw-l5K">
@@ -480,20 +489,20 @@
                         <color key="backgroundColor" red="0.25882352939999997" green="0.47058823529999999" blue="0.098039215690000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="HLc-Kg-4Pz" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="4MW-c0-bfh"/>
-                            <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="Z6b-sw-l5K" secondAttribute="bottom" id="DWX-GN-N9N"/>
                             <constraint firstAttribute="trailing" secondItem="HLc-Kg-4Pz" secondAttribute="trailing" id="FdN-Z8-YTp"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="Ior-gv-7aL"/>
-                            <constraint firstItem="8Xm-ZY-1dp" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="IuV-t7-y18"/>
                             <constraint firstAttribute="centerY" secondItem="i1Y-Yb-DoU" secondAttribute="centerY" id="KRQ-EM-Okl"/>
                             <constraint firstAttribute="trailing" secondItem="8Xm-ZY-1dp" secondAttribute="trailing" id="Occ-J7-prc"/>
                             <constraint firstAttribute="centerX" secondItem="i1Y-Yb-DoU" secondAttribute="centerX" id="QvK-Cc-nHF"/>
                             <constraint firstAttribute="trailing" secondItem="Z6b-sw-l5K" secondAttribute="trailing" id="SL7-J4-fN0"/>
                             <constraint firstItem="8Xm-ZY-1dp" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="eMf-O7-xdd"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="top" secondItem="65P-iN-QSW" secondAttribute="bottom" id="fRI-lx-8Pt"/>
+                            <constraint firstItem="BZ0-oN-wCM" firstAttribute="top" secondItem="Z6b-sw-l5K" secondAttribute="bottom" id="kJh-Rv-S5h"/>
                             <constraint firstItem="HLc-Kg-4Pz" firstAttribute="top" secondItem="8Xm-ZY-1dp" secondAttribute="bottom" id="olS-c9-qrL"/>
                             <constraint firstItem="Sal-Vu-s9R" firstAttribute="leading" secondItem="65P-iN-QSW" secondAttribute="leading" id="qUo-yk-ODc"/>
                             <constraint firstItem="Z6b-sw-l5K" firstAttribute="top" secondItem="HLc-Kg-4Pz" secondAttribute="bottom" id="s59-t7-C8J"/>
                             <constraint firstAttribute="trailing" secondItem="Sal-Vu-s9R" secondAttribute="trailing" id="veR-E0-Tzi"/>
+                            <constraint firstItem="8Xm-ZY-1dp" firstAttribute="top" secondItem="xIa-9V-1yE" secondAttribute="bottom" id="xaN-d0-G92"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="b5k-10-as3"/>
@@ -501,6 +510,7 @@
                         <outlet property="articleOverlay" destination="Sal-Vu-s9R" id="DaA-jV-Pgt"/>
                         <outlet property="articleOverlayHeightConstraint" destination="Arp-Th-NNN" id="1Zf-X7-tt1"/>
                         <outlet property="articleOverlayTopEdgeConstraint" destination="fRI-lx-8Pt" id="gkK-Nm-CFg"/>
+                        <outlet property="crosshairs" destination="cBE-fd-WmG" id="dW1-P5-pnJ"/>
                         <outlet property="currentLocationButtonBottomEdgeConstraint" destination="6nk-od-M5J" id="cld-Ig-rgk"/>
                         <outlet property="goToCurrentLocationButton" destination="cbW-m1-mb9" id="hRW-X9-UDh"/>
                         <outlet property="mapContainerView" destination="HLc-Kg-4Pz" id="wXL-aO-ve3"/>
@@ -596,7 +606,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9hp-6D-nwR">
-                                <rect key="frame" x="290" y="265.5" width="20" height="20"/>
+                                <rect key="frame" x="290" y="266" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
