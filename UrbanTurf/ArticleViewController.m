@@ -40,6 +40,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     // turn on the navigation bar, which we want for the Back button.
     [self.navigationController setNavigationBarHidden:NO animated:YES];    
     // set self to the delegate so we can capture and act on the action of the user tapping Back.
@@ -59,7 +60,6 @@
     // headline.
     self.articleView.headlineLabel.backgroundColor = [UIColor clearColor]; // reset to clear in case some other color for debugging.
     self.articleView.headlineLabel.font = [[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline] fontWithSize:18.0];
-    //self.articleView.headlineLabel.numberOfLines = 2;
     self.articleView.headlineLabel.text = self.article.title;
     
     // introduction.
@@ -72,7 +72,7 @@
     [self metaInfoAttributedString];
     
     // button.
-    self.articleView.viewArticleButton.backgroundColor = [Stylesheet color1];
+    self.articleView.viewArticleButton.backgroundColor = [Stylesheet color6];
     NSString *buttonTitle = [@"Read full article\nat " stringByAppendingString:self.article.publication];
     self.articleView.viewArticleButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.articleView.viewArticleButton.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -174,7 +174,7 @@
         NSString *paramValue = (NSString *)[params objectForKey:paramKey];
         mapImageURL = [mapImageURL stringByAppendingFormat:@"%@=%@&", paramKey, [paramValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     }
-    //NSLog(@"google static map url: %@", mapImageURL);
+
     return [NSURL URLWithString:mapImageURL];
 }
 
@@ -188,15 +188,6 @@
         
         // unset this VC from being the nav bar's delegate since it has no need to be the delegate anymore so we should nullify that relationship.
         self.navigationController.delegate = nil;
-    }
-}
-
-- (void)listSubviewsOfView:(UIView *)view
-{
-    NSArray *subviews = [view subviews]; // Get the subviews of the view.
-    for (UIView *subview in subviews) {
-        NSLog(@"%@", subview);
-        [self listSubviewsOfView:subview]; // recursion.
     }
 }
 

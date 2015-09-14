@@ -12,8 +12,7 @@
 @interface Article : NSObject
 
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
-@property (nonatomic, copy) NSString *title; // this is the article headline. called title to comply with MKAnnotation protocol.
-@property (nonatomic, copy) NSString *subtitle; // this isn't used. only here to comply with MKAnnotation protocol.
+@property (nonatomic, copy) NSString *title; // article headline.
 @property (nonatomic, strong) UIImage *actualImage;
 @property (nonatomic, strong) NSString *article_id;
 @property (nonatomic, strong) NSString *url;

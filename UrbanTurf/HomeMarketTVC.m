@@ -102,7 +102,6 @@
     
     // uncomment this if you want to add an unwind segue back to automatically return to the Options main menu
     //[self performSegueWithIdentifier:@"unwindAfterDisplayOrderSelection" sender:self];
-    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

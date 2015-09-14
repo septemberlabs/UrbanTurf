@@ -19,9 +19,7 @@ static UIColor *_color4 = nil;
 static UIColor *_color5 = nil;
 static UIColor *_color6 = nil;
 static UIColor *_color7 = nil;
-static NSString *_fonticons = nil;
-static CGFloat _searchBarFontIconSize;
-static CGFloat _tabBarFontIconSize;
+static UIColor *_color8 = nil;
 
 /*
  font of article headline in full article view:
@@ -79,15 +77,14 @@ static CGFloat _tabBarFontIconSize;
     _color5 = [UIColor lightGrayColor];
     
     // RGB: 81, 136, 33. Green used in title bar.
+    //_color6 = [UIColor colorWithRed:(76/255.f) green:(183/255.f) blue:(73/255.f) alpha: 1];
     _color6 = [UIColor colorWithRed:(81/255.f) green:(136/255.f) blue:(33/255.f) alpha: 1];
     
     // White. For text in title bar.
     _color7 = [UIColor whiteColor];
-    
-    _fonticons = @"fontello";
-    
-    _searchBarFontIconSize = 22.0;
-    _tabBarFontIconSize = 30.0;
+
+    // Text field color in search bar.
+    _color8 = [UIColor colorWithRed:(134/255.f) green:(172/255.f) blue:(100/255.f) alpha: 1];
     
 }
 
@@ -100,8 +97,6 @@ static CGFloat _tabBarFontIconSize;
 + (UIColor*)color5 { return _color5; }
 + (UIColor*)color6 { return _color6; }
 + (UIColor*)color7 { return _color7; }
-+ (NSString*)fonticons { return _fonticons; }
-+ (CGFloat)searchBarFontIconSize { return _searchBarFontIconSize; }
-+ (CGFloat)tabBarFontIconSize { return _tabBarFontIconSize; }
++ (UIColor*)color8 { return _color8; }
 
 @end

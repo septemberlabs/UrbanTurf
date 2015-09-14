@@ -17,9 +17,9 @@
 
 @implementation ArticleWebViewVC
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 
     self.webView.delegate = self;
     self.webView.scalesPageToFit = YES;
@@ -51,7 +51,6 @@
         self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(turnOffSpinner:) userInfo:nil repeats:NO];
     }
 }
-
 
 - (void)turnOffSpinner:(NSTimer *)timer
 {

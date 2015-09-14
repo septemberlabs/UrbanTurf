@@ -12,10 +12,10 @@
 @protocol FetcherView; // forward declaration
 
 @interface Fetcher : NSObject
-@property (nonatomic, weak) id<FetcherView> delegate; // once fetch is executed, resulting data is sent to this delegate
+@property (nonatomic, weak) id<FetcherView> delegate; // once fetch is executed, resulting data is sent to this delegate.
 @property (strong, nonatomic) NSURLSession *urlSession;
-- (void)fetchDataAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age limit:(int)limit order:(NSString *)order; // essentially an abstract method that all subclasses must implement
-- (void)numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age; // essentially an abstract method that all subclasses must implement
+- (void)fetchDataAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age limit:(int)limit order:(NSString *)order; // essentially an abstract method that all subclasses must implement.
+- (void)numberOfResultsAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age; // essentially an abstract method that all subclasses must implement.
 @end
 
 // delegate protocol

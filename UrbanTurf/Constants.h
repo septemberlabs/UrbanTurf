@@ -42,13 +42,6 @@ extern NSString * const userDefaultsCityKey;
 extern NSString * const HOME_CITY_TABLE_HEADER;
 extern NSString * const HOME_CITY_TABLE_FOOTER;
 
-// constants used for pre-chosen locations
-extern CLLocationCoordinate2D const home;
-extern CLLocationCoordinate2D const lincolnMemorial;
-extern CLLocationCoordinate2D const office;
-extern CLLocationCoordinate2D const kingsCloister;
-extern CLLocationCoordinate2D const jacksonHoleSquare;
-
 #pragma mark - UI
 
 extern NSString * const image_not_downloaded;
@@ -57,8 +50,7 @@ extern NSString * const map_marker_remoteURL;
 extern NSString * const map_marker_currentLocation;
 + (NSArray *)mapMarkersDefault;
 + (NSArray *)mapMarkersSelected;
-extern UIEdgeInsets const map_marker_insets;
-extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker
+extern CLLocationDistance const MARKER_OVERLAP_DISTANCE; // distance in meters under which two locations are consolidated under one map marker.
 extern CGFloat const PAN_THRESHOLD; // horizontal distance (px) that a pan translation must return before triggering a visual response from the UI.
 extern CGFloat const PANNED_DISTANCE_THRESHOLD; // horizontal distance as percentage of view width that user must pan for neighboring article to move in.
 extern int const ARTICLE_OVERLAY_VIEW_HEIGHT; // height (px) of articles in table view and in full-map mode.

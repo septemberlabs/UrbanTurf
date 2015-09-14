@@ -125,35 +125,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
     self.imageView.layer.borderColor = [Stylesheet color2].CGColor;
 }
 
-// the height of the view is calculated by summing the height of the right-side components (labels & such) and left-side components (mostly just the image view) and returning whichever is taller.
-- (CGFloat)dynamicallyCalculatedHeight
-{
-    // all the labels and the spacing constraints between them constitute the right side content.
-    CGFloat heightOfRightSideContent =
-    self.betweenHeadlineAndSuperview.constant +
-    self.headlineLabel.frame.size.height +
-    self.betweenIntroAndHeadline.constant +
-    self.introLabel.frame.size.height +
-    self.betweenMetaInfoAndIntro.constant +
-    self.metaInfoLabel.frame.size.height;
-    
-    // the image view and its spacing constraint at the top constitute the left side content.
-    CGFloat heightOfLeftSideContent =
-    self.betweenImageViewAndSuperview.constant +
-    self.imageViewHeight.constant;
-    
-    NSLog(@"heightOfRightSideContent: %f", heightOfRightSideContent);
-    NSLog(@"heightOfLeftSideContent: %f", heightOfLeftSideContent);
-    
-    // return whichever is taller.
-    if (heightOfRightSideContent > heightOfLeftSideContent) {
-        return heightOfRightSideContent;
-    }
-    else {
-        return heightOfLeftSideContent;
-    }
-}
-
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant
 {
     [self setEdgesToSuperview:superview leading:leadingConstant trailing:trailingConstant top:topConstant bottom:bottomConstant superviewFeature:None];
@@ -289,9 +260,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)panArticleTeaser:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    //NSLog(@"registered pan: %ld", (long)gestureRecognizer.state);
-    //NSLog(@"velocityInView: %@", NSStringFromCGPoint([gestureRecognizer velocityInView:self.superview]));
-    
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         // zero out the state variables just in case.
         self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
@@ -394,8 +362,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                          }
                          completion:^(BOOL finished) {
                              if (finished) {
-                                 //NSLog(@"completion called!");
-
                                  // upon completion of the animation, dispose of the two article views that are not visible. if a new article was panned in, delete the old pan gesture recognizer and add a new one on the panned-in article.
                                  if (panDirection == Left) {
                                      
@@ -404,10 +370,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                      [self.rightArticleSubview addPanGestureRecognizer];
                                      
                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                         //NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
                                          [self.leftArticleSubview removeFromSuperview];
                                          [self removeFromSuperview];
-                                         //NSLog(@"left pan subviews: %@", self.rightArticleSubview.superview.subviews);
                                          // save the right-side article as the now visible article in the cell.
                                          [self.delegate setArticleOverlayView:self.rightArticleSubview];
                                          [self resetPanState];
@@ -420,10 +384,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                      [self.leftArticleSubview addPanGestureRecognizer];
                                      
                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                         //NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
                                          [self.rightArticleSubview removeFromSuperview];
                                          [self removeFromSuperview];
-                                         //NSLog(@"right pan subviews: %@", self.leftArticleSubview.superview.subviews);
                                          // save the left-side article as the now visible article in the cell.
                                          [self.delegate setArticleOverlayView:self.leftArticleSubview];
                                          [self resetPanState];
@@ -431,10 +393,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
                                  }
                                  else {
                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                         //NSLog(@"no pan subviews: %@", self.superview.subviews);
                                          [self.leftArticleSubview removeFromSuperview];
                                          [self.rightArticleSubview removeFromSuperview];
-                                         //NSLog(@"no pan subviews: %@", self.superview.subviews);
                                          [self resetPanState];
                                      });
                                  }
@@ -447,7 +407,6 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)resetPanState
 {
-    //[self.delegate articleOverlayView:self otherGestureRecognizersEnabled:YES]; // turn other gestures back on.
     self.shouldRecognizeSimultaneouslyWithGestureRecognizer = YES;
     self.panTriggered = NO;
     self.leftArticleSubview = nil;
@@ -515,13 +474,11 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 - (void)loadArticle:(UIGestureRecognizer *)gestureRecognizer
 {
-    NSLog(@"loadArticle called.");
     [self.delegate loadArticle:self.article];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    //NSLog(@"shouldRecognizeSimultaneouslyWithGestureRecognizer called: %@", self.shouldRecognizeSimultaneouslyWithGestureRecognizer ? @"YES" : @"NO");
     return self.shouldRecognizeSimultaneouslyWithGestureRecognizer;
 }
 

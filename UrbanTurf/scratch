@@ -1,0 +1,51 @@
+
+//[self.locationManager stopUpdatingLocation];
+
+//[self setLocationWithLatitude:mostRecentlyReportedLocation.coordinate.latitude andLongitude:mostRecentlyReportedLocation.coordinate.longitude zoom:DEFAULT_ZOOM_LEVEL];
+
+/*
+// confirm self.lastFetch has a value, which indicates that there has been a fetch at some point.
+if (self.lastFetch != nil) {
+// if the time since the last fetch is greater than MINIMUM_FETCH_UPDATE_TIME, proceed (else, do nothing).
+NSTimeInterval timeSinceLastFetch = [[NSDate date] timeIntervalSinceDate:self.lastFetch];
+if (timeSinceLastFetch > MINIMUM_SECONDS_BETWEEN_FETCHES) {
+// if the existing location has been set (ie, not equal to 0.0), proceed.
+if (self.latitude != 0.0) {
+// if the distance between the existing location and the new location is greater than self.locationManager.distanceFilter, fetch. (else, do nothing.)
+CLLocation *locationAtLastFetch = [[CLLocation alloc] initWithLatitude:self.latitude longitude:self.longitude];
+CLLocationDistance distanceSinceLastFetch = [mostRecentlyReportedLocation distanceFromLocation:locationAtLastFetch];
+if (distanceSinceLastFetch > self.locationManager.distanceFilter) {
+[self fetchBasedOnUserLocationChangedTo:mostRecentlyReportedLocation.coordinate];
+}
+else {
+NSLog(@"REMOVE THIS. Distance hasn't been far enough to execute another fetch.");
+}
+}
+// else fetch, because self.latitude being zeroed is another indication that a fetch has never been completed and should be done so now.
+else {
+[self fetchBasedOnUserLocationChangedTo:mostRecentlyReportedLocation.coordinate];
+}
+}
+else {
+NSLog(@"REMOVE THIS. Not enough time has elapsed to execute another fetch.");
+}
+}
+// self.lastFetch is nil, which means a fetch has never been completed and should be done so now.
+else {
+[self fetchBasedOnUserLocationChangedTo:mostRecentlyReportedLocation.coordinate];
+}
+*/
+
+
+/*
+if the time since the last fetch (not update!) is greater than MINIMUM_FETCH_UPDATE_TIME, proceed
+if the existing location has been set (ie, not equal to 0.0), proceed
+if the distance between the existing location and the new location is greater than locationManager.distanceFilter, fetch!
+else, do nothing
+else
+fetch! (because this should be the first fetch ever)
+else, do nothing
+
+Also, figure out if this fetching will be occuring and screwing stuff up if NewsMap is not the active VC.
+
+*/

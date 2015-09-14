@@ -50,7 +50,6 @@
         }
     }
     
-    //NSLog(@"imageName: %@", imageName);
     UIImage *markerImageToUse;
     if ([self.markerImages objectForKey:imageName] != nil) {
         markerImageToUse = (UIImage *)[self.markerImages objectForKey:imageName];
@@ -70,7 +69,6 @@
     
     return markerImageToUse;
 }
-
 
 
 @end

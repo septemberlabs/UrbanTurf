@@ -10,6 +10,7 @@
 
 @implementation UIImage (ColorOverlay)
 
+// used by TabBarController to correctly color unselected tab text and icons, which apparently is quite difficult to do. thank you: http://stackoverflow.com/questions/11512783/unselected-uitabbar-color/24106632#24106632
 - (UIImage *)imageWithColor:(UIColor *)color1
 {
     UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);

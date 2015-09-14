@@ -45,8 +45,6 @@
     // authenticate with Google for use of Maps
     [GMSServices provideAPIKey:googleAPIKeyForiOSApplications];
     
-    //NSLog(@"user defaults: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
-    
     [Fabric with:@[CrashlyticsKit]];
     
     return YES;

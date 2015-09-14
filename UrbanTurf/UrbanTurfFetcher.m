@@ -16,7 +16,6 @@
  count = true; add this if you just want the count of results
  */
 
-
 #import "UrbanTurfFetcher.h"
 #import "Article.h"
 #import "Constants.h"
@@ -25,14 +24,8 @@
 
 - (void)fetchDataAtLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude radius:(float)radius units:(NSString *)units age:(int)age limit:(int)limit order:(NSString *)order
 {
-    if ((latitude == 0) || (longitude == 0)) {
-        CLLocationCoordinate2D testLocation = office;
-        latitude = testLocation.latitude;
-        longitude = testLocation.longitude;
-    }
-    
     NSString *urlToLoad = [NSString stringWithFormat:@"%@near=%f,%f&radius=%f&units=%@&age=%d&limit=%d&order=%@", API_ADDRESS, latitude, longitude, radius, units, age, limit, order];
-    NSLog(@"Search results URL we're loading: %@", urlToLoad);
+    //NSLog(@"Search results URL we're loading: %@", urlToLoad);
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlToLoad]];
     NSURLSessionDownloadTask *task = [self.urlSession downloadTaskWithRequest:request completionHandler:^(NSURL *localFile, NSURLResponse *response, NSError *error) {
                     if (!error) {

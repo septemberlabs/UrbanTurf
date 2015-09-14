@@ -32,10 +32,11 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) BOOL locationAwarenessEnabled;
 
+@property (weak, nonatomic) IBOutlet UIButton *goToCurrentLocationButton; // button to put map at user's current location.
 @property (weak, nonatomic) IBOutlet UIButton *toggleViewButton; // button to right of search field.
 @property (weak, nonatomic) IBOutlet UIButton *searchFiltersButton; // button to left of search field.
-@property (strong, nonatomic) UIImage *expandMap;
-@property (strong, nonatomic) UIImage *contractMap;
+@property (strong, nonatomic) UIImage *expandMap; // image for toggleViewButton when in list-view mode.
+@property (strong, nonatomic) UIImage *contractMap; // image for toggleViewButton when in full-map mode.
 
 // data structures related to search field.
 @property (strong, nonatomic) NSArray *searchResults;
@@ -47,11 +48,10 @@
 @property (strong, nonatomic) GMSMarker *currentLocationMarker;
 @property (strong, nonatomic) MarkerImageHolder *markerImageHolder;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic) CGFloat originalMapViewBottomEdgeY;
-@property (nonatomic, strong) CALayer *borderBetweenMapAndTable;
+@property (nonatomic) CGFloat originalMapViewBottomEdgeY; // the y-coordinate of the bottom edge of the map, list-view mode.
+@property (nonatomic, strong) CALayer *borderBetweenMapAndTable; // hairline between map and table view.
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *mapContainerViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
-
 @property (weak, nonatomic) IBOutlet UIView *searchControlsContainerView;
 
 @property (strong, nonatomic) NSTimer *timer;
@@ -73,6 +73,8 @@
 @property (strong, nonatomic) IBOutlet UIView *articleOverlay;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayTopEdgeConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *articleOverlayHeightConstraint;
+// the bottom of the current location button, which needs to move along with the article overlay showing/hiding
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *currentLocationButtonBottomEdgeConstraint;
 
 // alert views related to location awareness checking.
 @property (strong, nonatomic) UIAlertView *cityPrompt;
@@ -95,8 +97,8 @@ typedef NS_ENUM(NSInteger, ArticlePanDirection) {
 
 @end
 
-@implementation NewsMap
 
+@implementation NewsMap
 
 #define CHARACTERS_BEFORE_SEARCHING 3
 static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
@@ -130,21 +132,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.contractMap = [UIImage imageNamed:@"contract-map"];
     [self.toggleViewButton setImage:self.expandMap forState:UIControlStateNormal];
     self.toggleViewButton.tintColor = [Stylesheet color7];
-    /*
-    [self.toggleViewButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
-    [self.toggleViewButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
-    [self.toggleViewButton setTitle:[NSString stringWithUTF8String:"\ue80f"] forState:UIControlStateNormal];
-     */
     
     // search filters button
     [self.searchFiltersButton setImage:[UIImage imageNamed:@"sliders"] forState:UIControlStateNormal];
     self.searchFiltersButton.tintColor = [Stylesheet color7];
-    
-    /*
-    [self.searchFiltersButton.titleLabel setFont:[UIFont fontWithName:[Stylesheet fonticons] size:[Stylesheet searchBarFontIconSize]]];
-    [self.searchFiltersButton setTitleColor:[Stylesheet color1] forState:UIControlStateNormal];
-    [self.searchFiltersButton setTitle:[NSString stringWithUTF8String:"\ue804"] forState:UIControlStateNormal];
-     */
+
+    // current location button
+    [self.goToCurrentLocationButton setImage:[UIImage imageNamed:@"current-location"] forState:UIControlStateNormal];
+    self.goToCurrentLocationButton.tintColor = [Stylesheet color2];
     
     // search filters. see Constants.m for the values each array element represents.
     self.displayOrders = [Constants displayOrders];
@@ -157,12 +152,28 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.searchDisplayController.searchBar.backgroundImage = [[UIImage alloc] init];
     self.searchDisplayController.searchBar.backgroundColor = [Stylesheet color6];
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color7];
-        
+    
+    // the lines below change the search bar's color and text field color.
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setBackgroundColor:[Stylesheet color8]];
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[Stylesheet color7]];
+    [[UILabel appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[Stylesheet color7]];
+    
+    //  the above doesn't change the magnifying glass and clear icons. this does. thank you: http://www.tanryan.com/2015/05/changing-icon-colors-on-uisearchbar-and-uitextfield/
+    UITextField *searchBarTextField = [self.searchDisplayController.searchBar valueForKey:@"_searchField"];
+    // magnifying glass icon.
+    UIImageView *leftImageView = (UIImageView *)searchBarTextField.leftView;
+    leftImageView.image = [leftImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    leftImageView.tintColor = [Stylesheet color7];
+    // clear icon.
+    UIButton *clearButton = [searchBarTextField valueForKey:@"_clearButton"];
+    [clearButton setImage:[clearButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    clearButton.tintColor = [Stylesheet color7];
+    
+
     // by default the table view is displayed.
     self.listView = YES;
     
     // hide the spinner unless necessary.
-    //self.spinner.hidden = YES;
     self.spinner.hidesWhenStopped = YES;
     
     self.articleOverlaid = NO;
@@ -175,8 +186,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // this sets the back button text of the subsequent vc, not the visible vc. confusing.
     // thank you: https://dbrajkovic.wordpress.com/2012/10/31/customize-the-back-button-of-uinavigationitem-in-the-navigation-bar/
     //self.navigationBar.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
-    //[self fetchData];
     
     self.clearDataAndMapUponFetchReturn = YES;
     
@@ -200,12 +209,13 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         self.mapView = [GMSMapView mapWithFrame:self.mapContainerView.bounds camera:cameraPosition];
         self.mapView.translatesAutoresizingMaskIntoConstraints = NO;
         self.mapView.delegate = self;
-        self.mapView.settings.myLocationButton = YES;
-        self.mapView.settings.compassButton = YES;
+        self.mapView.settings.myLocationButton = NO;
+        self.mapView.settings.compassButton = NO;
         self.mapView.indoorEnabled = NO; // disabled this to suppress the random error "Encountered indoor level with missing enclosing_building field" we were getting.
         
         // add it the screen.
         [self.mapContainerView addSubview:self.mapView];
+        [self.mapContainerView sendSubviewToBack:self.mapView];
 
         // add the bottom border for a hairline separation between the map and table view.
         self.borderBetweenMapAndTable = [self.mapView addBorder:UIRectEdgeBottom color:[Stylesheet color5] thickness:0.5f];
@@ -261,7 +271,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // if the number of search results at this radius is SEARCH_RESULTS_MINIMUM or more, display the map.
     if (numberOfResults >= SEARCH_RESULTS_MINIMUM) {
         [self setLocationWithLatitude:latitude andLongitude:longitude zoom:DEFAULT_ZOOM_LEVEL];
-        NSLog(@"Made it!");
     }
     // otherwise, extend the map
     else {
@@ -291,31 +300,26 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         
         switch (authorizationStatus) {
             case kCLAuthorizationStatusNotDetermined:
-                NSLog(@"kCLAuthorizationStatusNotDetermined reported in establishLocationAwarenessPermissions.");
                 // this means the user hasn't yet specified permission one way or the other, so we call requestWhenInUseAuthorization, which will prompt the user for permission.
                 self.locationAwarenessEnabled = NO;
                 [self.locationManager requestWhenInUseAuthorization];
                 break;
             case kCLAuthorizationStatusRestricted:
-                NSLog(@"kCLAuthorizationStatusRestricted reported in establishLocationAwarenessPermissions.");
                 // we don't have permission so proceed with fallback.
                 self.locationAwarenessEnabled = NO;
                 [self processLackOfLocationAwareness:PermissionAlreadyDenied];
                 break;
             case kCLAuthorizationStatusDenied:
-                NSLog(@"kCLAuthorizationStatusDenied reported in establishLocationAwarenessPermissions.");
                 // we don't have permission so proceed with fallback.
                 self.locationAwarenessEnabled = NO;
                 [self processLackOfLocationAwareness:PermissionAlreadyDenied];
                 break;
             case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
-                NSLog(@"kCLAuthorizationStatusAuthorized reported in establishLocationAwarenessPermissions.");
                 // we have permission so turn on location awareness.
                 self.locationAwarenessEnabled = YES;
                 [self.locationManager startUpdatingLocation];
                 break;
             case kCLAuthorizationStatusAuthorizedWhenInUse:
-                NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in establishLocationAwarenessPermissions.");
                 // we have permission so turn on location awareness.
                 self.locationAwarenessEnabled = YES;
                 [self.locationManager startUpdatingLocation];
@@ -366,7 +370,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         NSDictionary *city = (NSDictionary *)[[Constants cities] objectAtIndex:[defaults integerForKey:userDefaultsCityKey]];
         CLLocationDegrees cityCenterLatitude = ((NSNumber *)[city objectForKey:@"CenterLatitude"]).doubleValue;
         CLLocationDegrees cityCenterLongitude = ((NSNumber *)[city objectForKey:@"CenterLongitude"]).doubleValue;
-        [self setLocationWithLatitude:cityCenterLatitude andLongitude:cityCenterLongitude zoom:12];
+        [self setLocationWithLatitude:cityCenterLatitude andLongitude:cityCenterLongitude zoom:DEFAULT_ZOOM_LEVEL];
     }
     else {
         [self promptToSelectCity];
@@ -403,7 +407,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     // the prompt to select a city.
     if ([alertView isEqual:self.cityPrompt]) {
         NSDictionary *selectedCity = (NSDictionary *)[[Constants cities] objectAtIndex:buttonIndex];
-        NSLog(@"selected city: %@", [selectedCity objectForKey:@"Name"]);
         CLLocationDegrees latitude = ((NSNumber *)[selectedCity objectForKey:@"CenterLatitude"]).doubleValue;
         CLLocationDegrees longitude = ((NSNumber *)[selectedCity objectForKey:@"CenterLongitude"]).doubleValue;
         [self setLocationWithLatitude:latitude andLongitude:longitude zoom:DEFAULT_ZOOM_LEVEL];
@@ -529,9 +532,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)receiveData:(NSArray *)fetchedResults
 {
-    //NSLog(@"fetchedResults called.");
     NSMutableArray *processedFromJSON = [NSMutableArray arrayWithCapacity:[fetchedResults count]];
-    //NSLog(@"results: %@", fetchedResults);
     NSDateFormatter *dateFormatter = [Constants dateFormatter];
     for (NSDictionary *article in fetchedResults) {
         CLLocationCoordinate2D location = CLLocationCoordinate2DMake([article[@"latitude"] doubleValue], [article[@"longitude"] doubleValue]);
@@ -590,7 +591,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     }
     
     return 0;
-    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -688,7 +688,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         }
         // otherwise, give it the standard height for all the article table cells.
         else {
-            //return TOP_CAPTION_HEIGHT + IMAGE_HEIGHT + BOTTOM_CAPTION_HEIGHT + VERTICAL_MARGIN;
             return ARTICLE_OVERLAY_VIEW_HEIGHT;
         }
     }
@@ -749,11 +748,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             articleOverlaySubview.delegate = self;
         }
         
-        //NSLog(@"subviews of row %d: %@", (int)indexPath.row, cell.subviews);
         int i = 1;
         for (UIView *subview in cell.subviews) {
             if ([subview isKindOfClass:[articleOverlaySubview class]]) {
-                //NSLog(@"Row %d. %d: %@", (int)indexPath.row, i, subview);
                 i++;
             }
         }
@@ -812,7 +809,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reusableCellIdentifier];
             }
             NSDictionary *place = [self.searchResults objectAtIndex:indexPath.row];
-            //NSLog(@"place: %@", [place description]);
             cell.textLabel.text = [NSString stringWithFormat:@"%@", [place objectForKey:@"description"]];
             return cell;
         }
@@ -835,7 +831,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         [self.recentSearches insertObject:selectedCell.textLabel.text atIndex:0];
         
         NSDictionary *selectedSearchResult = (NSDictionary *)self.searchResults[indexPath.row];
-        //NSLog(@"selectedSearchResult: %@", [selectedSearchResult description]);
         NSString *placeID = [selectedSearchResult objectForKey:@"place_id"];
         [[GooglePlacesClient sharedGooglePlacesClient] getPlaceDetails:placeID delegate:self];
         
@@ -851,9 +846,14 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)executeSearch:(NSString *)searchString
 {
-    // TO DO: set the region to the DMV
-    CLLocationCoordinate2D locationToSearchAround = CLLocationCoordinate2DMake(38.895108, -77.036548);
-    
+    CLLocationCoordinate2D locationToSearchAround;
+    if (self.latitude != 0.0) {
+        locationToSearchAround = CLLocationCoordinate2DMake(self.latitude, self.longitude);
+    }
+    else {
+        
+    }
+
     [[GooglePlacesClient sharedGooglePlacesClient] getPlacesLike:searchString atLocation:locationToSearchAround delegate:self];
 }
 
@@ -899,6 +899,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         
         [self.view layoutIfNeeded];
         self.articleOverlayTopEdgeConstraint.constant += self.articleOverlayHeightConstraint.constant;
+        // the current location button needs to slide up/down along with the article overlay, lest the overlay obscure it.
+        self.currentLocationButtonBottomEdgeConstraint.constant -= self.articleOverlayHeightConstraint.constant;
         
         [UIView animateWithDuration:0.35
                               delay:0.0
@@ -956,6 +958,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             // the article overlay starts life hidden because its top edge constraint equals the super view's bottom edge. so it is pushed down, and hidden behind the tab bar. to slide it up, we reduce this constraint, effectively giving it a smaller Y value, i.e. higher vertical placement in the view window. we reverse this -- i.e. add to the constraint -- to push the article overlay back off screen.
             [self.view layoutIfNeeded];
             self.articleOverlayTopEdgeConstraint.constant -= self.articleOverlayHeightConstraint.constant;
+            // the current location button needs to slide up/down along with the article overlay, lest the overlay obscure it.
+            self.currentLocationButtonBottomEdgeConstraint.constant += self.articleOverlayHeightConstraint.constant;
 
             [UIView animateWithDuration:0.35
                                   delay:0.0
@@ -1057,16 +1061,10 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         pointB = [[CLLocation alloc] initWithLatitude:self.mapView.projection.visibleRegion.farLeft.latitude longitude:self.mapView.projection.visibleRegion.farLeft.longitude];
     }
     
-    //NSLog(@"point A: %f,%f", pointA.coordinate.latitude, pointA.coordinate.longitude);
-    //NSLog(@"point B: %f,%f", pointB.coordinate.latitude, pointB.coordinate.longitude);
-
     distanceAtWidestSide = [pointA distanceFromLocation:pointB]; // return value in meters.
-    //NSLog(@"distance: %f", distanceAtWidestSide);
     radius = distanceAtWidestSide / 2; // halve the span to get the radius.
     radius = radius / 1000; // divide by 1000 to convert kilometers.
-    //NSLog(@"radius: %f", radius);
     radius = radius * (1.0 + extraMarginForSearchRadius);
-    //NSLog(@"radius with extra: %f", radius);
     
     return radius;
 }
@@ -1219,8 +1217,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                              [self.view layoutIfNeeded];
                          }
                          completion:^(BOOL finished) {
-                             //[self.toggleListViewButton setTitle:[NSString stringWithUTF8String:"\ue807"] forState:UIControlStateNormal];
-
                              // upon completion, if there was a selected marker, de-select it in the table view and on the map.
                              if (self.articleContainerWithFocus) {
                                  NSIndexPath *indexPathOfCellWithFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
@@ -1260,13 +1256,13 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     }
 
     [self fetchData];
-
 }
 
-- (IBAction)pressSearchFiltersButton:(id)sender
+- (IBAction)currentLocationTapped:(id)sender
 {
-    NSLog(@"search filters");
-    //[[Crashlytics sharedInstance] crash];
+    if (self.currentLocationMarker != nil) {
+        [self setLocationWithLatitude:self.currentLocationMarker.position.latitude andLongitude:self.currentLocationMarker.position.longitude zoom:-1];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -1274,18 +1270,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     // at the end of scrolling, the topmost visible row will be the one we want to give focus.
-    //NSIndexPath *indexPathOfCellToFocus = [[self.tableView indexPathsForVisibleRows] objectAtIndex:0];
     NSIndexPath *indexPathOfCellToFocus = [NSIndexPath indexPathForRow:[self.articleContainers indexOfObject:self.articleContainerWithFocus] inSection:0];
     NewsMapTableViewCell *cellToFocus = (NewsMapTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathOfCellToFocus];
     // fade in the highlighting color.
     [UIView animateWithDuration:0.5 animations:^{
         cellToFocus.articleView.backgroundColor = [Stylesheet color3];
     }];
-}
-
-- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
-{
-    NSLog(@"scrollViewDidScrollToTop called.");
 }
 
 #pragma mark - UISearchDisplayDelegate
@@ -1312,7 +1302,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         if ([segue.destinationViewController isKindOfClass:[ArticleViewController class]]) {
             ArticleViewController *articleVC = (ArticleViewController *)segue.destinationViewController;
             NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-            //Article *articleToDisplay = (Article *)self.articles[indexPath.row];
             Article *articleToDisplay = [self.articleContainers[indexPath.row] articleOfDisplayedTeaser];
             articleVC.article = articleToDisplay;
         }
@@ -1410,12 +1399,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)populateArticleContainersArray:(NSArray *)articlesToMap // articlesToMap is an array of Articles.
 {
-    NSLog(@"number of articles: %d", (int)[articlesToMap count]);
-    
     int i = 1;
     for (Article *article in articlesToMap) {
-        
-        //NSLog(@"article: %d", i);
         
         CLLocation *articleLocation = [[CLLocation alloc] initWithLatitude:article.coordinate.latitude longitude:article.coordinate.longitude];
         
@@ -1424,8 +1409,6 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         int j = 1;
         
         for (ArticleContainer *articleContainer in self.articleContainers) {
-            
-            //NSLog(@"marker: %d", j);
             
             CLLocationCoordinate2D articleContainerCoordinate;
             
@@ -1569,8 +1552,8 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     CLLocation *mostRecentlyReportedLocation = [locations lastObject];
-    NSLog(@"location: %@", mostRecentlyReportedLocation);
-
+    NSLog(@"didUpdateLocations called: %@", mostRecentlyReportedLocation);
+    
     // create the current location marker if it doesn't exist; update its location if it does. don't actually display it on the map here (by setting its map parameter), instead doing that when the other markers are displayed. we don't touch the map view at all in this method.
     if (!self.currentLocationMarker) {
         self.currentLocationMarker = [GMSMarker markerWithPosition:mostRecentlyReportedLocation.coordinate];
@@ -1580,60 +1563,37 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         self.currentLocationMarker.position = mostRecentlyReportedLocation.coordinate;
     }
     
-    //[self.locationManager stopUpdatingLocation];
-
-    //[self setLocationWithLatitude:mostRecentlyReportedLocation.coordinate.latitude andLongitude:mostRecentlyReportedLocation.coordinate.longitude zoom:DEFAULT_ZOOM_LEVEL];
-    
-    // before we kick off another fetch, we check that both the distance has been far enough, and time long enough, to warrant it.
-    if (self.latitude != 0.0) {
-        
-    }
-    /*
-     if the time since the last fetch (not update!) is greater than MINIMUM_FETCH_UPDATE_TIME, proceed
-        if the existing location has been set (ie, not equal to 0.0), proceed
-            if the distance between the existing location and the new location is greater than locationManager.distanceFilter, fetch!
-            else, do nothing
-        else
-            fetch! (because this should be the first fetch ever)
-     else, do nothing
-     
-     Also, figure out if this fetching will be occuring and screwing stuff up if NewsMap is not the active VC.
-
-    */
-    
-    [self.fetcher numberOfResultsAtLatitude:mostRecentlyReportedLocation.coordinate.latitude
-                                  longitude:mostRecentlyReportedLocation.coordinate.longitude
-                                     radius:BASE_RADIUS_FROM_USER_LOCATION
-                                      units:RADIUS_UNITS
-                                        age:[self getSelectedArticleAge]];
+    // if the existing location has not been set (ie, not equal to 0.0), fetch.
+    if (self.latitude == 0.0) {
+        [self.fetcher numberOfResultsAtLatitude:mostRecentlyReportedLocation.coordinate.latitude
+                                      longitude:mostRecentlyReportedLocation.coordinate.longitude
+                                         radius:BASE_RADIUS_FROM_USER_LOCATION
+                                          units:RADIUS_UNITS
+                                            age:[self getSelectedArticleAge]];
+    }    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     switch (status) {
         case kCLAuthorizationStatusNotDetermined:
-            NSLog(@"kCLAuthorizationStatusNotDetermined reported in didChangeAuthorizationStatus.");
             break;
         case kCLAuthorizationStatusRestricted:
-            NSLog(@"kCLAuthorizationStatusRestricted reported in didChangeAuthorizationStatus.");
             // user didn't grant permission so proceed with fallback.
             self.locationAwarenessEnabled = NO;
             [self processLackOfLocationAwareness:PermissionDeniedRightNow];
             break;
         case kCLAuthorizationStatusDenied:
-            NSLog(@"kCLAuthorizationStatusDenied reported in didChangeAuthorizationStatus.");
             // user didn't grant permission so proceed with fallback.
             self.locationAwarenessEnabled = NO;
             [self processLackOfLocationAwareness:PermissionDeniedRightNow];
             break;
         case kCLAuthorizationStatusAuthorized: // kCLAuthorizationStatusAuthorized == kCLAuthorizationStatusAuthorizedAlways
-            NSLog(@"kCLAuthorizationStatusAuthorized reported in didChangeAuthorizationStatus.");
             // user granted permission so turn on location awareness.
             self.locationAwarenessEnabled = YES;
             [self.locationManager startUpdatingLocation];
             break;
         case kCLAuthorizationStatusAuthorizedWhenInUse:
-            NSLog(@"kCLAuthorizationStatusAuthorizedWhenInUse reported in didChangeAuthorizationStatus.");
             // user granted permission so turn on location awareness.
             self.locationAwarenessEnabled = YES;
             [self.locationManager startUpdatingLocation];

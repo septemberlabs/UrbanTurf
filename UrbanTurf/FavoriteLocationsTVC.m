@@ -47,8 +47,8 @@
     return 2;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     // the top section displays only a single row, the Save Location command
     if (section == 0) {
         return 1;
@@ -57,7 +57,6 @@
     else {
         return [self.savedLocations count];
     }
-    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -76,8 +75,8 @@
     }    
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     static NSString *MyIdentifier = @"MyReuseIdentifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
     if (cell == nil) {
@@ -99,7 +98,6 @@
     }
 
     return cell;
-    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -118,7 +116,7 @@
         
         NSMutableArray *newArray = [self.savedLocations mutableCopy];
         [newArray removeObjectAtIndex:indexPath.row];
-        self.savedLocations = newArray; // HOW CAN THIS WORK, assigning a mutable to an immutable array?
+        self.savedLocations = newArray;
 
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:self.savedLocations forKey:userDefaultsSavedLocationsKey];

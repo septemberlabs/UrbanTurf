@@ -7,11 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ArticleOverlayView">
             <connections>
-                <outlet property="betweenIntroAndHeadline" destination="x19-c1-lMS" id="wSk-61-WOV"/>
-                <outlet property="betweenMetaInfoAndIntro" destination="19K-lL-jLK" id="OXs-cW-yg4"/>
                 <outlet property="headlineLabel" destination="KQL-JQ-cvt" id="Ifg-xq-y45"/>
                 <outlet property="imageView" destination="vUF-bI-UEP" id="NvU-Ot-z0P"/>
-                <outlet property="imageViewHeight" destination="UYd-q7-PWE" id="8SY-bN-HMj"/>
                 <outlet property="introLabel" destination="pAM-NC-2gx" id="XAv-qc-Kvw"/>
                 <outlet property="metaInfoLabel" destination="RaZ-3G-LlK" id="fKK-Bu-Vpm"/>
                 <outlet property="placementInArrayLabel" destination="N3a-lY-fWn" id="Uj7-RS-eVg"/>

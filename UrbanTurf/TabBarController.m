@@ -56,7 +56,7 @@
                                              forState:UIControlStateSelected];
     
     // set colors for UNSELECTED tabs
-    UIColor *unselectedColor = [UIColor purpleColor];
+    UIColor *unselectedColor = [Stylesheet color6];
     // unselected text
     [[UITabBarItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName : unselectedColor }
                                              forState:UIControlStateNormal];

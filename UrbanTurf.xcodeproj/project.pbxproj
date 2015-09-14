@@ -14,12 +14,12 @@
 		1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A0F7A761B7D7E27001DBD89 /* ArticleOverlayView.xib */; };
 		1A12DDD31B80333E0033046F /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A12DDD11B80333E0033046F /* Fabric.framework */; };
 		1A12DDD41B80333E0033046F /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A12DDD21B80333E0033046F /* Crashlytics.framework */; };
+		1A1602201BA63F390004B5F5 /* scratch in Resources */ = {isa = PBXBuildFile; fileRef = 1A16021F1BA63F390004B5F5 /* scratch */; };
 		1A2CEBDC1A8AC725004DE623 /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CEBDB1A8AC725004DE623 /* TabBarController.m */; };
 		1A2E6A581A49F5BD0033AC87 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A571A49F5BD0033AC87 /* Article.m */; };
 		1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5A1A49F6160033AC87 /* Fetcher.m */; };
 		1A2E6A5F1A49F6D70033AC87 /* UrbanTurfFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A5E1A49F6D70033AC87 /* UrbanTurfFetcher.m */; };
 		1A2E6A691A4E26540033AC87 /* ArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E6A681A4E26540033AC87 /* ArticleViewController.m */; };
-		1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */; };
 		1A6F1EB91A507971007D3B99 /* Stylesheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F1EB81A507971007D3B99 /* Stylesheet.m */; };
 		1A6F40C01B86E49700028759 /* ArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6F40BF1B86E49700028759 /* ArticleContainer.m */; };
 		1A7208DF1AC0D13F0054CA38 /* HomeScreenLocationSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7208DE1AC0D13F0054CA38 /* HomeScreenLocationSelection.m */; };
@@ -69,7 +69,6 @@
 		1AECA16D1AF059E500EAE054 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA15C1AF059E500EAE054 /* UIWebView+AFNetworking.m */; };
 		1AECA1701AF05CD000EAE054 /* GooglePlacesClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */; };
 		1AF4D2E31AC37D18003168AD /* NewsMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4D2E21AC37D18003168AD /* NewsMap.m */; };
-		1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */; };
 		1AF7ADB41B251BB4009164F6 /* ArticleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB31B251BB4009164F6 /* ArticleView.xib */; };
 		1AF7ADB71B251D17009164F6 /* ArticleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7ADB61B251D17009164F6 /* ArticleView.m */; };
 		1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFBC7F91AAFD18E00561916 /* FavoriteLocationsTVC.m */; };
@@ -98,6 +97,14 @@
 		1A0F7A761B7D7E27001DBD89 /* ArticleOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleOverlayView.xib; sourceTree = "<group>"; };
 		1A12DDD11B80333E0033046F /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1A12DDD21B80333E0033046F /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		1A1602181BA617010004B5F5 /* 11th & Natoma.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Natoma.gpx"; sourceTree = "<group>"; };
+		1A1602191BA617740004B5F5 /* 11th & Minna.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Minna.gpx"; sourceTree = "<group>"; };
+		1A16021A1BA617B10004B5F5 /* 11th & Mission.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Mission.gpx"; sourceTree = "<group>"; };
+		1A16021B1BA617D10004B5F5 /* 11th & Market.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Market.gpx"; sourceTree = "<group>"; };
+		1A16021C1BA617FA0004B5F5 /* 11th & Howard.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Howard.gpx"; sourceTree = "<group>"; };
+		1A16021D1BA618200004B5F5 /* 11th & Folsom.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Folsom.gpx"; sourceTree = "<group>"; };
+		1A16021E1BA618410004B5F5 /* 11th & Harrison.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "11th & Harrison.gpx"; sourceTree = "<group>"; };
+		1A16021F1BA63F390004B5F5 /* scratch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scratch; sourceTree = "<group>"; };
 		1A2CEBDA1A8AC725004DE623 /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		1A2CEBDB1A8AC725004DE623 /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		1A2E6A561A49F5BD0033AC87 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
@@ -109,7 +116,6 @@
 		1A2E6A651A4A1E650033AC87 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1A2E6A671A4E26540033AC87 /* ArticleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleViewController.h; sourceTree = "<group>"; };
 		1A2E6A681A4E26540033AC87 /* ArticleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleViewController.m; sourceTree = "<group>"; };
-		1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fontello.ttf; sourceTree = "<group>"; };
 		1A6F1EB71A507971007D3B99 /* Stylesheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		1A6F1EB81A507971007D3B99 /* Stylesheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stylesheet.m; sourceTree = "<group>"; };
 		1A6F40BE1B86E49700028759 /* ArticleContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleContainer.h; sourceTree = "<group>"; };
@@ -208,8 +214,6 @@
 		1AECA16F1AF05CD000EAE054 /* GooglePlacesClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GooglePlacesClient.m; path = UrbanTurf/GooglePlacesClient.m; sourceTree = SOURCE_ROOT; };
 		1AF4D2E11AC37D18003168AD /* NewsMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsMap.h; sourceTree = "<group>"; };
 		1AF4D2E21AC37D18003168AD /* NewsMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsMap.m; sourceTree = "<group>"; };
-		1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontIconViewController.h; sourceTree = "<group>"; };
-		1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontIconViewController.m; sourceTree = "<group>"; };
 		1AF7ADB31B251BB4009164F6 /* ArticleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleView.xib; sourceTree = "<group>"; };
 		1AF7ADB51B251D17009164F6 /* ArticleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleView.h; sourceTree = "<group>"; };
 		1AF7ADB61B251D17009164F6 /* ArticleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleView.m; sourceTree = "<group>"; };
@@ -349,8 +353,6 @@
 				1AB1A56B1A48E3D900369211 /* Main.storyboard */,
 				1A2CEBDA1A8AC725004DE623 /* TabBarController.h */,
 				1A2CEBDB1A8AC725004DE623 /* TabBarController.m */,
-				1AF6F0381A7AA6100023BBDD /* FontIconViewController.h */,
-				1AF6F0391A7AA6100023BBDD /* FontIconViewController.m */,
 				1A6F1EB71A507971007D3B99 /* Stylesheet.h */,
 				1A6F1EB81A507971007D3B99 /* Stylesheet.m */,
 				1AB1A56E1A48E3D900369211 /* Images.xcassets */,
@@ -367,8 +369,8 @@
 		1AB1A55E1A48E3D900369211 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1A16021F1BA63F390004B5F5 /* scratch */,
 				1AD33F501AB5526E00DE1DE2 /* GoogleMaps.bundle */,
-				1A3A0B441A79CA1E00E2F6BF /* fontello.ttf */,
 				1AB1A55F1A48E3D900369211 /* Info.plist */,
 				1AB1A5601A48E3D900369211 /* main.m */,
 				1AE3251D1B8D50C4004437E2 /* Custom Locations */,
@@ -422,6 +424,13 @@
 		1AE3251D1B8D50C4004437E2 /* Custom Locations */ = {
 			isa = PBXGroup;
 			children = (
+				1A16021B1BA617D10004B5F5 /* 11th & Market.gpx */,
+				1A16021A1BA617B10004B5F5 /* 11th & Mission.gpx */,
+				1A1602191BA617740004B5F5 /* 11th & Minna.gpx */,
+				1A1602181BA617010004B5F5 /* 11th & Natoma.gpx */,
+				1A16021C1BA617FA0004B5F5 /* 11th & Howard.gpx */,
+				1A16021D1BA618200004B5F5 /* 11th & Folsom.gpx */,
+				1A16021E1BA618410004B5F5 /* 11th & Harrison.gpx */,
 				1AA28AFF1B902E5D00452B93 /* San Jose.gpx */,
 				1AA28B001B902E9000452B93 /* Jackson Hole.gpx */,
 				1AE3251A1B8D5014004437E2 /* Union Station.gpx */,
@@ -598,10 +607,10 @@
 				1AF7ADB41B251BB4009164F6 /* ArticleView.xib in Resources */,
 				1AB1A56D1A48E3D900369211 /* Main.storyboard in Resources */,
 				1AB1A5721A48E3D900369211 /* LaunchScreen.xib in Resources */,
-				1A3A0B451A79CA1E00E2F6BF /* fontello.ttf in Resources */,
 				1AB1A56F1A48E3D900369211 /* Images.xcassets in Resources */,
 				1AD33F511AB5526E00DE1DE2 /* GoogleMaps.bundle in Resources */,
 				1A0F7A771B7D7E27001DBD89 /* ArticleOverlayView.xib in Resources */,
+				1A1602201BA63F390004B5F5 /* scratch in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,7 +675,6 @@
 				1AC8126F1ABF904500ABD302 /* Options.m in Sources */,
 				1AFBC7FA1AAFD18E00561916 /* FavoriteLocationsTVC.m in Sources */,
 				1A96E19A1B7E59C5002DAFF1 /* ArticleWebViewVC.m in Sources */,
-				1AF6F03A1A7AA6100023BBDD /* FontIconViewController.m in Sources */,
 				1A2E6A5B1A49F6160033AC87 /* Fetcher.m in Sources */,
 				1A9E486D1B83002100CC7A8A /* SearchFilters.m in Sources */,
 				1AECA1601AF059E500EAE054 /* AFNetworkReachabilityManager.m in Sources */,

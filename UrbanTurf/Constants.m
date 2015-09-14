@@ -39,18 +39,11 @@ NSString * const userDefaultsCityKey = @"city";
 NSString * const HOME_CITY_TABLE_HEADER = @"";
 NSString * const HOME_CITY_TABLE_FOOTER = @"This is the area that will display by default if your current location is disabled or otherwise unavailable.";
 
-const CLLocationCoordinate2D home = {38.925162, -77.044052};
-const CLLocationCoordinate2D lincolnMemorial = {38.889262, -77.048568};
-const CLLocationCoordinate2D office = {38.914384, -77.041262};
-const CLLocationCoordinate2D kingsCloister = {38.816724, -77.075691};
-const CLLocationCoordinate2D jacksonHoleSquare = {43.479990, -110.761819};
-
 // UI
 NSString * const image_not_downloaded = @"placeholder 250x250";
 float const FONT_POINT_SIZE = 12.0;
 NSString * const map_marker_remoteURL = @"http://septemberlabs.com/apps/hoodie/graphics/marker_googlemaps_remote_38x38.png";
 NSString * const map_marker_currentLocation = @"blue marker 72x72";
-UIEdgeInsets const map_marker_insets = {34.0, 34.0, 34.0, 34.0}; // tried to use this with negative inset values to force extra tappable margin. was too hacky so ultimately went with fatter marker graphics.
 CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
 CGFloat const PAN_THRESHOLD = 10;
 CGFloat const PANNED_DISTANCE_THRESHOLD = 0.20;
@@ -62,7 +55,7 @@ double const BASE_RADIUS_FROM_USER_LOCATION = 0.5; // meters
 double const DEFAULT_ZOOM_LEVEL = 14.0;
 NSString * const RADIUS_UNITS = @"metric"; // metric|english
 
-CLLocationDistance const DISTANCE_FILTER = 100; // in meters, so a tenth of a kilometer.
+CLLocationDistance const DISTANCE_FILTER = 10; // in meters, so a tenth of a kilometer.
 
 @implementation Constants
 

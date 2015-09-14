@@ -22,13 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *introLabel;
 @property (weak, nonatomic) IBOutlet UILabel *metaInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *placementInArrayLabel;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewHeight;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenImageViewAndSuperview;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenHeadlineAndSuperview;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenIntroAndHeadline;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *betweenMetaInfoAndIntro;
 
-- (CGFloat)dynamicallyCalculatedHeight;
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant;
 - (void)setEdgesToSuperview:(UIView *)superview leading:(CGFloat)leadingConstant trailing:(CGFloat)trailingConstant top:(CGFloat)topConstant bottom:(CGFloat)bottomConstant superviewFeature:(SuperviewFeature)superviewFeature;
 - (void)configureTeaserForArticle:(Article *)article;

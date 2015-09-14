@@ -23,7 +23,6 @@
     [super viewWillAppear:animated];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSLog(@"user defaults: %@", [defaults dictionaryRepresentation]);
     
     // display order.
     NSDictionary *displayOrder = [[Constants displayOrders] objectAtIndex:[defaults integerForKey:userDefaultsDisplayOrderKey]];

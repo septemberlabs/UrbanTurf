@@ -17,7 +17,8 @@
 
 @implementation SearchFilters
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     self.tableView.delegate = self;
@@ -59,12 +60,14 @@
     }
 }
 
-- (IBAction)cancel:(id)sender {
+- (IBAction)cancel:(id)sender
+{
     [self.delegate updateSearchFilters:self displayOrders:nil articleAges:nil articleTags:nil save:NO];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)save:(id)sender {
+- (IBAction)save:(id)sender
+{
     NSMutableArray *displayOrdersToReturn = [[NSMutableArray alloc] initWithCapacity:[self.displayOrders count]];
     for (NSMutableDictionary *displayOrder in self.displayOrders) {
         [displayOrdersToReturn addObject:[NSDictionary dictionaryWithDictionary:displayOrder]];
@@ -109,8 +112,8 @@
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchFiltersCell" forIndexPath:indexPath];
     
     NSString *filterLabel;
@@ -119,13 +122,6 @@
     if (indexPath.section == 0) {
         filterLabel = (NSString *)[self.displayOrders[indexPath.row] objectForKey:@"Menu Item"];
         checked = ((NSNumber *)[self.displayOrders[indexPath.row] objectForKey:@"Value"]).boolValue;
-
-        /* DELETE AFTER 8/25. Was used for unimplemented UISegmentedControl stuff.
-        NSMutableArray *displayOrderMenuItems;
-        for (NSDictionary *displayOrder in self.displayOrders) {
-            [displayOrderMenuItems addObject:[displayOrder objectForKey:@"Menu Item"]];
-        }
-         */
     }
     
     if (indexPath.section == 1) {

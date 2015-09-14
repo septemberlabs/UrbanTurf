@@ -45,9 +45,7 @@ NSString * const googlePlaceDetailsPath = @"details/";
       success:^(NSURLSessionDataTask *task, id responseObject) {
           if ([responseObject isKindOfClass:[NSDictionary class]]) {
               NSDictionary *fetchedPlacesList = (NSDictionary *)responseObject;
-              //NSLog(@"task URL: %@", task.originalRequest.URL);
               NSArray *places = [fetchedPlacesList valueForKeyPath:@"predictions"];
-              //NSLog(@"places: %@", places);
               [delegate receiveGooglePlacesAutocompleteResults:places];
           }
       }
@@ -68,15 +66,12 @@ NSString * const googlePlaceDetailsPath = @"details/";
       success:^(NSURLSessionDataTask *task, id responseObject) {
           if ([responseObject isKindOfClass:[NSDictionary class]]) {
               NSDictionary *fetchedPlace = (NSDictionary *)responseObject;
-              //NSLog(@"task URL: %@", task.originalRequest.URL);
-              //NSLog(@"place: %@", fetchedPlace);
               [delegate receiveGooglePlacesPlaceDetails:fetchedPlace];
           }
       }
       failure:^(NSURLSessionDataTask *task, NSError *error) {
           NSLog(@"Error: %@ ***** %@ ***** %@", task.originalRequest, task.response, error);
       }];
-
 }
 
 @end
