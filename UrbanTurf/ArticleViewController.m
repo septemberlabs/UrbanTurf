@@ -49,9 +49,11 @@
     self.title = @"Article Preview";
 
     // image.
+    self.articleView.imageView.clipsToBounds = YES;
     [self.articleView.imageView setImageWithURL:[NSURL URLWithString:self.article.imageURL]];
+    /* DELETE THIS AFTER 10/15. No longer used. Also delete processImage and the call to processImage in viewWillLayoutSubviews. */
     // the only way I found to make the image fill the full width (or height, if portrait layout) of the image view, then have the image view shrink its height to fit the exact height of the image is to 1) set the content mode to UIViewContentModeScaleAspectFit here, then 2) in viewWillLayoutSubviews change the height of the image view height to the image's new height after being adjusted by setting the content mode below, then 3) change the content mode of the image view to UIViewContentModeScaleToFill.
-    self.articleView.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    //self.articleView.imageView.contentMode = UIViewContentModeScaleAspectFit;
     
     // map.
     self.articleView.mapImageView.layer.borderWidth = 1.0f;
@@ -96,7 +98,8 @@
 
 - (void)viewWillLayoutSubviews
 {
-    [self processImage];
+    [super viewWillLayoutSubviews];
+    //[self processImage];
 }
 
 - (void)viewDidAppear:(BOOL)animated

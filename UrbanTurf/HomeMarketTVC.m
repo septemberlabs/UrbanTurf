@@ -69,7 +69,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     // if a city has been set, and it's different than the one the user just selected, update the UI and user defaults value.
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:userDefaultsCityKey] != nil) {
+    if ([defaults objectForKey:userDefaultsCityKey] != nil) {
         
         int currentlySelectedCity = (int)[defaults integerForKey:userDefaultsCityKey];
         

@@ -32,9 +32,6 @@ NSString * const currentLocationString = @"Current Location";
 
 NSString * const userDefaultsSavedLocationsKey = @"savedLocations";
 
-NSString * const userDefaultsVersionKey = @"version";
-NSString * const version = @"0.9";
-
 NSString * const userDefaultsCityKey = @"city";
 NSString * const HOME_CITY_TABLE_HEADER = @"";
 NSString * const HOME_CITY_TABLE_FOOTER = @"This is the area that will display by default if your current location is disabled or otherwise unavailable.";
@@ -44,7 +41,7 @@ NSString * const image_not_downloaded = @"placeholder 250x250";
 float const FONT_POINT_SIZE = 12.0;
 NSString * const map_marker_remoteURL = @"http://septemberlabs.com/apps/hoodie/graphics/marker_googlemaps_remote_38x38.png";
 NSString * const map_marker_currentLocation = @"blue marker 72x72";
-CLLocationDistance const MARKER_OVERLAP_DISTANCE = 1.0; // in meters. 91.44 m = 300 ft.
+CLLocationDistance const MARKER_OVERLAP_DISTANCE = 10.0; // in meters. 91.44 m = 300 ft.
 CGFloat const PAN_THRESHOLD = 10;
 CGFloat const PANNED_DISTANCE_THRESHOLD = 0.20;
 int const ARTICLE_OVERLAY_VIEW_HEIGHT = 135;

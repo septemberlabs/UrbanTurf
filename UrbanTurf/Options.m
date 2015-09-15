@@ -40,7 +40,7 @@
         self.homeMarketCell.detailTextLabel.text = @"Unspecified";
     }
     
-    self.versionCell.detailTextLabel.text = [defaults stringForKey:userDefaultsVersionKey];
+    self.versionCell.detailTextLabel.text = (NSString *)[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

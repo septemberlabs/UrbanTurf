@@ -442,7 +442,6 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="pressSearchFiltersButton:" destination="STl-BS-KjN" eventType="touchUpInside" id="mY6-J0-Ipl"/>
                                             <segue destination="jq8-Rm-jiI" kind="presentation" identifier="SearchFiltersSegue" id="A5U-Wf-BD1"/>
                                         </connections>
                                     </button>

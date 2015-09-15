@@ -22,6 +22,26 @@
 @interface NewsMap ()
 
 /*
+
+ This is the flow of events related to which location to go to upon launch:
+ 
+ - start in goToDefaultLocation. if the user has a saved location as the default location, go there. if the user doesn't have a default location, or the default location is current location, initiate the attempt to go to the user's current location with a call to establishLocationAwarenessPermissions.
+ - in establishLocationAwarenessPermissions, we either a) already know that we do NOT have location permissions so go to processLackOfLocationAwareness, b) do have location permissions so call the location manager's startUpdatingLocation, or c) don't know if we have location permissions so we ask.
+ - in case a, processLackOfLocationAwareness determines whether the user has indicated her default home market. if so, go there. if not, prompt for it then go there.
+ - in case b, delegate method didUpdateLocations will get called as a result of calling startUpdatingLocation. it stores the newly secured current location and, if the lat/lon state hasn't yet been set (meaning this is the app launch), call setLocationWithLatitude:andLongitude to initiate the sequence below related to map movement and data updating.
+ - in case c, didChangeAuthorizationStatus will get called when user allows or disallows location permissions in answer to the prompt. in that method, cases a and b above are the resulting possibilities.
+ 
+ This is the flow of events related to map movement and data updating:
+ 
+ - setLocationWithLatitude:andLongitude simply moves the map, which triggers idleAtCameraPosition. so note that this method actually just moves the map to the given lat/lon. it is in idleAtCameraPosition where self.latitude and self.longitude are actually set with the new values (and where the model is updated by new data from a fetch).
+ - idleAtCameraPosition sets self.lat and self.long and initiates a fetch. it is a delegate method of GMSMapView that is called whenever the map stops moving.
+ - fetchData sends a request to the API, which triggers receiveData: upon completion.
+ - receiveData: updates the model (with updateDataWithArray:) and view (with updateMarkersOnMap).
+
+*/
+
+
+/*
  these two arrays comprise the model. self.articles is the result of the fetch and is an arry of articles. we construct the array of articleContainers after first populating self.articles. an articleContainer stores the article(s) whose location the articleContainer's marker visually represents on the map. because some articles have locations that are very close or identical, we cluster such articles in a single articleContainer, represented visusally by a single marker. in such cases, the articleContainer's articles array contain multiple elements. therefore, there is a one-to-many relationship between articleContainers and articles, not one-to-one. this relationship is managed and contained by articleContainer. there IS a one-to-one relationship between articleContainers and the rows in the table view (and markers on the map; each articleContainer contains only one marker). for cells that represent articleContainers with multiple stories at its location, the cell is pannable, with the stories ordered in reverse chronological order.
  */
 @property (strong, nonatomic) NSMutableArray *articles; // of Articles
@@ -849,14 +869,23 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
 
 - (void)executeSearch:(NSString *)searchString
 {
+    // this location is what we send Google for the point around which we want to retrieve place information. see https://developers.google.com/places/web-service/autocomplete
     CLLocationCoordinate2D locationToSearchAround;
+    // if the map location has been set, use that.
     if (self.latitude != 0.0) {
         locationToSearchAround = CLLocationCoordinate2DMake(self.latitude, self.longitude);
     }
-    else {
-        
+    // if somehow the map location hasn't been set but the user at some point has saved her home city in settings, use that.
+    else if ([[NSUserDefaults standardUserDefaults] objectForKey:userDefaultsCityKey] != nil) {
+        NSDictionary *city = (NSDictionary *)[[Constants cities] objectAtIndex:[[NSUserDefaults standardUserDefaults] integerForKey:userDefaultsCityKey]];
+        CLLocationDegrees cityCenterLatitude = ((NSNumber *)[city objectForKey:@"CenterLatitude"]).doubleValue;
+        CLLocationDegrees cityCenterLongitude = ((NSNumber *)[city objectForKey:@"CenterLongitude"]).doubleValue;
+        locationToSearchAround = CLLocationCoordinate2DMake(cityCenterLatitude, cityCenterLongitude);
     }
-
+    // if none of the above, send (0,0) to tell GoolgePlaceClient's function to suppress sending a location parameter at all.
+    else {
+        locationToSearchAround = CLLocationCoordinate2DMake(0.0, 0.0);
+    }
     [[GooglePlacesClient sharedGooglePlacesClient] getPlacesLike:searchString atLocation:locationToSearchAround delegate:self];
 }
 

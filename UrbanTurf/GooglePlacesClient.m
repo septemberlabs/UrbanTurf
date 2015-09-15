@@ -32,14 +32,25 @@ NSString * const googlePlaceDetailsPath = @"details/";
 
 - (void)getPlacesLike:(NSString *)searchString atLocation:(CLLocationCoordinate2D)locationToSearchAround delegate:(id<GooglePlacesView>)delegate
 {
-    NSDictionary *params = @{
-                             @"input" : searchString,
-                             @"location" : [NSString stringWithFormat:@"%f,%f", locationToSearchAround.latitude, locationToSearchAround.longitude],
-                             @"radius" : googlePlacesAutocompleteRadius,
-                             @"sensor" : @"true",
-                             @"key" : googleAPIKeyForBrowserApplications
-                             };
-    
+    NSDictionary *params;
+    // if location is not (0,0), include it in the API URL.
+    if (locationToSearchAround.latitude != 0.0) {
+        params = @{
+                                 @"input" : searchString,
+                                 @"location" : [NSString stringWithFormat:@"%f,%f", locationToSearchAround.latitude, locationToSearchAround.longitude],
+                                 @"radius" : googlePlacesAutocompleteRadius,
+                                 @"sensor" : @"true",
+                                 @"key" : googleAPIKeyForBrowserApplications
+                                 };
+    }
+    else {
+        params = @{
+                                 @"input" : searchString,
+                                 @"radius" : googlePlacesAutocompleteRadius,
+                                 @"sensor" : @"true",
+                                 @"key" : googleAPIKeyForBrowserApplications
+                                 };
+    }
     [self GET:[NSString stringWithFormat:@"%@%@", googlePlacesAutocompletePath, googlePlacesResultsFormat]
    parameters:params
       success:^(NSURLSessionDataTask *task, id responseObject) {

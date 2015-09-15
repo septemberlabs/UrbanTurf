@@ -32,12 +32,10 @@
     NSArray *defaultsKeys = [NSArray arrayWithObjects:
                              userDefaultsDisplayOrderKey,
                              userDefaultsHomeScreenLocationKey,
-                             userDefaultsVersionKey,
                              nil];
     NSArray *defaultsValues = [NSArray arrayWithObjects:
                                [NSNumber numberWithInt:0], // the first element in the array, Closest First
                                @"Current Location",
-                               version,
                                nil];
     NSDictionary *defaults = [NSDictionary dictionaryWithObjects:defaultsValues forKeys:defaultsKeys];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];

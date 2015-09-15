@@ -7,12 +7,12 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "@2x 750x1334.png"
+      "filename" : "Splash_Screen_750x1334.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "@3x 1242x2208.png"
+      "filename" : "Splash_Screen1242x2208.png"
     }
   ],
   "info" : {

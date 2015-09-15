@@ -34,9 +34,6 @@ extern NSString * const currentLocationString;
 
 extern NSString * const userDefaultsSavedLocationsKey;
 
-extern NSString * const userDefaultsVersionKey;
-extern NSString * const version;
-
 extern NSString * const userDefaultsCityKey;
 + (NSArray *)cities;
 extern NSString * const HOME_CITY_TABLE_HEADER;
