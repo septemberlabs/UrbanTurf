@@ -158,10 +158,11 @@
     self.articleView.metaInfoLabel.attributedText = metaInfoAttributedString;
 }
 
+// format here: https://developers.google.com/maps/documentation/staticmaps/
 - (NSURL *)googleStaticMapURL
 {
-    // format here: https://developers.google.com/maps/documentation/staticmaps/
-    NSString *markersString = [NSString stringWithFormat:@"icon:%@|shadow:false|%f,%f", map_marker_remoteURL, self.article.coordinate.latitude, self.article.coordinate.longitude];
+    // custom marker was pixelated until i learned about the undocumented scale descriptor for the markers parameter. thank you: http://stackoverflow.com/questions/10336646/how-can-i-use-high-resolution-custom-markers-with-the-scale-parameter-in-google
+    NSString *markersString = [NSString stringWithFormat:@"icon:%@|shadow:false|scale:2|%f,%f", map_marker_remoteURL, self.article.coordinate.latitude, self.article.coordinate.longitude];
     NSString *centerString = [NSString stringWithFormat:@"%f,%f", self.article.coordinate.latitude, self.article.coordinate.longitude];
     NSString *mapDimensions = [NSString stringWithFormat:@"%dx%d", (int)self.articleView.mapImageView.frame.size.width, (int)self.articleView.mapImageView.frame.size.height];
     NSDictionary *params = @{

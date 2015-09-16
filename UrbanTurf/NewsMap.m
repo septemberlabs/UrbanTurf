@@ -1516,6 +1516,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
             ArticleContainer *newArticleContainer = [[ArticleContainer alloc] init];
             newArticleContainer.marker = [GMSMarker markerWithPosition:article.coordinate];
             newArticleContainer.marker.userData = newArticleContainer; // marker.userData is a pointer to its containing container.
+            newArticleContainer.marker.groundAnchor = CGPointMake(0.5, 0.5); // center the icon on its anchor point.
             NSMutableArray *articlesAtLocation = [[NSMutableArray alloc] initWithObjects:article, nil];
             newArticleContainer.articles = articlesAtLocation;
             newArticleContainer.indexOfDisplayedTeaser = 0; // default is first element in the array (ie, most recent article).
@@ -1626,6 +1627,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     if (!self.currentLocationMarker) {
         self.currentLocationMarker = [GMSMarker markerWithPosition:mostRecentlyReportedLocation.coordinate];
         self.currentLocationMarker.icon = [UIImage imageNamed:map_marker_currentLocation];
+        self.currentLocationMarker.groundAnchor = CGPointMake(0.5, 0.5); // center the icon on its anchor point.
     }
     else {
         self.currentLocationMarker.position = mostRecentlyReportedLocation.coordinate;
