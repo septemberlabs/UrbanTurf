@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-@class GMSMarker;
+#import <CoreLocation/CoreLocation.h>
+
 @class Article;
+@class GMSMarker;
 
 @interface ArticleContainer : NSObject
 
@@ -17,5 +19,6 @@
 @property (nonatomic) int indexOfDisplayedTeaser;
 
 - (Article *)articleOfDisplayedTeaser;
+- (CLLocationCoordinate2D)geographicMidpointOfArticleLocations;
 
 @end

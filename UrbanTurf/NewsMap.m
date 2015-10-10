@@ -1478,14 +1478,12 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         
         for (ArticleContainer *articleContainer in self.articleContainers) {
             
-            CLLocationCoordinate2D articleContainerCoordinate;
-            
             NSMutableArray *articlesAtLocation = (NSMutableArray *)articleContainer.articles;
-            // just use the first article in the array for its coordinate. doesn't matter which we choose; the point is that they're all the same location.
-            articleContainerCoordinate = ((Article *)[articlesAtLocation firstObject]).coordinate;
-            CLLocation *articleContainerLocation = [[CLLocation alloc] initWithLatitude:articleContainerCoordinate.latitude longitude:articleContainerCoordinate.longitude];
-            // test whether the location associated with this marker is the same as the current article. if it is, append this article to the array of articles for this marker.
-            if ([articleLocation distanceFromLocation:articleContainerLocation] < MARKER_OVERLAP_DISTANCE) {
+
+            // test whether the current article's location is close enough to the midpoint of all the articles associated with this marker. if so, the article should also be associated with this marker so append it to the marker's array of articles.
+            CLLocationCoordinate2D midpoint = [articleContainer geographicMidpointOfArticleLocations];
+            CLLocation *geographicMidpointOfArticlesAtMarker = [[CLLocation alloc] initWithLatitude:midpoint.latitude longitude:midpoint.longitude];
+            if ([articleLocation distanceFromLocation:geographicMidpointOfArticlesAtMarker] < MARKER_OVERLAP_DISTANCE) {
                 
                 // loop through the array. if the new article happened later than an existing article, insert the new article at that spot in front of the existing article. that way we'll have a reverse-chronologically ordered array at the end.
                 BOOL articleStillNeedsToBeAdded = YES;
