@@ -174,6 +174,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
     self.searchDisplayController.searchBar.backgroundColor = [Stylesheet color6];
     self.searchDisplayController.searchBar.tintColor = [Stylesheet color7];
     
+    // this fixed a runtime auto layout issue that was proving extremely difficult to solve. thank you http://stackoverflow.com/a/25795758/4681708 and http://stackoverflow.com/a/30333810/4681708
+    self.mapContainerViewHeightConstraint.priority = 999;
+    
     // the lines below change the search bar's color and text field color.
     [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setBackgroundColor:[Stylesheet color8]];
     [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:[Stylesheet color7]];
@@ -715,7 +718,7 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
         }
     }
     
-    // if the table view sending the message is the search controller TVC
+    // if the table view sending the message is the search controller TVC.
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         return tableView.rowHeight;
     }
@@ -1500,6 +1503,9 @@ static CGFloat const extraMarginForSearchRadius = 0.20; // 20 percent.
                 if (articleStillNeedsToBeAdded) {
                     [articlesAtLocation addObject:article];
                 }
+                
+                // update the article container's marker's location to the new geographic midpoint, which will be different now that a new article has been added.
+                articleContainer.marker.position = [articleContainer geographicMidpointOfArticleLocations];
                 
                 article.container = articleContainer;
                 locationMatchedExistingMarker = YES;
